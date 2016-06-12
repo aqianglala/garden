@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">JiaDun_Android</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="input_account">请输入账号</string>
+    <string name="input_password">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="forget_pswd">忘记密码？</string>
+
+    <string name="input_phone_number">输入手机号</string>
+    <string name="input_verification_code">输入验证码</string>
+    <string name="next">下一步</string>
+    <string name="or_you_can">或者你可以</string>
+    <string name="phone_number">400-88-8888</string>
+    <string name="get_code">获取验证码</string>
+
+    <string name="input_new_pswd">输入新密码</string>
+    <string name="confirm_pswd">确认新密码</string>
+    <string name="complete">完成</string>
+
+    <string name="total_price">总金额</string>
+    <string name="choose_pay">选择支付方式</string>
+    <string name="alipay">支付宝</string>
+    <string name="weChat">微信</string>
+    <string name="yinlian">银联</string>
+    <string name="total">合计：¥</string>
+    <string name="confirm_pay">确认支付</string>
+
+</resources>

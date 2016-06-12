@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.softgarden.garden.jiadun_android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="design_width"
+            android:value="750" />
+        <meta-data
+            android:name="design_height"
+            android:value="1334" />
+
+        <activity
+            android:name="com.softgarden.garden.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FullBleedTheme" />
+        <activity
+            android:name="com.softgarden.garden.SplashActivity"
+            android:theme="@style/FullBleedTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.softgarden.garden.view.shopcar.ShopcarActivity" />
+        <activity android:name="com.softgarden.garden.view.login.LoginActivity" />
+        <activity android:name="com.softgarden.garden.view.password.ForgetPswdActivity" />
+        <activity android:name="com.softgarden.garden.view.password.ForgetNextActivity" />
+        <activity android:name="com.softgarden.garden.view.pay.PayActivity" />
+    </application>
+
+</manifest>
