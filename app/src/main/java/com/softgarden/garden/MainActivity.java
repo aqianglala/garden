@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -15,6 +15,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.softgarden.garden.global.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.L;
+import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.BackFragment;
 import com.softgarden.garden.view.buy.BuyFragment;
 import com.softgarden.garden.view.change.ChangeFragment;
@@ -32,39 +33,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-        Window window = getWindow();
-        //4.4版本及以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            setViewHeight();
         }
-        //5.0版本及以上
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-            window.setNavigationBarColor(Color.TRANSPARENT);
-        }
+        menu = getViewById(R.id.slidingmenulayout);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        // 设置侧滑菜单
-        initMenu();
-    }
-
-    private void initMenu() {
-        menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.drawable.shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        menu.setMenu(R.layout.layout_menu);
     }
 
     @Override
@@ -143,11 +118,15 @@ public class MainActivity extends BaseActivity {
     private long mExitTime;
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                mExitTime = System.currentTimeMillis();
-            } else {
-                finish();
+            if(menu.isMenuShowing()){
+               menu.showContent();
+            }else{
+                if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                    Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                    mExitTime = System.currentTimeMillis();
+                } else {
+                    finish();
+                }
             }
             return true;
         }
@@ -165,4 +144,17 @@ public class MainActivity extends BaseActivity {
         menu.toggle();
     }
 
+    private void setViewHeight() {
+        View view_content = findViewById(R.id.view_content);
+        view_content.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        ViewGroup.LayoutParams content_params = view_content.getLayoutParams();
+        content_params.height = ScreenUtils.getStatusBarHeight(this);
+        view_content.setLayoutParams(content_params);
+
+        View view_menu = findViewById(R.id.view_menu);
+        view_menu.setBackgroundColor(Color.WHITE);
+        ViewGroup.LayoutParams menu_params = view_menu.getLayoutParams();
+        menu_params.height = ScreenUtils.getStatusBarHeight(this);
+        view_menu.setLayoutParams(menu_params);
+    }
 }

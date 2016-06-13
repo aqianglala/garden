@@ -34,4 +34,36 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="menu_arrow">
+        <item name="android:layout_width">@dimen/menu_item_text</item>
+        <item name="android:layout_height">@dimen/menu_item_text</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">47px</item>
+        <item name="android:background">@mipmap/jiantou</item>
+    </style>
+
+    <style name="menu_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">50px</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@color/menu_item_text</item>
+        <item name="android:textSize">@dimen/menu_item_text</item>
+    </style>
+
+    <style name="menu_line">
+        <item name="android:layout_width">@dimen/menu_line_width</item>
+        <item name="android:layout_height">0.3dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@color/menu_line</item>
+    </style>
+
+    <style name="menu_rl">
+        <item name="android:clickable">true</item>
+        <item name="background">?attr/selectableItemBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

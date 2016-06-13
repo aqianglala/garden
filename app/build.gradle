@@ -35,4 +35,5 @@ dependencies {
     compile 'org.simple:androideventbus:1.0.5.1'
     compile files('libs/volley.jar')
     compile project(':slidingmenu')
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

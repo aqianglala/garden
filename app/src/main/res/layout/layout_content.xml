@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent"
+                                       android:background="@color/colorPrimary"
+                                       android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <FrameLayout
+            android:id="@+id/fl_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </FrameLayout>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_buy"
+                style="@style/RadioButton"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:text="我要订货"/>
+
+            <RadioButton
+                android:id="@+id/rb_back"
+                style="@style/RadioButton"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:text="我要退货"/>
+
+            <RadioButton
+                android:id="@+id/rb_change"
+                style="@style/RadioButton"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:text="我要换货"/>
+
+            <RadioButton
+                android:id="@+id/rb_orders"
+                style="@style/RadioButton"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:text="历史订单"/>
+        </RadioGroup>
+    </LinearLayout>
+</com.zhy.autolayout.AutoRelativeLayout>

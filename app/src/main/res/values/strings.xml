@@ -28,5 +28,9 @@
     <string name="yinlian">银联</string>
     <string name="total">合计：¥</string>
     <string name="confirm_pay">确认支付</string>
+    <string name="suggestion_feedback">建议反馈</string>
+    <string name="contact">联系客服</string>
+    <string name="modify_pswd">联系客服</string>
+    <string name="exit_account">退出当前账号</string>
 
 </resources>
