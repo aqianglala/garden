@@ -15,15 +15,22 @@
     <style name="RadioButton" >
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:button">@null</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@drawable/selector_tab_text</item>
+        <item name="android:textSize">@dimen/tab_text_size</item>
     </style>
     <style name="et_match_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">90px</item>
-        <item name="android:padding">20px</item>
+        <item name="android:paddingLeft">30px</item>
+        <item name="android:paddingRight">30px</item>
+        <item name="android:textSize">32px</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">@color/gray_c</item>
         <item name="android:background">@drawable/et_background</item>
     </style>
 
@@ -32,11 +39,12 @@
         <item name="android:layout_height">@dimen/btn_height</item>
         <item name="android:background">@drawable/btn_background</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_large</item>
     </style>
 
     <style name="menu_arrow">
-        <item name="android:layout_width">@dimen/menu_item_text</item>
-        <item name="android:layout_height">@dimen/menu_item_text</item>
+        <item name="android:layout_width">@dimen/text_middle</item>
+        <item name="android:layout_height">@dimen/text_middle</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">47px</item>
@@ -49,7 +57,7 @@
         <item name="android:padding">50px</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:textColor">@color/menu_item_text</item>
-        <item name="android:textSize">@dimen/menu_item_text</item>
+        <item name="android:textSize">@dimen/text_middle</item>
     </style>
 
     <style name="menu_line">
@@ -64,6 +72,28 @@
         <item name="background">?attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="item_gray_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/item_text_small</item>
+        <item name="android:textColor">@color/gray_darker</item>
+    </style>
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:background="?attr/selectableItemBackground"
+    android:textColor="@color/black_text"
+    android:textSize="@dimen/text_middle"
+    <style name="tab_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textSize">@dimen/text_middle</item>
     </style>
 
 </resources>

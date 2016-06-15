@@ -11,25 +11,26 @@
     tools:context="com.softgarden.garden.view.login.LoginActivity">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="116px"
+        android:layout_height="178px"
         android:layout_gravity="center_horizontal"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/logo"/>
 
     <EditText
         android:id="@+id/et_account"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/et_match_style"
         android:hint="@string/input_account"
-        android:drawableLeft="@mipmap/ic_launcher"/>
+        android:drawablePadding="20px"
+        android:layout_marginTop="60px"
+        android:drawableLeft="@mipmap/zhnaghao"/>
 
     <EditText
         android:id="@+id/et_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/et_match_style"
         android:layout_marginTop="20px"
+        android:drawablePadding="22px"
         android:hint="@string/input_password"
-        android:drawableLeft="@mipmap/ic_launcher"/>
+        android:drawableLeft="@mipmap/mima"/>
 
     <Button
         android:id="@+id/btn_login"
@@ -42,7 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginTop="10px"
+        android:layout_marginTop="20px"
         android:clickable="true"
+        android:textSize="28px"
+        android:textColor="@color/gray_darkest"
         android:text="@string/forget_pswd"/>
 </com.zhy.autolayout.AutoLinearLayout>

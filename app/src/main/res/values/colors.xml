@@ -5,10 +5,17 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="bg_gray">#F5F5F5</color>
+    <color name="bg_white">#ffffff</color>
     <color name="btn_bg_color">#E6003E</color>
     <color name="menu_item_text">#666666</color>
     <color name="menu_line">#e0e0e0</color>
-    <color name="menu_login_text">#999999</color>
+    <color name="gray_c">#cccccc</color>
+    <color name="gray_darkest">#666666</color>
 
+    <color name="gray_darker">#999999</color>
+    <color name="pink_text">#e6003e</color>
+    <color name="black_text">#333333</color>
+    <color name="white_text">#ffffff</color>
+    <color name="blue">#007aff</color>
 
 </resources>

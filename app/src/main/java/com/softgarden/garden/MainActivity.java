@@ -157,4 +157,5 @@ public class MainActivity extends BaseActivity {
         menu_params.height = ScreenUtils.getStatusBarHeight(this);
         view_menu.setLayoutParams(menu_params);
     }
+
 }

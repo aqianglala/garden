@@ -9,13 +9,15 @@
     <com.zhy.autolayout.AutoRelativeLayout
         android:id="@+id/rl_total"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100px"
         android:background="@android:color/white"
-        android:padding="32px">
+        android:padding="@dimen/content_padding">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/black_text"
             android:text="@string/total_price"/>
 
         <TextView
@@ -23,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:textSize="@dimen/text_middle"
             android:textColor="@color/colorPrimary"
             android:text="@string/total_price"/>
 
@@ -33,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="50px"
         android:paddingLeft="32px"
         android:paddingRight="32px"
         android:paddingBottom="32px"
@@ -43,6 +46,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:layout_marginTop="32px"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/black_text"
             android:text="@string/choose_pay"/>
         
         <ListView

@@ -2,6 +2,7 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                      android:layout_width="match_parent"
                                      android:layout_height="match_parent"
+                                     android:background="@android:color/white"
                                      android:orientation="vertical">
 
     <View
@@ -9,84 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="@dimen/menu_avator"
-        android:layout_height="@dimen/menu_avator"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50px"
-        android:src="@mipmap/touxiang"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="0dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20px"
-        android:text="@string/login"
-        android:textColor="@color/menu_login_text"
-        android:textSize="@dimen/menu_login_text"/>
-
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:id="@+id/rl_feedback"
-        style="@style/menu_rl">
-
-        <TextView
-            style="@style/menu_item_text"
-            android:text="@string/suggestion_feedback"/>
-
-        <ImageView
-            style="@style/menu_arrow"/>
-
-    </com.zhy.autolayout.AutoRelativeLayout>
-
-    <View
-        style="@style/menu_line"/>
-
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:id="@+id/rl_modify_pswd"
-        style="@style/menu_rl">
-
-        <TextView
-            style="@style/menu_item_text"
-            android:text="@string/modify_pswd"/>
-
-        <ImageView
-            style="@style/menu_arrow"/>
-
-    </com.zhy.autolayout.AutoRelativeLayout>
-
-    <View
-        style="@style/menu_line"/>
-
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:id="@+id/rl_contact"
-        style="@style/menu_rl">
-
-        <TextView
-            style="@style/menu_item_text"
-            android:text="@string/contact"/>
-
-        <ImageView
-            style="@style/menu_arrow"/>
-
-    </com.zhy.autolayout.AutoRelativeLayout>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/btn_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:clickable="true"
-        android:background="@drawable/shape_logout"
-        android:layout_marginBottom="110px"
-        android:text="@string/exit_account"/>
+    <fragment
+        android:id="@+id/fm_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.softgarden.garden.MenuFragment"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

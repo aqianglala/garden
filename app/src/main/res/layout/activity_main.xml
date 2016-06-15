@@ -26,7 +26,9 @@
             sliding:behindScrollScale="1"
             sliding:fadeDegree="0.7"
             sliding:fadeEnabled="true"
-            sliding:touchModeAbove="margin"
+            sliding:shadowDrawable="@drawable/shadow"
+            sliding:shadowWidth="15dp"
+            sliding:touchModeAbove="none"
             sliding:viewBehind="@layout/layout_menu"
             sliding:viewAbove="@layout/layout_content" />
     </com.zhy.autolayout.AutoLinearLayout>
