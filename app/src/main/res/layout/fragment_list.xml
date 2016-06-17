@@ -10,10 +10,36 @@
         android:layout_width="200px"
         android:layout_height="match_parent"/>
 
-    <ListView
-        android:id="@+id/lv_content"
+    <View
+        android:layout_width="@dimen/line_height"
+        android:layout_height="match_parent"
+        android:background="@color/menu_line"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="64px"
+            android:paddingLeft="30px"
+            android:gravity="center_vertical"
+            android:textSize="28px"
+            android:textColor="@color/gray_darkest"
+            android:text="忌廉面包"
+            android:background="@color/bg_gray"/>
+
+        <ListView
+            android:id="@+id/lv_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/bg_white"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
 
 </com.zhy.autolayout.AutoLinearLayout>

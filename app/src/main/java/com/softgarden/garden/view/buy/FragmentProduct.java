@@ -103,4 +103,9 @@ public class FragmentProduct extends BaseFragment{
             contentAdapter.notifyDataSetChanged();
         }
     }
+
+    public void setSelection(int position){
+        lv_content.setSelection(position);
+    }
+
 }

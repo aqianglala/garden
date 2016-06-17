@@ -76,16 +76,10 @@
     <style name="item_gray_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/item_text_small</item>
+        <item name="android:textSize">24px</item>
         <item name="android:textColor">@color/gray_darker</item>
     </style>
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:gravity="center"
-    android:background="?attr/selectableItemBackground"
-    android:textColor="@color/black_text"
-    android:textSize="@dimen/text_middle"
+
     <style name="tab_text">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -94,6 +88,20 @@
         <item name="android:clickable">true</item>
         <item name="android:textColor">@color/black_text</item>
         <item name="android:textSize">@dimen/text_middle</item>
+    </style>
+
+    <style name="line_horizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/line_height</item>
+        <item name="android:background">@color/menu_line</item>
+    </style>
+    <style name="order_gray_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/gray_8</item>
+        <item name="android:textSize">@dimen/text_30px</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
 </resources>

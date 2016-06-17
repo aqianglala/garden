@@ -2,7 +2,7 @@
 <com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="580px"
-    android:layout_height="220px"
+    android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog_call"
     android:orientation="vertical">
 
@@ -21,8 +21,7 @@
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="90px"
         android:orientation="horizontal">
 
         <TextView

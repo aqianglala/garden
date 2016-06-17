@@ -58,7 +58,8 @@
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80px"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/bg_white">
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
@@ -70,12 +71,12 @@
                         android:id="@+id/tv_bread"
                         style="@style/tab_text"
                         android:background="?attr/selectableItemBackground"
-                        android:text="面包"/>
+                        android:text="@string/bread"/>
                     <TextView
                         android:id="@+id/tv_cake"
                         style="@style/tab_text"
                         android:background="?attr/selectableItemBackground"
-                        android:text="面包"/>
+                        android:text="@string/cake"/>
                 </com.zhy.autolayout.AutoLinearLayout>
                 <com.zhy.autolayout.AutoRelativeLayout
                     android:id="@+id/rl_indicator"
@@ -91,6 +92,11 @@
             </com.zhy.autolayout.AutoLinearLayout>
         </com.zhy.autolayout.AutoLinearLayout>
     </cn.bingoogolapple.refreshlayout.BGARefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/menu_line"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

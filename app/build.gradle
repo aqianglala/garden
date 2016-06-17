@@ -38,4 +38,6 @@ dependencies {
     compile project(':slidingmenu')
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.bigkoo:convenientbanner:2.0.5'
+
+    compile 'com.prolificinteractive:material-calendarview:1.4.0'
 }

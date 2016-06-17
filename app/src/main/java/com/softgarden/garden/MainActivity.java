@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,9 @@ import com.softgarden.garden.view.back.BackFragment;
 import com.softgarden.garden.view.buy.BuyFragment;
 import com.softgarden.garden.view.change.ChangeFragment;
 import com.softgarden.garden.view.historyOrders.OrderFragment;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 public class MainActivity extends BaseActivity {
 
@@ -38,6 +42,9 @@ public class MainActivity extends BaseActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             setViewHeight();
         }
+        // register the receiver object
+        EventBus.getDefault().register(this);
+
         menu = getViewById(R.id.slidingmenulayout);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
     }
@@ -138,6 +145,19 @@ public class MainActivity extends BaseActivity {
         if(menu.isMenuShowing()){
             menu.showContent();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Don’t forget to unregister !!
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscriber(tag = "my_tag")
+    private void closeMenu(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        menu.showContent();
     }
 
     public void toggle(){

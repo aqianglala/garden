@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin"
+        android:background="@color/bg_gray"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true">
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="74px"
+        android:textSize="@dimen/text_small"
+        android:textColor="@color/gray_8"
+        android:text="2016-07-05"
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        android:gravity="center_vertical"/>
+
+    <View
+        style="@style/line_horizontal"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:orientation="horizontal"
+        android:paddingLeft="20px"
+        android:paddingRight="20px">
+
+        <ImageView
+            android:layout_width="40px"
+            android:layout_height="50px"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/black_text"
+            android:text="2016070556254"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:gravity="center_vertical"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <View
+        style="@style/line_horizontal"/>
+    
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="210px"
+        android:orientation="horizontal"
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        android:paddingBottom="20px">
+
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/order_gray_text"
+                    android:text="商品总数："/>
+                <TextView
+                    style="@style/order_gray_text"
+                    android:text="订单金额："/>
+
+                <TextView
+                    style="@style/order_gray_text"
+                    android:layout_width="match_parent"
+                    android:gravity="right|center_vertical"
+                    android:text="退货率："/>
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_amount"
+                    style="@style/order_gray_text"
+                    android:text="88件"/>
+                <TextView
+                    android:id="@+id/tv_price"
+                    style="@style/order_gray_text"
+                    android:text="￥550"/>
+                <TextView
+                    android:id="@+id/tv_back"
+                    style="@style/order_gray_text"
+                    android:text="5.8%"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
+        
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_width="160px"
+            android:layout_height="60px"
+            android:clickable="true"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/white_text"
+            android:text="订单详情"
+            android:gravity="center"
+            android:background="@drawable/shape_bg_yellow"
+            android:layout_gravity="bottom"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>
