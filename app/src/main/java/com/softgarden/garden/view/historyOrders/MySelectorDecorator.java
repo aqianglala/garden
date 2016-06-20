@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.sample.R;
+import com.softgarden.garden.jiadun_android.R;
 
 /**
  * Use a custom selector
@@ -16,7 +16,7 @@ public class MySelectorDecorator implements DayViewDecorator {
     private final Drawable drawable;
 
     public MySelectorDecorator(Activity context) {
-        drawable = context.getResources().getDrawable(R.drawable.my_selector);
+        drawable = context.getResources().getDrawable(R.drawable.selector_calendar_default);
     }
 
     @Override

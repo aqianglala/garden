@@ -1,9 +1,9 @@
 package com.softgarden.garden.view.historyOrders;
 
-import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +11,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.softgarden.garden.jiadun_android.R;
 
 import java.util.Calendar;
 

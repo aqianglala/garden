@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.softgarden.garden.jiadun_android.R;
+
 import java.util.ArrayList;
 
 /**
@@ -61,7 +63,7 @@ public class PickerListAdapter extends BaseAdapter {
         ViewHolder holder;
         if(convertView == null){
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_list, parent, false);
+            convertView = inflater.inflate(R.layout.item_dialog_list, parent, false);
             holder.textView = (TextView) convertView.findViewById(R.id.textview);
             convertView.setTag(holder);
         }else{

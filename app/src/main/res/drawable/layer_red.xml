@@ -10,7 +10,7 @@
     <item android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp">
         <shape android:shape="oval">
             <solid
-                android:color="#99d54b"/>
+                android:color="@color/calendar_red"/>
         </shape>
     </item>
 </layer-list>

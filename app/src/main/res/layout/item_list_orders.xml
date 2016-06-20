@@ -16,19 +16,6 @@
         android:orientation="vertical"
         android:background="?attr/selectableItemBackground"
         android:clickable="true">
-    <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="match_parent"
-        android:layout_height="74px"
-        android:textSize="@dimen/text_small"
-        android:textColor="@color/gray_8"
-        android:text="2016-07-05"
-        android:paddingLeft="20px"
-        android:paddingRight="20px"
-        android:gravity="center_vertical"/>
-
-    <View
-        style="@style/line_horizontal"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"

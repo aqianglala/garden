@@ -19,5 +19,7 @@
     <color name="blue">#007aff</color>
     <color name="gray_8">#808080</color>
     <color name="yellow">#F2B533</color>
+    <color name="calendar_red">#e4230c</color>
+    <color name="calendar_blue">#6aaae1</color>
 
 </resources>
