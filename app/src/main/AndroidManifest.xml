@@ -1,42 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.softgarden.garden.jiadun_android">
+<manifest package="com.softgarden.garden.jiadun_android"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
+        android:name="com.softgarden.garden.global.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name="com.softgarden.garden.global.BaseApplication"
         android:theme="@style/AppTheme">
-        <meta-data android:name="design_width" android:value="750">
+        <meta-data
+            android:name="design_width"
+            android:value="750">
         </meta-data>
-        <meta-data android:name="design_height" android:value="1334">
+        <meta-data
+            android:name="design_height"
+            android:value="1334">
         </meta-data>
 
         <activity
             android:name="com.softgarden.garden.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/FullBleedTheme" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name="com.softgarden.garden.SplashActivity"
-            android:theme="@style/FullBleedTheme">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.softgarden.garden.view.shopcar.ShopcarActivity" />
-        <activity android:name="com.softgarden.garden.view.login.LoginActivity" />
-        <activity android:name="com.softgarden.garden.view.password.ForgetPswdActivity" />
-        <activity android:name="com.softgarden.garden.view.password.ForgetNextActivity" />
-        <activity android:name="com.softgarden.garden.view.pay.PayActivity" />
+        <activity
+            android:name="com.softgarden.garden.view.shopcar.ShopcarActivity"
+            android:label="@string/label_shopcar"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.softgarden.garden.view.login.LoginActivity"
+                  android:label="@string/lable_login"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.softgarden.garden.view.password.ForgetPswdActivity"
+            android:label="修改密码"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.softgarden.garden.view.password.ForgetNextActivity"
+                  android:label="@string/label_forget_pswd"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.softgarden.garden.view.pay.PayActivity"
+            android:label="@string/lable_pay"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.softgarden.garden.SuggestionActivity"
+            android:label="@string/lable_suggestion"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.softgarden.garden.view.historyOrders.OrderDetailActivity"
+                  android:label="@string/lable_order_detail"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.softgarden.garden.view.shopcar.ConfirmOrderActivity"
+            android:label="@string/confirm_order"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

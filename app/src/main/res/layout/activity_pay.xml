@@ -1,84 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
+    android:orientation="vertical"
     tools:context="com.softgarden.garden.view.pay.PayActivity">
 
+    <include layout="@layout/layout_toolbar"/>
+
     <com.zhy.autolayout.AutoRelativeLayout
-        android:id="@+id/rl_total"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:background="@android:color/white"
-        android:padding="@dimen/content_padding">
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_middle"
-            android:textColor="@color/black_text"
-            android:text="@string/total_price"/>
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:id="@+id/rl_total"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:background="@android:color/white"
+            android:padding="@dimen/content_padding">
 
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textSize="@dimen/text_middle"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/total_price"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price"
+                android:textColor="@color/black_text"
+                android:textSize="@dimen/text_middle"/>
 
-    </com.zhy.autolayout.AutoRelativeLayout>
-    
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_below="@id/rl_total"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:layout_marginTop="50px"
-        android:paddingLeft="32px"
-        android:paddingRight="32px"
-        android:paddingBottom="32px"
-        android:orientation="vertical">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_marginTop="32px"
-            android:textSize="@dimen/text_middle"
-            android:textColor="@color/black_text"
-            android:text="@string/choose_pay"/>
-        
-        <ListView
-            android:id="@+id/lv_pay"
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/total_price"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_middle"/>
+
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@null"></ListView>
-    </com.zhy.autolayout.AutoLinearLayout>
-    
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:layout_alignParentBottom="true">
-        
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/total"/>
+            android:layout_below="@id/rl_total"
+            android:layout_marginTop="50px"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingBottom="32px"
+            android:paddingLeft="32px"
+            android:paddingRight="32px">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:text="@string/confirm_pay"/>
-    </com.zhy.autolayout.AutoLinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32px"
+                android:text="@string/choose_pay"
+                android:textColor="@color/black_text"
+                android:textSize="@dimen/text_middle"/>
 
-</com.zhy.autolayout.AutoRelativeLayout>
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/ll_alipay"
+                android:layout_width="match_parent"
+                android:layout_height="90px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/shape_modify_order_normal"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="80px"
+                android:paddingRight="50px">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/zhifubao"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40px"
+                    android:layout_weight="1"
+                    android:text="支付宝"
+                    android:textColor="@color/black_text"
+                    android:textSize="28px"/>
+
+                <CheckBox
+                    android:id="@+id/cb_alipay"
+                    style="@style/checkbox"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/ll_weixin"
+                android:layout_width="match_parent"
+                android:layout_height="90px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/shape_modify_order_normal"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="80px"
+                android:paddingRight="50px">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/weixin"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40px"
+                    android:layout_weight="1"
+                    android:text="微信"
+                    android:textColor="@color/black_text"
+                    android:textSize="28px"/>
+
+                <CheckBox
+                    android:id="@+id/cb_weixin"
+                    style="@style/checkbox"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+
+            <com.zhy.autolayout.AutoLinearLayout
+                android:id="@+id/ll_yinlian"
+                android:layout_width="match_parent"
+                android:layout_height="90px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/shape_modify_order_normal"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="80px"
+                android:paddingRight="50px">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/yinlian"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40px"
+                    android:layout_weight="1"
+                    android:text="银联"
+                    android:textColor="@color/black_text"
+                    android:textSize="28px"/>
+
+                <CheckBox
+                    android:id="@+id/cb_yinlian"
+                    style="@style/checkbox"/>
+            </com.zhy.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="@string/total"
+                android:textColor="@color/colorPrimary"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="@string/confirm_pay"
+                android:textColor="@android:color/white"/>
+        </com.zhy.autolayout.AutoLinearLayout>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+</com.zhy.autolayout.AutoLinearLayout>

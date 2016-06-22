@@ -8,8 +8,24 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="FullBleedTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- API 19 theme customizations can go here. -->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="CustomDialog" parent="android:style/Theme.Dialog">
+
+        <!-- 背景颜色及透明程度 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否有标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否模糊 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowFrame">@null</item>
     </style>
 
     <style name="RadioButton" >
@@ -23,10 +39,22 @@
         <item name="android:textColor">@drawable/selector_tab_text</item>
         <item name="android:textSize">@dimen/tab_text_size</item>
     </style>
+
+    <style name="radioButton_banner_item" >
+        <item name="android:layout_width">180px</item>
+        <item name="android:layout_height">70px</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginLeft">35px</item>
+        <item name="android:layout_marginRight">35px</item>
+        <item name="android:background">@drawable/selector_banner_item</item>
+        <item name="android:textColor">@drawable/selector_banner_item_text</item>
+        <item name="android:textSize">30px</item>
+    </style>
     <style name="et_match_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">90px</item>
-        <item name="android:paddingLeft">30px</item>
+        <item name="android:paddingLeft">20px</item>
         <item name="android:paddingRight">30px</item>
         <item name="android:textSize">32px</item>
         <item name="android:singleLine">true</item>
@@ -86,7 +114,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
-        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColor">@color/white_text</item>
         <item name="android:textSize">@dimen/text_middle</item>
     </style>
 
@@ -102,6 +130,13 @@
         <item name="android:textColor">@color/gray_8</item>
         <item name="android:textSize">@dimen/text_30px</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="checkbox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@drawable/selector_item_check</item>
     </style>
 
 </resources>

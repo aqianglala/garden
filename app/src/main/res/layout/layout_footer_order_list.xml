@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                     android:layout_width="match_parent"
+                                     android:layout_height="wrap_content"
+                                     android:background="@color/bg_white"
+                                     android:orientation="vertical"
+                                     android:padding="@dimen/margin">
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="备注："
+        android:textColor="@color/black_text"
+        android:textSize="@dimen/text_middle"
+        />
+
+    <EditText
+        android:id="@+id/et_remarks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@color/bg_gray"
+        android:gravity="start"
+        android:hint="请在这里添加备注（100字以内）"
+        android:minLines="4"
+        android:padding="10px"
+        android:textSize="26px"
+        />
+
+</com.zhy.autolayout.AutoLinearLayout>

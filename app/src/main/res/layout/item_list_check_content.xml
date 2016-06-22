@@ -5,12 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="vertical"
+    android:background="@color/bg_white"
+    android:orientation="horizontal"
     android:paddingBottom="10px"
     android:paddingLeft="20px"
     android:paddingRight="20px"
     android:paddingTop="20px">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="30px"
+        style="@style/checkbox"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
@@ -109,30 +120,6 @@
             android:textColor="@color/colorPrimary"
             android:textSize="28px"/>
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/item_gray_text"
-                android:text="团购"/>
-
-            <EditText
-                android:id="@+id/et_group"
-                android:layout_width="62px"
-                android:layout_height="32px"
-                android:layout_marginLeft="20px"
-                android:background="@drawable/shape_et_group_bg"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="2"
-                android:text="0"
-                android:textColor="@color/pink_text"
-                android:textSize="12sp"/>
-        </com.zhy.autolayout.AutoLinearLayout>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="180px"
@@ -160,7 +147,7 @@
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="3"
-                android:text="0"
+                android:text="1"
                 android:textColor="@color/pink_text"
                 android:textSize="26px"/>
 
@@ -174,4 +161,6 @@
                 android:clickable="true"/>
         </com.zhy.autolayout.AutoRelativeLayout>
     </com.zhy.autolayout.AutoRelativeLayout>
+
+    </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoLinearLayout>

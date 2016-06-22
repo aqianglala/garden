@@ -1,13 +1,17 @@
 package com.softgarden.garden;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -19,8 +23,8 @@ import com.softgarden.garden.utils.L;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.BackFragment;
 import com.softgarden.garden.view.buy.BuyFragment;
-import com.softgarden.garden.view.change.ChangeFragment;
 import com.softgarden.garden.view.historyOrders.OrderFragment;
+import com.softgarden.garden.view.password.ForgetPswdActivity;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -30,7 +34,7 @@ public class MainActivity extends BaseActivity {
     private RadioGroup radioGroup;
     private BuyFragment buyFragment;
     private BackFragment backFragment;
-    private ChangeFragment changeFragment;
+    private BackFragment changeFragment;
     private OrderFragment orderFragment;
     private SlidingMenu menu;
 
@@ -70,6 +74,9 @@ public class MainActivity extends BaseActivity {
                     case R.id.rb_back:
                         if (backFragment == null) {
                             backFragment = new BackFragment();
+                            Bundle backBundle = new Bundle();
+                            backBundle.putBoolean("isBack",true);
+                            backFragment.setArguments(backBundle);
                             ft.add(R.id.fl_content, backFragment);
                         } else {
                             ft.show(backFragment);
@@ -77,7 +84,10 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.rb_change:
                         if (changeFragment == null) {
-                            changeFragment = new ChangeFragment();
+                            changeFragment = new BackFragment();
+                            Bundle changeBundle = new Bundle();
+                            changeBundle.putBoolean("isBack",false);
+                            changeFragment.setArguments(changeBundle);
                             ft.add(R.id.fl_content, changeFragment);
                         } else {
                             ft.show(changeFragment);
@@ -100,6 +110,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         radioGroup.check(R.id.rb_buy);
+        showModifyDialog();
     }
 
     /**
@@ -176,6 +187,30 @@ public class MainActivity extends BaseActivity {
         ViewGroup.LayoutParams menu_params = view_menu.getLayoutParams();
         menu_params.height = ScreenUtils.getStatusBarHeight(this);
         view_menu.setLayoutParams(menu_params);
+    }
+
+    private void showModifyDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_modify, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view)
+                .setCancelable(false).create();
+        // 点击跳转到修改密码页面
+        view.findViewById(R.id.btn_modify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ForgetPswdActivity.class));
+                alertDialog.dismiss();
+            }
+        });
+        Window window = alertDialog.getWindow();
+        // 设置背景透明，以实现圆角
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+
+        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
+        attributes.height = (int) (ScreenUtils.getScreenWidth(this));
+        window.setAttributes(attributes);
     }
 
 }

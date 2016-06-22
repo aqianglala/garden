@@ -1,6 +1,7 @@
 package com.softgarden.garden.view.historyOrders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +128,8 @@ public class OrderAdapter extends BaseAdapter {
                 holderView.tv_detail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // 更新第一项数据，并收缩列表
+                        // 跳转到详情页
+                        context.startActivity(new Intent(context,OrderDetailActivity.class));
                     }
                 });
                 break;

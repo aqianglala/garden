@@ -12,7 +12,7 @@
     <dimen name="slidingmenu_offset">60dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
 
-    <dimen name="text_middle">16sp</dimen>
+    <dimen name="text_middle">32px</dimen>
     <dimen name="text_small">28px</dimen>
     <dimen name="menu_avator">164px</dimen>
     <dimen name="menu_line_width">300px</dimen>

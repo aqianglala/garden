@@ -1,7 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-</LinearLayout>
+    <com.softgarden.garden.widget.MyRadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb1"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+            <RadioButton
+                android:id="@+id/rb2"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+            <RadioButton
+                android:id="@+id/rb3"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34px"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb4"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+            <RadioButton
+                android:id="@+id/rb5"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+            <RadioButton
+                android:id="@+id/rb6"
+                style="@style/radioButton_banner_item"
+                android:text="生命包"/>
+
+        </com.zhy.autolayout.AutoLinearLayout>
+    </com.softgarden.garden.widget.MyRadioGroup>
+</com.zhy.autolayout.AutoLinearLayout>

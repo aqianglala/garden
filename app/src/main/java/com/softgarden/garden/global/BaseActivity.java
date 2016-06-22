@@ -4,16 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.L;
+import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     public String TAG;
     protected BaseApplication mApp;
+    private TextView tv_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +29,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
         initView(savedInstanceState);
         if(!TAG.equals("MainActivity")&&!TAG.equals("SplashActivity")){
+            Toolbar toolbar = getViewById(R.id.toolBar);
+            setSupportActionBar(toolbar);
+            tv_title = getViewById(R.id.tv_title);
+            // 设置状态栏为红色
+            StatusBarUtils.setColor(this, getResources().getColor(R.color.colorPrimary));
+            // 设置显示返回键
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
         setListener();
         processLogic(savedInstanceState);
@@ -85,5 +97,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy() {
         L.i(TAG,"关闭请求");
         super.onDestroy();
+    }
+
+    // 在Activity的onPostCreate与onTitleChanged中都会调用这个方法，可以在这个方法中设置toolbar的标题，标题根据menifest中指定的
+    @Override
+    protected void onTitleChanged(CharSequence title, int color) {
+        super.onTitleChanged(title, color);
+        if(tv_title!=null){
+            tv_title.setText(title);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.softgarden.garden.view.historyOrders;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.softgarden.garden.MainActivity;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.shopcar.ShopcarActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import java.util.Date;
 public class OrderFragment extends BaseFragment implements OnDateSelectedListener{
 
     private ImageView iv_me;
-    private ImageView iv_shopcar;
     private MainActivity mActivity;
     private ListView lv_orders;
     private ArrayList<OrderBeanTest> mData;
@@ -40,7 +37,6 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_orders);
         iv_me = getViewById(R.id.iv_me);
-        iv_shopcar = getViewById(R.id.iv_shopCar);
         mActivity = (MainActivity)getActivity();
 
         getData();
@@ -96,7 +92,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     private void getData() {
         mData = new ArrayList<>();
-        for(int i = 0;i<3;i++){
+        for(int i = 0;i<20;i++){
             OrderBeanTest orderBeanTest = new OrderBeanTest();
             Calendar instance = Calendar.getInstance();
             instance.add(Calendar.DAY_OF_MONTH,-(i+1));
@@ -114,7 +110,6 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Override
     protected void setListener() {
         iv_me.setOnClickListener(this);
-        iv_shopcar.setOnClickListener(this);
     }
 
     @Override
@@ -133,9 +128,6 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         switch (v.getId()){
             case R.id.iv_me:
                 mActivity.toggle();
-                break;
-            case R.id.iv_shopCar:
-                startActivity(new Intent(mActivity, ShopcarActivity.class));
                 break;
             case R.id.view_choose:
                 // 弹出时间选择框

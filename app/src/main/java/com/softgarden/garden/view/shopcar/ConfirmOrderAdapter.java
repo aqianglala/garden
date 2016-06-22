@@ -11,11 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.historyOrders.OrderBeanTest;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by qiang-pc on 2016/6/17.
@@ -26,13 +23,13 @@ public class ConfirmOrderAdapter extends BaseAdapter {
     private final int ITEM_STRETCH = 1;
 
     private LayoutInflater inflater;
-    private ArrayList<OrderBeanTest>data;
-    private ArrayList<OrderBeanTest>tempData = new ArrayList<>();
+    private ArrayList<String>data;
+    private ArrayList<String>tempData = new ArrayList<>();
     private Context context;
 
     private boolean isOpen;
 
-    public ConfirmOrderAdapter(ArrayList<OrderBeanTest> data, Context context) {
+    public ConfirmOrderAdapter(ArrayList<String> data, Context context) {
         this.data = data;
         tempData.addAll(data);
         this.context = context;
@@ -55,9 +52,11 @@ public class ConfirmOrderAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if(!isOpen){// 收缩
+        if(!isOpen){// 收缩,默认显示三条
             data.clear();
-            data.add(tempData.get(0));
+            for(int i=0;i<3;i++){
+                data.add(tempData.get(i));
+            }
         }else{// 展开
             data.clear();
             data.addAll(tempData);
@@ -83,12 +82,8 @@ public class ConfirmOrderAdapter extends BaseAdapter {
             holderView = new HolderView();
             switch (itemViewType){
                 case ITEM_ORDER:
-                    convertView = inflater.inflate(R.layout.item_list_orders,parent,false);
-                    holderView.tv_number = (TextView) convertView.findViewById(R.id.tv_number);
-                    holderView.tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
-                    holderView.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-                    holderView.tv_back = (TextView) convertView.findViewById(R.id.tv_back);
-                    holderView.tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
+                    convertView = inflater.inflate(R.layout.item_order_detail,parent,false);
+                    holderView.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
                     break;
                 case ITEM_STRETCH:
                     convertView = inflater.inflate(R.layout.item_more,parent,false);
@@ -104,33 +99,8 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         switch (itemViewType){
             case ITEM_ORDER:
                 // 设置数据
-                if(isCalendarClick){
-                    if(selectedPosition !=-1){
-                        data.clear();
-                        data.add(tempData.get(selectedPosition));
-                    }else{
-                        data.clear();
-                        OrderBeanTest orderBeanTest = new OrderBeanTest();
-                        orderBeanTest.setBack("%0");
-                        orderBeanTest.setPrice(0);
-                        orderBeanTest.setAmount(0);
-                        orderBeanTest.setNumber("0");
-                        data.add(orderBeanTest);
-                    }
-                    selectedPosition = -1;
-                    isCalendarClick = false;
-                }
-                OrderBeanTest item = data.get(position);
-                holderView.tv_number.setText(item.getNumber());
-                holderView.tv_amount.setText(item.getAmount()+"");
-                holderView.tv_price.setText("￥"+item.getPrice());
-                holderView.tv_back.setText(item.getBack());
-                holderView.tv_detail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 更新第一项数据，并收缩列表
-                    }
-                });
+                String item = data.get(position);
+                holderView.tv_name.setText(item);
                 break;
             case ITEM_STRETCH:
                 if(isOpen){
@@ -143,7 +113,9 @@ public class ConfirmOrderAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         if(isOpen){// 收缩
                             data.clear();
-                            data.add(tempData.get(0));
+                            for(int i=0;i<3;i++){
+                                data.add(tempData.get(i));
+                            }
                             isOpen = !isOpen;
                             notifyDataSetChanged();
                             ((ListView)parent).setSelection(0);
@@ -159,29 +131,13 @@ public class ConfirmOrderAdapter extends BaseAdapter {
         }
         return convertView;
     }
-    private int selectedPosition = -1;
-    private boolean isCalendarClick;
-    public void showDetail(Date date){
-        isCalendarClick = true;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String seletedDate = format.format(date);
-        for(int i=0;i<tempData.size();i++){
-            if(seletedDate.equals(tempData.get(i).getDate())){
-                selectedPosition = i;
-                // 跳出循环
-                break;
-            }
-        }
-        isOpen = false;
-        notifyDataSetChanged();
-    }
 
     class HolderView{
-        TextView tv_number;
-        TextView tv_amount;
-        TextView tv_price;
-        TextView tv_back;
-        TextView tv_detail;
+        TextView tv_name;
+//        TextView tv_amount;
+//        TextView tv_price;
+//        TextView tv_back;
+//        TextView tv_detail;
         LinearLayout ll_more;
         ImageView imageView;
     }

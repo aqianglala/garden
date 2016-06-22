@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,6 +31,18 @@ public class ModifyOrderAdapter extends BaseAdapter {
 
     private boolean isOpen;
     private boolean isEditable;
+
+    private ModifyCountInterface modifyCountInterface;
+
+    public void setModifyCountInterface(ModifyCountInterface modifyCountInterface)
+    {
+        this.modifyCountInterface = modifyCountInterface;
+    }
+
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
+    }
 
     public ModifyOrderAdapter(ArrayList<String> data, Context context) {
         this.data = data;
@@ -77,7 +90,7 @@ public class ModifyOrderAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         int itemViewType = getItemViewType(position);
         HolderView holderView = null;
         if(convertView == null){
@@ -87,6 +100,9 @@ public class ModifyOrderAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.item_order_detail,parent,false);
                     holderView.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
                     holderView.tv_numb = (TextView) convertView.findViewById(R.id.tv_numb);
+                    holderView.tv_minus = (TextView) convertView.findViewById(R.id.tv_minus);
+                    holderView.tv_plus = (TextView) convertView.findViewById(R.id.tv_plus);
+                    holderView.et_total = (EditText) convertView.findViewById(R.id.et_total);
                     holderView.rl_modify_numb = (RelativeLayout) convertView.findViewById(R.id.rl_modify_numb);
                     break;
                 case ITEM_STRETCH:
@@ -107,6 +123,29 @@ public class ModifyOrderAdapter extends BaseAdapter {
                 holderView.tv_name.setText(item);
                 holderView.rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);
                 holderView.tv_numb.setVisibility(isEditable?View.GONE:View.VISIBLE);
+                final HolderView finalHolderView = holderView;
+                holderView.tv_plus.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        int count = Integer.parseInt(finalHolderView.et_total.getText().toString()
+                                .trim());
+                        finalHolderView.et_total.setText(++count+"");
+                        modifyCountInterface.doIncrease(position,count);// 暴露增加接口
+                    }
+                });
+                holderView.tv_minus.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        int count = Integer.parseInt(finalHolderView.et_total.getText().toString()
+                                .trim());
+                        finalHolderView.et_total.setText(--count+"");
+                        modifyCountInterface.doDecrease(position,count);// 暴露删减接口
+                    }
+                });
                 break;
             case ITEM_STRETCH:
                 if(isOpen){
@@ -141,12 +180,23 @@ public class ModifyOrderAdapter extends BaseAdapter {
     class HolderView{
         TextView tv_name;
         TextView tv_numb;
-//        TextView tv_amount;
-//        TextView tv_price;
-//        TextView tv_back;
+        TextView tv_minus;
+        EditText et_total;
+        TextView tv_plus;
 //        TextView tv_detail;
         LinearLayout ll_more;
         ImageView imageView;
         RelativeLayout rl_modify_numb;
+    }
+
+    /**
+     * 改变数量的接口
+     *
+     *
+     */
+    public interface ModifyCountInterface
+    {
+        public void doIncrease(int position, int currentCount);
+        public void doDecrease(int position, int currentCount);
     }
 }

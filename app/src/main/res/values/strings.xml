@@ -9,6 +9,7 @@
     <string name="input_password">请输入密码</string>
     <string name="login">登录</string>
     <string name="forget_pswd">忘记密码？</string>
+    <string name="label_forget_pswd">忘记密码</string>
 
     <string name="input_phone_number">输入手机号</string>
     <string name="input_verification_code">输入验证码</string>
@@ -22,18 +23,38 @@
     <string name="complete">完成</string>
 
     <string name="total_price">总金额</string>
+    <string name="order_date">订货日期</string>
     <string name="choose_pay">选择支付方式</string>
     <string name="alipay">支付宝</string>
     <string name="weChat">微信</string>
     <string name="yinlian">银联</string>
     <string name="total">合计：¥</string>
     <string name="confirm_pay">确认支付</string>
+    <string name="commit_order">提交订单</string>
     <string name="suggestion_feedback">建议反馈</string>
     <string name="contact">联系客服</string>
-    <string name="modify_pswd">联系客服</string>
+    <string name="modify_pswd">修改密码</string>
     <string name="exit_account">退出当前账号</string>
     <string name="phone">400-88-8888</string>
     <string name="cake">蛋糕</string>
     <string name="bread">面包</string>
+    <string name="confirm_change">确认换货</string>
+    <string name="confirm_back">确认退货</string>
+    <string name="commit">提交</string>
+    <string name="complaint">投诉</string>
+    <string name="suggestion">建议</string>
+    <string name="suggestion_hint">嘉顿还在不断成长中，需要持续不断地改进。希望您多提建议和想法，您留下来的每个字都用来改善我们的产品。</string>
+    <string name="lable_suggestion">意见反馈</string>
+    <string name="overtime">已超明天配货下单时间，每天下次日单时间为当天16点前，如需帮助请联系400客服中心或返回下订后天的订单</string>
+    <string name="edit">编辑</string>
+    <string name="label_shopcar">购物车</string>
+    <string name="confirm_order">确认订单</string>
+    <string name="lable_pay">支付</string>
+    <string name="lable_order_detail">订单详情</string>
+    <string name="lable_login">登录</string>
+    <string name="address">地址：</string>
+    <string name="address_hint">确认收货地址无误，如有错误请联系客服！</string>
+    <string name="true_pay">实付款：</string>
+    <string name="cancel">取消</string>
 
 </resources>

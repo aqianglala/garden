@@ -1,13 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.zhy.autolayout.AutoLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.softgarden.garden.view.shopcar.ConfirmOrderActivity">
+    android:background="@color/bg_gray"
+    android:orientation="vertical"
+    tools:context="com.softgarden.garden.view.historyOrders.OrderDetailActivity">
 
-</RelativeLayout>
+    <include layout="@layout/layout_toolbar"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="138px"
+        android:background="@color/bg_white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/margin">
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                android:textColor="@color/black_text"
+                android:textSize="@dimen/text_middle"/>
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广州市天河区中山大道西新福大厦128号"
+                android:textColor="@color/black_text"
+                android:textSize="@dimen/text_middle"/>
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/address_hint"
+            android:textColor="@color/gray_darker"
+            android:textSize="@dimen/text_middle"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_weight="1"
+        android:background="@color/bg_white"></ListView>
+
+    <View
+        style="@style/line_horizontal"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="94px"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@color/bg_white">
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/true_pay"
+            android:textColor="@color/pink_text"
+            android:textSize="@dimen/text_middle"/>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30px"
+            android:gravity="right|center_vertical"
+            android:text="￥70.50"
+            android:textColor="@color/pink_text"
+            android:textSize="@dimen/text_middle"/>
+
+        <Button
+            android:id="@+id/btn_commit_order"
+            android:layout_width="210px"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:text="@string/confirm_order"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_large"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoLinearLayout>

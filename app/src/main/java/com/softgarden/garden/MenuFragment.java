@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
+import com.softgarden.garden.view.password.ForgetPswdActivity;
 
 import org.simple.eventbus.EventBus;
 
@@ -50,15 +51,12 @@ public class MenuFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        // 关闭侧滑菜单
-        // post a event with tag, the tag is like broadcast's action
-        EventBus.getDefault().post(new MessageBean("mr.simple"), "my_tag");
         switch (v.getId()) {
             case R.id.rl_feedback:
-
+                mActivity.startActivity(new Intent(mActivity,SuggestionActivity.class));
                 break;
             case R.id.rl_modify_pswd:
-
+                mActivity.startActivity(new Intent(mActivity,ForgetPswdActivity.class));
                 break;
             case R.id.rl_contact:
                 // 弹出提示框
@@ -67,6 +65,9 @@ public class MenuFragment extends BaseFragment {
 
                 break;
         }
+        // 关闭侧滑菜单
+        // post a event with tag, the tag is like broadcast's action
+        EventBus.getDefault().post(new MessageBean("mr.simple"), "my_tag");
     }
 
     private void showContactDialog() {
