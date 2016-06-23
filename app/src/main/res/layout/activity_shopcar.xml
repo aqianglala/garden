@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
     android:orientation="vertical"
-    tools:context="com.softgarden.garden.view.shopcar.ShopcarActivity">
+    tools:context="com.softgarden.garden.view.shopcar.activity.ShopcarActivity">
 
     <include layout="@layout/layout_toolbar"/>
 
@@ -37,14 +37,21 @@
 
     </com.zhy.autolayout.AutoRelativeLayout>
 
+    <View
+        style="@style/line_horizontal"/>
+
     <ExpandableListView
         android:id="@+id/exListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/bg_white"
         android:childIndicator="@null"
         android:groupIndicator="@null">
     </ExpandableListView>
+
+    <View
+        style="@style/line_horizontal"/>
 
 
     <com.zhy.autolayout.AutoLinearLayout
@@ -68,7 +75,7 @@
             android:textColor="@color/black_text"
             android:textSize="@dimen/text_small"/>
 
-        <FrameLayout
+        <com.zhy.autolayout.AutoFrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -81,6 +88,7 @@
                 android:textColor="@color/pink_text"
                 android:text="删除"
                 android:layout_marginRight="@dimen/margin"
+                android:visibility="gone"
                 android:layout_gravity="right|center_vertical"
                 android:background="@drawable/shape_get_code_normal"/>
 
@@ -94,7 +102,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30px"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -102,6 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
@@ -116,6 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="￥70.50"
+                        android:textSize="34px"
                         android:textColor="@color/colorPrimary"/>
                 </com.zhy.autolayout.AutoLinearLayout>
 
@@ -131,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:text="订单总数："
                         android:textColor="@color/gray_darker"
-                        android:textSize="34px"/>
+                        android:textSize="28px"/>
 
                     <TextView
                         android:id="@+id/tv_amount"
@@ -139,20 +149,20 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="25件"
+                        android:textSize="28px"
                         android:textColor="@color/gray_darker"/>
                 </com.zhy.autolayout.AutoLinearLayout>
             </com.zhy.autolayout.AutoLinearLayout>
 
             <Button
                 android:id="@+id/btn_commit_order"
-                android:layout_width="0dp"
+                android:layout_width="210px"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="@color/colorPrimary"
                 android:text="@string/commit_order"
                 android:textColor="@android:color/white"/>
         </com.zhy.autolayout.AutoLinearLayout>
-        </FrameLayout>
+        </com.zhy.autolayout.AutoFrameLayout>
     </com.zhy.autolayout.AutoLinearLayout>
 
 </com.zhy.autolayout.AutoLinearLayout>

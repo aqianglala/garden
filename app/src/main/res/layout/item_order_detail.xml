@@ -135,19 +135,30 @@
                 android:background="@mipmap/jian"
                 android:clickable="true"/>
 
-            <EditText
-                android:id="@+id/et_total"
+            <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="60px"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/layer_underline"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="3"
-                android:text="1"
-                android:textColor="@color/pink_text"
-                android:textSize="26px"/>
+                android:layout_marginLeft="10dp">
+
+                <EditText
+                    android:id="@+id/et_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="1"
+                    android:textColor="@color/pink_text"
+                    android:textSize="26px"/>
+
+                <View
+                    style="@style/line_horizontal"/>
+
+            </com.zhy.autolayout.AutoLinearLayout>
 
             <TextView
                 android:id="@+id/tv_plus"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
     android:orientation="vertical"
-    tools:context="com.softgarden.garden.SuggestionActivity">
+    tools:context="com.softgarden.garden.view.feedback.activity.SuggestionActivity">
 
     <include layout="@layout/layout_toolbar"/>
     <com.zhy.autolayout.AutoLinearLayout

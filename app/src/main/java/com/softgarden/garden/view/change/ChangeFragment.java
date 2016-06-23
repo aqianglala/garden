@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.softgarden.garden.MainActivity;
+import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.global.BaseFragment;
-import com.softgarden.garden.view.shopcar.ShopcarActivity;
+import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 
 /**
  * Created by Hasee on 2016/6/6.

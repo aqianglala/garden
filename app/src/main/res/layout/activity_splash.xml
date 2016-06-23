@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.softgarden.garden.SplashActivity">
+    tools:context="com.softgarden.garden.view.main.activity.SplashActivity">
 
     <TextView
         android:layout_width="match_parent"

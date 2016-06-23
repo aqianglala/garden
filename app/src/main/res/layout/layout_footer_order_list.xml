@@ -22,9 +22,8 @@
         android:background="@color/bg_gray"
         android:gravity="start"
         android:hint="请在这里添加备注（100字以内）"
-        android:minLines="4"
+        android:minLines="5"
         android:padding="10px"
-        android:textSize="26px"
-        />
+        android:textSize="28px"/>
 
 </com.zhy.autolayout.AutoLinearLayout>

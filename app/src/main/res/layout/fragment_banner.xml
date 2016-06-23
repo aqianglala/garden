@@ -2,11 +2,11 @@
 <com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 
     <com.softgarden.garden.widget.MyRadioGroup
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="215px">
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
@@ -54,4 +54,5 @@
 
         </com.zhy.autolayout.AutoLinearLayout>
     </com.softgarden.garden.widget.MyRadioGroup>
+
 </com.zhy.autolayout.AutoLinearLayout>

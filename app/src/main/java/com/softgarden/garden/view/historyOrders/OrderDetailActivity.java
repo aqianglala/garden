@@ -1,18 +1,23 @@
 package com.softgarden.garden.view.historyOrders;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.view.historyOrders.adapter.ModifyOrderAdapter;
 
 import java.util.ArrayList;
 
-public class OrderDetailActivity extends BaseActivity implements ModifyOrderAdapter.ModifyCountInterface{
+public class OrderDetailActivity extends BaseActivity implements ModifyCountInterface{
 
 
     private ListView listview;
@@ -83,14 +88,27 @@ public class OrderDetailActivity extends BaseActivity implements ModifyOrderAdap
         }
     }
 
+
     @Override
-    public void doIncrease(int position, int currentCount) {
-        // 修改原数据
-        // notifyDataSetchange
+    public void doIncrease(EditText et_total, int position, String currentCount) {
+        if(TextUtils.isEmpty(currentCount)){
+            et_total.setText("1");
+        }else{
+            int total = Integer.parseInt(currentCount);
+            et_total.setText((++total)+"");
+        }
     }
 
     @Override
-    public void doDecrease(int position, int currentCount) {
-        // 修改原数据
+    public void doDecrease(EditText editText, int position, String currentCount) {
+        if(TextUtils.isEmpty(currentCount)){
+            Toast.makeText(this,"宝贝不能再少了哦！",Toast.LENGTH_SHORT).show();
+        }else{
+            int total = Integer.parseInt(currentCount);
+            if(total>1){
+                total--;
+                editText.setText(total+"");
+            }
+        }
     }
 }
