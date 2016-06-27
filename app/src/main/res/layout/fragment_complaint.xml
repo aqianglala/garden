@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="left"
+        android:maxHeight="250px"
         android:hint="@string/suggestion_hint"
         android:textColor="@color/gray_darker"
         android:textSize="@dimen/text_small"/>
@@ -21,5 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:verticalSpacing="20px"
         android:numColumns="5"></GridView>
 </com.zhy.autolayout.AutoRelativeLayout>

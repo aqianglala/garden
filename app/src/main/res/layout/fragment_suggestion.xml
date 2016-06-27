@@ -10,6 +10,7 @@
         android:id="@+id/et_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxHeight="250px"
         android:background="@android:color/transparent"
         android:gravity="left"
         android:textSize="@dimen/text_small"

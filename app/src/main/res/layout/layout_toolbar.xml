@@ -14,6 +14,17 @@
         android:fitsSystemWindows="true"
         app:navigationIcon="@mipmap/back_arrow">
 
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:gravity="center_vertical"
+            android:text="购物车"
+            android:visibility="gone"
+            android:textColor="@color/white_text"
+            android:textSize="@dimen/title_text_size"/>
+
 
         <TextView
             android:id="@+id/tv_title"
