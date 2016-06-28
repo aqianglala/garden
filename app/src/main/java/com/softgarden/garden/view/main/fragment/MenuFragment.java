@@ -76,7 +76,6 @@ public class MenuFragment extends BaseFragment {
                 EventBus.getDefault().post(new MessageBean("mr.simple"), "my_tag");
             }
         },300);
-
     }
 
     private void showContactDialog() {
