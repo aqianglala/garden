@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -90,12 +91,26 @@ public class SuggestionActivity extends BaseActivity {
 
     @Override
     protected void setListener() {
-
+        tv_complaint.setOnClickListener(this);
+        tv_suggestion.setOnClickListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.tv_complaint:
+                viewPager.setCurrentItem(0);
+                break;
+            case R.id.tv_suggestion:
+                viewPager.setCurrentItem(1);
+                break;
+        }
     }
 
     public static final int REQUEST_IMAGE = 2;
@@ -125,6 +140,7 @@ public class SuggestionActivity extends BaseActivity {
                                         path.lastIndexOf("/") + 1,
                                         path.lastIndexOf("."));
                                 FileUtils.saveBitmap(bm, "" + newStr);
+                                Bimp.drr.add(FileUtils.SDPATH+newStr+".JPEG");
                                 Message message = Message.obtain();
                                 message.what = 1;
                                 handler.sendMessage(message);
@@ -154,6 +170,7 @@ public class SuggestionActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         Bimp.bmp.clear();
+        Bimp.drr.clear();
         FileUtils.deleteDir();
     }
 }

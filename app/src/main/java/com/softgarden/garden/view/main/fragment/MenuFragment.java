@@ -6,16 +6,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
+import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
 import com.softgarden.garden.view.main.entity.MessageBean;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 
@@ -69,7 +70,13 @@ public class MenuFragment extends BaseFragment {
         }
         // 关闭侧滑菜单
         // post a event with tag, the tag is like broadcast's action
-        EventBus.getDefault().post(new MessageBean("mr.simple"), "my_tag");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                EventBus.getDefault().post(new MessageBean("mr.simple"), "my_tag");
+            }
+        },300);
+
     }
 
     private void showContactDialog() {

@@ -13,12 +13,12 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.nineoldandroids.view.ViewHelper;
-import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.LocalImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
+import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         fragments.add(fragmentProduct1);
         fragments.add(fragmentProduct2);
 
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getFragmentManager(), fragments);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
         viewPager.setAdapter(myPagerAdapter);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -163,7 +163,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
 
     public void startTurning(){
         if(convenientBanner!=null){
-            convenientBanner.startTurning(5000);
+            convenientBanner.startTurning(3000);
         }
     }
 
