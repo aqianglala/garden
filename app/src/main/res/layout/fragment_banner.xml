@@ -4,55 +4,11 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <com.softgarden.garden.widget.MyRadioGroup
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_height="215px">
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="34px"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb1"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-            <RadioButton
-                android:id="@+id/rb2"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-            <RadioButton
-                android:id="@+id/rb3"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="34px"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb4"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-            <RadioButton
-                android:id="@+id/rb5"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-            <RadioButton
-                android:id="@+id/rb6"
-                style="@style/radioButton_banner_item"
-                android:text="生命包"/>
-
-        </com.zhy.autolayout.AutoLinearLayout>
-    </com.softgarden.garden.widget.MyRadioGroup>
-
+        android:layout_height="match_parent"
+        android:verticalSpacing="15dp"
+        android:layout_marginTop="15dp"
+        android:numColumns="3"></GridView>
 </com.zhy.autolayout.AutoLinearLayout>

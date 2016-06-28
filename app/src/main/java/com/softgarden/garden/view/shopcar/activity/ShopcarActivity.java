@@ -92,7 +92,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
             case R.id.btn_commit_order:// 提交订单
                 // 需要验证时间
                 Calendar instance = Calendar.getInstance();
-                instance.set(Calendar.HOUR_OF_DAY,18);
+                instance.set(Calendar.HOUR_OF_DAY,16);
                 instance.set(Calendar.MINUTE,0);
                 instance.set(Calendar.SECOND,0);
                 Date time = instance.getTime();
@@ -102,7 +102,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                     showDialog();
                 }
                 break;
-            case R.id.cb_all:// 提交订单
+            case R.id.cb_all:
                 doCheckAll();
                 break;
             case R.id.tv_right:// 切换视图

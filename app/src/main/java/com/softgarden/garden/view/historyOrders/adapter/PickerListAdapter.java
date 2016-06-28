@@ -24,6 +24,10 @@ public class PickerListAdapter extends BaseAdapter {
         this.isMonth = isMonth;
     }
 
+    public boolean isMonth() {
+        return isMonth;
+    }
+
     public PickerListAdapter(LayoutInflater inflater) {
         this.inflater = inflater;
         // 初始化数据
@@ -71,14 +75,6 @@ public class PickerListAdapter extends BaseAdapter {
         }
         final int item = (int) getItem(position);
         holder.textView.setText(item+"");
-        holder.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(listener!=null){
-                    listener.onItemSelected(item, isMonth);
-                }
-            }
-        });
 
         if(!isMonth){// 年
             if(position == year-1900){
@@ -100,14 +96,6 @@ public class PickerListAdapter extends BaseAdapter {
         TextView textView;
     }
 
-    private onTimePickListener listener;
-    public interface onTimePickListener {
-        void onItemSelected(int time, boolean isMonth);
-    }
-
-    public void setOnItemSelectedListener(onTimePickListener listener){
-        this.listener = listener;
-    }
     private int year;
     private int month;
     public void setTime(int year, int month){

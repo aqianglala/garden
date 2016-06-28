@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,9 +55,16 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
         listView.setDividerHeight(0);
         adapter = new PickerListAdapter(inflater);
         // 设置时间选择监听
-        if(listener!=null){
-            adapter.setOnItemSelectedListener(listener);
-        }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(listener!=null){
+                    int time = (int) parent.getAdapter().getItem(position);
+                    listener.onItemSelected(time,adapter.isMonth());
+                }
+            }
+        });
+
         // 如果没有设置时间，则使用当前时间
         if(year==0 && month==0){
             Calendar instance = Calendar.getInstance();
@@ -130,8 +138,12 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
         this.month = month;
     }
     // 设置时间选择的监听
-    PickerListAdapter.onTimePickListener listener;
-    public void setOnItemSelectedListener(PickerListAdapter.onTimePickListener listener){
+    onTimePickListener listener;
+    public void setOnItemSelectedListener(onTimePickListener listener){
         this.listener = listener;
+    }
+
+    public interface onTimePickListener {
+        void onItemSelected(int time, boolean isMonth);
     }
 }

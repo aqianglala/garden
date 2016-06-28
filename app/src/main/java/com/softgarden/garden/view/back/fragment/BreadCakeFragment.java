@@ -41,6 +41,8 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,Mo
     private Button btn_confirm;
 
     private List<ImageView> dots = new ArrayList<ImageView>();
+    private ArrayList<String> tags;
+    private ArrayList<BaseFragment> bannerFragments;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -54,15 +56,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,Mo
 
         vp_banner = getViewById(R.id.vp_banner);
         vp_content = getViewById(R.id.vp_content);
-
-        ArrayList<BaseFragment> fragments = new ArrayList<>();
-        BannerFragment bannerFragment1 = new BannerFragment();
-        BannerFragment bannerFragment2 = new BannerFragment();
-        fragments.add(bannerFragment1);
-        fragments.add(bannerFragment2);
+        // 模擬获取到的banner数据
+        initBannerData();
+        // 分组，每组6个
+        grouping();
 
         BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(getChildFragmentManager(),
-                fragments);
+                bannerFragments);
         vp_banner.setAdapter(bannerPagerAdapter);
 
         lv_content = getViewById(R.id.lv_content);
@@ -72,8 +72,32 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,Mo
         adapter.setDatas(mData);
         lv_content.setAdapter(adapter);
 
-        addDots(fragments);
+        addDots(bannerFragments);
         dots.get(0).setSelected(true);
+    }
+
+    private void grouping() {
+        bannerFragments = new ArrayList<>();
+        int size = tags.size();
+        int groups = (int) (size / 6.0+0.5);
+        for (int i = 0;i<groups;i++){
+            ArrayList<String> group = new ArrayList<>();
+            for(int j=i*6;j<(i+1)*6;j++){
+                group.add(tags.get(j));
+            }
+            BannerFragment bannerFragment = new BannerFragment();
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList("tags",group);
+            bannerFragment.setArguments(bundle);
+            bannerFragments.add(bannerFragment);
+        }
+    }
+
+    private void initBannerData() {
+        tags = new ArrayList<>();
+        for(int i=0;i<20;i++){
+            tags.add("生命包"+i);
+        }
     }
 
     private void addDots(ArrayList<BaseFragment> fragments) {

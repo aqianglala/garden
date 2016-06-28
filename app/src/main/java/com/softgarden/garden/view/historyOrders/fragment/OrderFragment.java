@@ -12,14 +12,13 @@ import android.widget.Toast;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
-import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
 import com.softgarden.garden.view.historyOrders.adapter.OrderAdapter;
 import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
-import com.softgarden.garden.view.historyOrders.adapter.PickerListAdapter;
+import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
+import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
+import com.softgarden.garden.view.main.activity.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -149,7 +148,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         // 更新对话框的时间
         dialogFm.setTime(currentYear,currentMonth);
         dialogFm.setTitleBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        dialogFm.setOnItemSelectedListener(new PickerListAdapter.onTimePickListener() {
+        dialogFm.setOnItemSelectedListener(new YearMonthDialogFm.onTimePickListener() {
             @Override
             public void onItemSelected(int time, boolean isMonth) {
                 Calendar instance = Calendar.getInstance();
