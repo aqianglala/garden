@@ -120,7 +120,7 @@ public class PhotoActivity extends BaseActivity {
 		tv_right = getViewById(R.id.tv_right);
 		tv_right.setVisibility(View.VISIBLE);
 		tv_right.setText("");
-		tv_right.setBackgroundResource(R.mipmap.ic_launcher);
+		tv_right.setBackgroundResource(R.mipmap.delete);
 	}
 
 	private boolean isToolBarHide;

@@ -6,6 +6,11 @@ import android.widget.GridView;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.back.adapter.BannerGridAdapter;
+import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
+import com.softgarden.garden.view.main.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 
@@ -16,14 +21,24 @@ public class BannerFragment extends BaseFragment {
 
     private GridView mGridView;
     private ArrayList<String> mData;
+    private int groupIndex;
+    private BannerGridAdapter bannerGridAdapter;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_banner);
+        // register the receiver object
+        EventBus.getDefault().register(this);
+
         Bundle arguments = getArguments();
+        groupIndex = arguments.getInt("groupIndex");
         mData = arguments.getStringArrayList("tags");
         mGridView = getViewById(R.id.gridView);
-        BannerGridAdapter bannerGridAdapter = new BannerGridAdapter(mData, getActivity());
+        bannerGridAdapter = new BannerGridAdapter(groupIndex,mData, getActivity
+                ());
+        if(listener!=null){
+            bannerGridAdapter.setOnItemClickPositionListener(listener);
+        }
         mGridView.setAdapter(bannerGridAdapter);
     }
 
@@ -39,5 +54,23 @@ public class BannerFragment extends BaseFragment {
     @Override
     protected void onUserVisible() {
 
+    }
+    private OnItemClickPositionListener listener;
+    public void setOnItemClickPositionListener(OnItemClickPositionListener listener){
+        this.listener = listener;
+    }
+
+    @Override
+    public void onDestroyView() {
+        // Don’t forget to unregister !!
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscriber(tag = "clickIndex")
+    private void clickIndex(MessageBean user) {
+        int clickIndex = Integer.parseInt(user.message);
+        bannerGridAdapter.setClickIndex(clickIndex);
+        bannerGridAdapter.notifyDataSetChanged();
     }
 }

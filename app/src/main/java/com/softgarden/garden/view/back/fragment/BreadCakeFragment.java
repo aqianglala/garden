@@ -21,7 +21,11 @@ import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.BackPromptDialog;
 import com.softgarden.garden.view.back.adapter.BannerPagerAdapter;
 import com.softgarden.garden.view.back.adapter.CheckProductAdapter;
+import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
 import com.softgarden.garden.view.change.ChangePromptDialog;
+import com.softgarden.garden.view.main.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,8 @@ import java.util.List;
 /**
  * Created by qiang on 2016/6/14.
  */
-public class BreadCakeFragment extends BaseFragment implements CheckInterface,ModifyCountInterface{
+public class BreadCakeFragment extends BaseFragment implements CheckInterface,
+        ModifyCountInterface,OnItemClickPositionListener{
 
     private boolean isBread;
     private ViewPager vp_banner;
@@ -79,14 +84,26 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,Mo
     private void grouping() {
         bannerFragments = new ArrayList<>();
         int size = tags.size();
-        int groups = (int) (size / 6.0+0.5);
+        int groups = (int)Math.ceil(size/6.0);
+        // 设置viewpager的缓存页数
+        vp_banner.setOffscreenPageLimit(groups);
         for (int i = 0;i<groups;i++){
             ArrayList<String> group = new ArrayList<>();
-            for(int j=i*6;j<(i+1)*6;j++){
-                group.add(tags.get(j));
+            if(i == groups-1){// 如果是最后一组
+                int lastSize = size % 6;
+                for(int k = i*6;k<(i*6+lastSize);k++){
+                    group.add(tags.get(k));
+                }
+            }else{
+                for(int j=i*6;j<(i+1)*6;j++){
+                    group.add(tags.get(j));
+                }
             }
             BannerFragment bannerFragment = new BannerFragment();
+            bannerFragment.setOnItemClickPositionListener(this);
             Bundle bundle = new Bundle();
+            // 传递数据及组的坐标，以此来获得被点击的item在原集合的位置
+            bundle.putInt("groupIndex",i);
             bundle.putStringArrayList("tags",group);
             bannerFragment.setArguments(bundle);
             bannerFragments.add(bannerFragment);
@@ -219,5 +236,15 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,Mo
                 et_total.setText(total+"");
             }
         }
+    }
+    /**
+     * bannerFragment中的item被点击后会触发此回调
+     * 然后再把选中的位置通知给所有的bannerFragment，让他们更新界面
+     * 同时可以在此方法中实现点击事件,更新下面列表
+      */
+
+    @Override
+    public void onClickPosition(int position,String tag) {
+        EventBus.getDefault().post(new MessageBean(position+""), "clickIndex");
     }
 }

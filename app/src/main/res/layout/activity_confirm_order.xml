@@ -50,13 +50,17 @@
 
     </com.zhy.autolayout.AutoLinearLayout>
 
-    <ListView
-        android:id="@+id/listview"
+    <ExpandableListView
+        android:id="@+id/exListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin"
         android:layout_weight="1"
-        android:background="@color/bg_white"></ListView>
+        android:background="@android:color/white"
+        android:scrollbars="none"
+        android:layout_marginTop="@dimen/margin"
+        android:childIndicator="@null"
+        android:groupIndicator="@null">
+    </ExpandableListView>
 
     <View
         style="@style/line_horizontal"/>

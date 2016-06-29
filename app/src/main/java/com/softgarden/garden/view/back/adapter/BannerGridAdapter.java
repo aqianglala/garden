@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
 
 import java.util.ArrayList;
 
@@ -21,8 +21,10 @@ public class BannerGridAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private ArrayList<String>mData;
     private Context context;
+    private int groupIndex;
 
-    public BannerGridAdapter(ArrayList<String> mData, Context context) {
+    public BannerGridAdapter(int groupIndex,ArrayList<String> mData, Context context) {
+        this.groupIndex = groupIndex;
         this.mData = mData;
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -46,14 +48,34 @@ public class BannerGridAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.item_grid_banner, parent, false);
-        RadioButton rb_tag = (RadioButton) view.findViewById(R.id.rb_tag);
-        rb_tag.setText(mData.get(position));
-        rb_tag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final RadioButton rb_tag = (RadioButton) view.findViewById(R.id.rb_tag);
+        final String tag = mData.get(position);
+        rb_tag.setText(tag);
+        rb_tag.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(context,mData.get(position),Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                if(clickIndex != groupIndex*6+position&& rb_tag.isChecked()){
+                    Toast.makeText(context,tag,Toast.LENGTH_SHORT).show();
+                    if(listener!=null){
+                        listener.onClickPosition(groupIndex*6+position,tag);
+                    }
+                }
             }
         });
+        if(groupIndex*6+position == clickIndex){
+            rb_tag.setChecked(true);
+        }else{
+            rb_tag.setChecked(false);
+        }
         return view;
+    }
+
+    private OnItemClickPositionListener listener;
+    public void setOnItemClickPositionListener(OnItemClickPositionListener listener){
+        this.listener = listener;
+    }
+    private int clickIndex = -1;
+    public void setClickIndex(int clickIndex){
+        this.clickIndex = clickIndex;
     }
 }

@@ -67,6 +67,7 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(buyFragment);
                         }
+                        buyFragment.startTurning();
                         break;
                     case R.id.rb_back:
                         if (backFragment == null) {
@@ -78,6 +79,7 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(backFragment);
                         }
+                        buyFragment.stopTurning();
                         break;
                     case R.id.rb_change:
                         if (changeFragment == null) {
@@ -89,6 +91,7 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(changeFragment);
                         }
+                        buyFragment.stopTurning();
                         break;
                     case R.id.rb_orders:
                         if (orderFragment == null) {
@@ -97,6 +100,7 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(orderFragment);
                         }
+                        buyFragment.stopTurning();
                         break;
                 }
                 ft.commit();
@@ -163,6 +167,26 @@ public class MainActivity extends BaseActivity {
     public void onBackPressed() {
         if(menu.isMenuShowing()){
             menu.showContent();
+        }
+    }
+
+    // 开始自动翻页
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //开始自动翻页
+        if(buyFragment!=null){
+            buyFragment.startTurning();
+        }
+    }
+
+    // 停止自动翻页
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //停止翻页
+        if(buyFragment!=null){
+            buyFragment.stopTurning();
         }
     }
 

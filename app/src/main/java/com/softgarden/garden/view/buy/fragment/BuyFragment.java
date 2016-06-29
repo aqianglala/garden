@@ -13,15 +13,18 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.nineoldandroids.view.ViewHelper;
-import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.LocalImageHolderView;
+import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
+import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -45,6 +48,16 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     private TextView tv_bread;
     private TextView tv_cake;
 
+    private List<String> networkImages;
+    private String[] images = {"http://img2.imgtn.bdimg.com/it/u=3093785514,1341050958&fm=21&gp=0.jpg",
+            "http://img2.3lian.com/2014/f2/37/d/40.jpg",
+            "http://d.3987.com/sqmy_131219/001.jpg",
+            "http://img2.3lian.com/2014/f2/37/d/39.jpg",
+            "http://www.8kmm.com/UploadFiles/2012/8/201208140920132659.jpg",
+            "http://f.hiphotos.baidu.com/image/h%3D200/sign=1478eb74d5a20cf45990f9df460b4b0c/d058ccbf6c81800a5422e5fdb43533fa838b4779.jpg",
+            "http://f.hiphotos.baidu.com/image/pic/item/09fa513d269759ee50f1971ab6fb43166c22dfba.jpg"
+    };
+
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -57,23 +70,39 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         tv_bread = getViewById(R.id.tv_bread);
         tv_cake = getViewById(R.id.tv_cake);
         // 设置tab的宽度
-        tabWidth = ScreenUtils.getScreenWidth(mActivity)/2;
-        rl_indicator = getViewById(R.id.rl_indicator);
-        ViewGroup.LayoutParams layoutParams = rl_indicator
-                .getLayoutParams();
-        layoutParams.width = tabWidth;
-        rl_indicator.setLayoutParams(layoutParams);
+        setTabWidth();
 
         viewPager = getViewById(R.id.viewPager);
-
+        // TODO: 2016/6/29 当获取到数据之后，需要将其传递给对应的fragment 
         ArrayList<BaseFragment> fragments = new ArrayList<>();
         FragmentProduct fragmentProduct1 = new FragmentProduct();
         FragmentProduct fragmentProduct2 = new FragmentProduct();
         fragments.add(fragmentProduct1);
         fragments.add(fragmentProduct2);
 
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getFragmentManager(), fragments);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
         viewPager.setAdapter(myPagerAdapter);
+
+        initRefreshLayout();
+//        mRefreshLayout.beginRefreshing();
+    }
+
+    private void setTabWidth() {
+        tabWidth = ScreenUtils.getScreenWidth(mActivity)/2;
+        rl_indicator = getViewById(R.id.rl_indicator);
+        ViewGroup.LayoutParams layoutParams = rl_indicator
+                .getLayoutParams();
+        layoutParams.width = tabWidth;
+        rl_indicator.setLayoutParams(layoutParams);
+    }
+
+
+    @Override
+    protected void setListener() {
+        iv_me.setOnClickListener(this);
+        iv_shopcar.setOnClickListener(this);
+        tv_bread.setOnClickListener(this);
+        tv_cake.setOnClickListener(this);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -96,24 +125,31 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
 
             }
         });
-        initRefreshLayout();
-        mRefreshLayout.beginRefreshing();
-    }
-
-
-
-    @Override
-    protected void setListener() {
-        iv_me.setOnClickListener(this);
-        iv_shopcar.setOnClickListener(this);
-        tv_bread.setOnClickListener(this);
-        tv_cake.setOnClickListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        initData();
         //本地图片例子
+//        initData();
+//        localBanner();
+        //网络加载例子
+        networkBanner();
+        startTurning();
+    }
+
+    private void networkBanner() {
+        networkImages= Arrays.asList(images);
+        convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+            @Override
+            public NetworkImageHolderView createHolder() {
+                return new NetworkImageHolderView();
+            }
+        },networkImages);
+        convenientBanner.setPageIndicator(new int[]{R.mipmap.ic_page_indicator, R.mipmap
+                .ic_page_indicator_focused});
+    }
+
+    private void localBanner() {
         convenientBanner.setPages(
                 new CBViewHolderCreator<LocalImageHolderView>() {
                     @Override
@@ -128,7 +164,6 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
 //                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
 //                .setOnPageChangeListener(this)//监听翻页事件
 //                .setOnItemClickListener(this);
-        startTurning();
     }
 
     private void initData() {

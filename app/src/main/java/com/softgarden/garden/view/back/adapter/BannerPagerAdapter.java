@@ -2,7 +2,7 @@ package com.softgarden.garden.view.back.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import com.softgarden.garden.global.BaseFragment;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by qiang-pc on 2016/6/21.
  */
-public class BannerPagerAdapter extends FragmentStatePagerAdapter {
+public class BannerPagerAdapter extends FragmentPagerAdapter {
 
     private ArrayList<BaseFragment>fragments;
     public BannerPagerAdapter(FragmentManager fm, ArrayList<BaseFragment>fragments) {

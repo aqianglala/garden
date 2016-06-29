@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="40px"
             android:layout_height="50px"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/jiadunlogo"/>
 
         <TextView
             android:id="@+id/tv_number"

@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.softgarden.garden.global.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.view.historyOrders.adapter.DetailExAdapter;
 import com.softgarden.garden.view.pay.PayActivity;
-import com.softgarden.garden.view.shopcar.adapter.ConfirmOrderAdapter;
 
 import java.util.ArrayList;
 
@@ -21,10 +21,9 @@ public class ConfirmOrderActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_price;
     private Button btn_commit_order;
-    private ListView listview;
     private ArrayList<String> mData;
-    private ConfirmOrderAdapter adapter;
-
+    private DetailExAdapter adapter;
+    private ExpandableListView expandableListView;
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_confirm_order);
@@ -34,17 +33,28 @@ public class ConfirmOrderActivity extends BaseActivity {
         btn_commit_order = getViewById(R.id.btn_commit_order);
 
         virtualData();
-        listview = getViewById(R.id.listview);
-        adapter = new ConfirmOrderAdapter(mData, this);
-        listview.setAdapter(adapter);
+
+        expandableListView = getViewById(R.id.exListView);
+        adapter = new DetailExAdapter(mData, this);
+        expandableListView.setAdapter(adapter);
+        // 默认展示收缩第一组
+        expandableListView.collapseGroup(2);
+        // 屏蔽组的点击事件
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition,
+                                        long id) {
+                return true;
+            }
+        });
 
         addFooter();
     }
 
     private void addFooter() {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_footer_order_list,
-                listview, false);
-        listview.addFooterView(view);
+                expandableListView, false);
+        expandableListView.addFooterView(view);
     }
 
     private void virtualData() {

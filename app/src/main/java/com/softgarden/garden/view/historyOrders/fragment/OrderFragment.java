@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -14,7 +14,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.historyOrders.adapter.OrderAdapter;
+import com.softgarden.garden.view.historyOrders.adapter.OrderExAdapter;
 import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
 import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
 import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
@@ -32,10 +32,10 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     private ImageView iv_me;
     private MainActivity mActivity;
-    private ListView lv_orders;
     private ArrayList<OrderBeanTest> mData;
-    private OrderAdapter orderAdapter;
     private MaterialCalendarView widget;
+    private ExpandableListView expandableListView;
+    private OrderExAdapter myExAdapter;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -44,15 +44,17 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         mActivity = (MainActivity)getActivity();
 
         getData();
-        lv_orders = getViewById(R.id.lv_orders);
+        expandableListView = getViewById(R.id.exListView);
+        myExAdapter = new OrderExAdapter(mData, mActivity);
+        expandableListView.setAdapter(myExAdapter);
+        // 默认展示收缩第一组
+        expandableListView.collapseGroup(0);
 
         addFooter();
-        orderAdapter = new OrderAdapter(mData, mActivity);
-        lv_orders.setAdapter(orderAdapter);
     }
 
     private void addFooter() {
-        View calenderLayout = LayoutInflater.from(mActivity).inflate(R.layout.calendarview, lv_orders,
+        View calenderLayout = LayoutInflater.from(mActivity).inflate(R.layout.calendarview, expandableListView,
                 false);
         widget = (MaterialCalendarView) calenderLayout.findViewById(R.id.calendarView);
         // 设置中文
@@ -91,7 +93,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         Drawable greenDrawable = getResources().getDrawable(R.drawable.layer_green);
         widget.addDecorator(new EventDecorator(greenDrawable, oldDates));
 
-        lv_orders.addFooterView(calenderLayout);
+        expandableListView.addFooterView(calenderLayout);
     }
 
     private void getData() {
@@ -114,6 +116,14 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Override
     protected void setListener() {
         iv_me.setOnClickListener(this);
+        // 屏蔽组的点击事件
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition,
+                                        long id) {
+                return true;
+            }
+        });
     }
 
     @Override
@@ -175,7 +185,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         Date date = calendarDay.getDate();
 
         // 收缩列表,将数据更新在第一项
-        orderAdapter.showDetail(date);
-        lv_orders.setSelection(0);
+        myExAdapter.showDetail(date);
+        expandableListView.setSelection(0);
     }
 }

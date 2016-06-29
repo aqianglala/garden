@@ -31,13 +31,16 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/lv_orders"
+    <ExpandableListView
+        android:id="@+id/exListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:dividerHeight="0dp"
         android:scrollbars="none"
-        android:background="@color/bg_white"
         android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"/>
+        android:layout_marginRight="@dimen/margin"
+        android:childIndicator="@null"
+        android:groupIndicator="@null">
+    </ExpandableListView>
 </com.zhy.autolayout.AutoLinearLayout>

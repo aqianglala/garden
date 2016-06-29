@@ -3,12 +3,13 @@ package com.softgarden.garden.view.pay;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.softgarden.garden.global.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 
-public class PayActivity extends BaseActivity {
+public class PayActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
 
 
     private LinearLayout ll_alipay;
@@ -37,6 +38,10 @@ public class PayActivity extends BaseActivity {
         ll_alipay.setOnClickListener(this);
         ll_weixin.setOnClickListener(this);
         ll_yinlian.setOnClickListener(this);
+        // 点击checkBox也能切换
+        cb_alipay.setOnCheckedChangeListener(this);
+        cb_weixin.setOnCheckedChangeListener(this);
+        cb_yinlian.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -75,5 +80,23 @@ public class PayActivity extends BaseActivity {
         cb_alipay.setChecked(resId == R.id.ll_alipay?true:false);
         cb_weixin.setChecked(resId == R.id.ll_weixin?true:false);
         cb_yinlian.setChecked(resId == R.id.ll_yinlian?true:false);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()){
+            case R.id.cb_alipay:
+                if (isChecked)
+                changeBackground(R.id.ll_alipay);
+                break;
+            case R.id.cb_weixin:
+                if (isChecked)
+                changeBackground(R.id.ll_weixin);
+                break;
+            case R.id.cb_yinlian:
+                if (isChecked)
+                changeBackground(R.id.ll_yinlian);
+                break;
+        }
     }
 }

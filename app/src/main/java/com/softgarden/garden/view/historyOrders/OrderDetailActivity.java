@@ -6,25 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.softgarden.garden.global.BaseActivity;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.historyOrders.adapter.ModifyOrderAdapter;
+import com.softgarden.garden.view.historyOrders.adapter.DetailExAdapter;
 
 import java.util.ArrayList;
 
 public class OrderDetailActivity extends BaseActivity implements ModifyCountInterface{
 
 
-    private ListView listview;
     private ArrayList<String> mData;
-    private ModifyOrderAdapter adapter;
+    private DetailExAdapter adapter;
     private Button btn_modify;
     private RelativeLayout rl_confirm;
+    private ExpandableListView expandableListView;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -34,10 +34,20 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         rl_confirm = getViewById(R.id.rl_confirm);
 
         virtualData();
-        listview = getViewById(R.id.listview);
-        adapter = new ModifyOrderAdapter(mData, this);
+        expandableListView = getViewById(R.id.exListView);
+        adapter = new DetailExAdapter(mData, this);
         adapter.setModifyCountInterface(this);
-        listview.setAdapter(adapter);
+        expandableListView.setAdapter(adapter);
+        // 默认展示收缩第一组
+        expandableListView.collapseGroup(2);
+        // 屏蔽组的点击事件
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition,
+                                        long id) {
+                return true;
+            }
+        });
         addFooter();
     }
 
@@ -77,8 +87,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     private void addFooter() {
         View footer_remark = LayoutInflater.from(this).inflate(R.layout.layout_footer_order_list,
-                listview, false);
-        listview.addFooterView(footer_remark);
+                expandableListView, false);
+        expandableListView.addFooterView(footer_remark);
     }
 
     private void virtualData() {
