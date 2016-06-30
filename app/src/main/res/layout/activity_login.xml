@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/bg_white"
     tools:context="com.softgarden.garden.view.login.LoginActivity">
 
     <include layout="@layout/layout_toolbar"/>
@@ -36,6 +37,7 @@
         <EditText
             android:id="@+id/et_password"
             style="@style/et_match_style"
+            android:inputType="textPassword"
             android:layout_marginTop="20px"
             android:drawableLeft="@mipmap/mima"
             android:drawablePadding="22px"

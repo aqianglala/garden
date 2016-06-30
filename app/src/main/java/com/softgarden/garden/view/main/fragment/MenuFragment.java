@@ -2,6 +2,7 @@ package com.softgarden.garden.view.main.fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import com.softgarden.garden.global.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
+import com.softgarden.garden.view.login.LoginActivity;
 import com.softgarden.garden.view.main.entity.MessageBean;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 
@@ -64,8 +66,21 @@ public class MenuFragment extends BaseFragment {
             case R.id.rl_contact:
                 // 弹出提示框
                 showContactDialog();
+                break;
             case R.id.tv_logout:
-
+                // 弹出对话框提示是否退出
+                new AlertDialog.Builder(mActivity)
+                        .setTitle("退出当前账号")
+                        .setNegativeButton("取消",null)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: 2016/6/30 清除本地账号信息，跳转到登录界面
+                                mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+                                mActivity.finish();
+                            }
+                        }).create()
+                        .show();
                 break;
         }
         // 关闭侧滑菜单

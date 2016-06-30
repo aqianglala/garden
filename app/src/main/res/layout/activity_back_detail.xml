@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.softgarden.garden.view.back.activity.BackDetailActivity">
+
+    <include layout="@layout/layout_toolbar"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:background="@color/bg_white"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/margin"
+        android:paddingRight="@dimen/margin"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_darker"
+            android:textSize="@dimen/text_middle"
+            android:text="商品总数"/>
+
+        <TextView
+            android:id="@+id/tv_totalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_text"
+            android:textSize="@dimen/text_middle"
+            android:text="88件"/>
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <View
+        style="@style/line_horizontal"/>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/margin"
+        android:background="@color/bg_white"
+        ></ListView>
+
+</com.zhy.autolayout.AutoLinearLayout>

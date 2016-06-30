@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity {
     private BackFragment changeFragment;
     private OrderFragment orderFragment;
     private SlidingMenu menu;
+    private boolean isShowDiaog;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends BaseActivity {
         }
         // register the receiver object
         EventBus.getDefault().register(this);
-
+        isShowDiaog = getIntent().getBooleanExtra("isShowDiaog", true);
         menu = getViewById(R.id.slidingmenulayout);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
     }
@@ -111,7 +112,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         radioGroup.check(R.id.rb_buy);
-        showDialog();
+        if(isShowDiaog){
+            showDialog();
+        }
     }
 
     private void showDialog() {

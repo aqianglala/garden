@@ -2,7 +2,6 @@ package com.softgarden.garden.view.shopcar.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,10 +15,11 @@ import android.widget.TextView;
 import com.softgarden.garden.global.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
-import com.softgarden.garden.view.shopcar.entity.GroupInfo;
+import com.softgarden.garden.view.shopcar.CommitOrderDialog;
 import com.softgarden.garden.view.shopcar.OverTimePromptDialog;
-import com.softgarden.garden.view.shopcar.entity.ProductInfo;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
+import com.softgarden.garden.view.shopcar.entity.GroupInfo;
+import com.softgarden.garden.view.shopcar.entity.ProductInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -96,10 +96,10 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 instance.set(Calendar.MINUTE,0);
                 instance.set(Calendar.SECOND,0);
                 Date time = instance.getTime();
-                if(System.currentTimeMillis()<time.getTime()){// 4点内
-                    startActivity(new Intent(this,ConfirmOrderActivity.class));
+                if(System.currentTimeMillis()<time.getTime()){// 4点内,弹出对话框提示输入登录密码
+                    showCommitDialog();
                 }else{// 4点后不允许提交订单
-                    showDialog();
+                    showOverTimeDialog();
                 }
                 break;
             case R.id.cb_all:
@@ -340,13 +340,23 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         tv_amount.setText(totalCount + "件");
     }
 
-    private void showDialog() {
+    private void showOverTimeDialog() {
         OverTimePromptDialog dialog = new OverTimePromptDialog(this, R.style.CustomDialog);
         dialog.show();
         // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
         WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
         attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
         attributes.height = ScreenUtils.getScreenWidth(this);
+        dialog.getWindow().setAttributes(attributes);
+    }
+
+    private void showCommitDialog() {
+        CommitOrderDialog dialog = new CommitOrderDialog(this, R.style.CustomDialog);
+        dialog.show();
+        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
+        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
+        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.9);
+        attributes.height =(int) (ScreenUtils.getScreenWidth(this)*0.9);
         dialog.getWindow().setAttributes(attributes);
     }
 

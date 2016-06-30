@@ -41,7 +41,7 @@ public class PhotoActivity extends BaseActivity {
 	@Override
 	protected void initView(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_photo);
-		StatusBarUtils.setColor(this,Color.BLACK);
+		StatusBarUtils.setColor(this,Color.parseColor("#2E3432"));
 		initToolBar();
 
 		pager = (ViewPager) findViewById(R.id.viewpager);
