@@ -32,7 +32,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile 'com.google.code.gson:gson:2.5'
     compile 'com.zhy:autolayout:1.4.3'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'cn.bingoogolapple:bga-refreshlayout:1.1.3@aar'
@@ -42,7 +41,7 @@ dependencies {
     compile project(':slidingmenu')
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.bigkoo:convenientbanner:2.0.5'
-
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'com.prolificinteractive:material-calendarview:1.4.0'
+    compile 'com.google.code.gson:gson:2.7'
 }

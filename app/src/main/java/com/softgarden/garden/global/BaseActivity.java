@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.L;
+import com.softgarden.garden.utils.LoadingDialog;
 import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
@@ -19,6 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public String TAG;
     protected BaseApplication mApp;
     private TextView tv_title;
+    private LoadingDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +108,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if(tv_title!=null){
             tv_title.setText(title);
         }
+    }
+
+    public void showLoadingDialog(){
+        dialog = new LoadingDialog(this, R.style.CustomDialog);
+        dialog.setCancelable(true);
+        dialog.show();
+    }
+
+    public void dismissDialog(){
+        dialog.dismiss();
     }
 }
