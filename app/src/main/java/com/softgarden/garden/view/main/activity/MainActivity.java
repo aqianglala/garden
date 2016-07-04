@@ -13,9 +13,11 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.L;
+import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
 import com.softgarden.garden.view.buy.fragment.BuyFragment;
@@ -34,19 +36,18 @@ public class MainActivity extends BaseActivity {
     private BackFragment changeFragment;
     private OrderFragment orderFragment;
     private SlidingMenu menu;
-    private boolean isShowDiaog;
+    private boolean hasModify;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             setViewHeight();
         }
         // register the receiver object
         EventBus.getDefault().register(this);
-        isShowDiaog = getIntent().getBooleanExtra("isShowDiaog", true);
+        hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
         menu = getViewById(R.id.slidingmenulayout);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
     }
@@ -61,7 +62,7 @@ public class MainActivity extends BaseActivity {
                 hideFragments(ft);//先隐藏掉所有的fragment
                 switch (checkedId){
                     case R.id.rb_buy:
-                        L.e(TAG,"buy");
+                        LogUtils.e(TAG,"buy");
                         if (buyFragment == null) {
                             buyFragment = new BuyFragment();
                             ft.add(R.id.fl_content, buyFragment);
@@ -112,14 +113,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         radioGroup.check(R.id.rb_buy);
-        if(isShowDiaog){
+        if(!hasModify){
             showDialog();
         }
     }
 
     private void showDialog() {
         ModifyPswdDialog dialog = new ModifyPswdDialog(this, R.style.CustomDialog);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.show();
         // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
         WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();

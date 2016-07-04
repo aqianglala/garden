@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 
 public class PayActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{

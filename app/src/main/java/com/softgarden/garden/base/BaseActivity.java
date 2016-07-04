@@ -1,5 +1,6 @@
-package com.softgarden.garden.global;
+package com.softgarden.garden.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
@@ -10,8 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.L;
-import com.softgarden.garden.utils.LoadingDialog;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
@@ -20,11 +20,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public String TAG;
     protected BaseApplication mApp;
     private TextView tv_title;
-    private LoadingDialog dialog;
+    protected BaseActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
+        BaseApplication.addActivity(this);
         TAG = this.getClass().getSimpleName();
         mApp = BaseApplication.getInstance();
 
@@ -97,7 +99,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onDestroy() {
-        L.i(TAG,"关闭请求");
+        LogUtils.i(TAG,"关闭请求");
+        BaseApplication.removeActivity(this);
         super.onDestroy();
     }
 
@@ -110,13 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void showLoadingDialog(){
-        dialog = new LoadingDialog(this, R.style.CustomDialog);
-        dialog.setCancelable(true);
-        dialog.show();
-    }
-
-    public void dismissDialog(){
-        dialog.dismiss();
+    public void goActivity(Class clazz){
+        startActivity(new Intent(this,clazz));
     }
 }

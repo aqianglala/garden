@@ -10,7 +10,7 @@ import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.historyOrders.adapter.DetailExAdapter;

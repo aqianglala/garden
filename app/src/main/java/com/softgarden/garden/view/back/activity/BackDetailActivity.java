@@ -3,7 +3,7 @@ package com.softgarden.garden.view.back.activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.back.adapter.BackDetailAdapter;
 

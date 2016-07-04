@@ -1,4 +1,4 @@
-package com.softgarden.garden.global;
+package com.softgarden.garden.base;
 
 import android.view.View;
 import android.view.ViewGroup;

@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;

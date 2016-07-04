@@ -8,25 +8,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseCallBack;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.engine.UserEngine;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
-import com.softgarden.garden.utils.volleyUtils.VolleyRequestUtil;
-import com.softgarden.garden.view.login.entity.LoginBean;
+import com.softgarden.garden.utils.ToastUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ForgetPswdActivity extends BaseActivity {
@@ -34,6 +31,7 @@ public class ForgetPswdActivity extends BaseActivity {
 
     private EditText et_phone_number;
     private EditText et_verification_code;
+    private String phone;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -53,7 +51,8 @@ public class ForgetPswdActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-
+        phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
+        et_phone_number.setText(phone);
     }
 
     @Override
@@ -61,97 +60,56 @@ public class ForgetPswdActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()){
             case R.id.btn_next:
-                String phone = (String) SPUtils.get(this, UrlsAndKeys.USERNAME, "");
                 String code = et_verification_code.getText().toString().trim();
                 if(TextUtils.isEmpty(code)){
                     showToast("验证码不能为空！");
                 }else{
-                    JsonObject data = new JsonObject();
-                    data.addProperty("phone",phone);
-                    data.addProperty("code",code);// 密码加密
-                    showLoadingDialog();
-                    VolleyRequestUtil.RequestPost(UrlsAndKeys.login,TAG,data,new VerifyCodeListener
-                            ());
+                    checkVerifyCode(code);
                 }
                 break;
             case R.id.ll_call:
                 showContactDialog();
                 break;
             case R.id.btn_get_code:
-                String phoneNumber = et_phone_number.getText().toString().trim();
-                if (TextUtils.isEmpty(phoneNumber)) {
-                    showToast("手机号不能为空!");
-                }else{
-                    JsonObject data = new JsonObject();
-                    data.addProperty("phone",phoneNumber);
-                    showLoadingDialog();
-                    VolleyRequestUtil.RequestPost(UrlsAndKeys.getCode,TAG,data,new GetCodeListener());
-                }
+                getCode();
                 break;
         }
     }
 
-    private class GetCodeListener implements VolleyRequestUtil.VolleyListener{
-
-        @Override
-        public void onSuccess(String data) {
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                String status = jsonObject.optString("status");
-                if(status.equals("1")){
-                    showToast("验证码已发送！");
-                    JSONObject object = new JSONObject(data);
-                    String code = object.optString("data");
-                    et_verification_code.setText(code);
-                }else {
-                    String errorMsg = jsonObject.optString("errorMsg");
-                    showToast(errorMsg);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+    /**
+     * 校验验证码
+     * @param code
+     */
+    private void checkVerifyCode(String code) {
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.checkCode(phone,code, new BaseCallBack(this) {
+            @Override
+            public void onSuccess(JSONObject result) {
+                // 跳转到下一页
+                goActivity(ForgetNextActivity.class);
+                finish();
             }
-            dismissDialog();
-        }
-
-        @Override
-        public void onError(VolleyError volleyError) {
-            Log.e(TAG,volleyError.getMessage());
-            dismissDialog();
-        }
+        });
     }
 
-    private class VerifyCodeListener implements VolleyRequestUtil.VolleyListener{
-
-        @Override
-        public void onSuccess(String data) {
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                String status = jsonObject.optString("status");
-                if(status.equals("1")){// 验证通过，跳转到下一页
-                    Gson gson = new Gson();
-                    LoginBean loginBean = gson.fromJson(data, LoginBean.class);
-                    Intent intent = new Intent(ForgetPswdActivity.this, ForgetNextActivity.class);
-                    intent.putExtra(UrlsAndKeys.USERNAME,loginBean.getData().getPhone());
-                    startActivity(intent);
-                    finish();
-                }else {
-                    String errorMsg = jsonObject.optString("errorMsg");
-                    showToast(errorMsg);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+    /**
+     * 获取验证码
+     */
+    private void getCode() {
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.getCode(phone, new BaseCallBack(this) {
+            @Override
+            public void onSuccess(JSONObject result) {
+                ToastUtil.show("获取验证码成功！");
+                String data = String.valueOf(result.optInt("data"));
+                et_verification_code.setText(data);
             }
-            dismissDialog();
-        }
-
-        @Override
-        public void onError(VolleyError volleyError) {
-            Log.e(TAG,volleyError.getMessage());
-            dismissDialog();
-        }
+        });
     }
 
-
+    /**
+     * 显示拨打电话的弹窗
+     */
     private void showContactDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_call, null);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view)

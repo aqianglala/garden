@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.historyOrders.adapter.DetailExAdapter;
 import com.softgarden.garden.view.pay.PayActivity;

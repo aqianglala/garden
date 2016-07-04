@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.softgarden.garden.global.BaseApplication;
+import com.softgarden.garden.base.BaseApplication;
 
 
 public class ScreenUtils {
@@ -71,14 +71,14 @@ public class ScreenUtils {
             return;
         }
 
-        L.i( "共有" + cursor.getCount() + "条记录");
+        LogUtils.i( "共有" + cursor.getCount() + "条记录");
         while (cursor.moveToNext()) {
-            L.i( "---------------");
+            LogUtils.i( "---------------");
             // 遍历所有的列
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 String columnName = cursor.getColumnName(i);
                 String value = cursor.getString(i);
-                L.i( columnName + " = " + value);
+                LogUtils.i( columnName + " = " + value);
             }
         }
     }

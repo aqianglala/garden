@@ -1,4 +1,4 @@
-package com.softgarden.garden.utils;
+package com.softgarden.garden.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

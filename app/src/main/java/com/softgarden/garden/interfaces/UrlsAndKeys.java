@@ -13,5 +13,7 @@ public interface UrlsAndKeys {
     String modifyPswd = baseUrl + "index.php/App/Api/modifyPassword";
 
     String USERNAME = "username";
-    String PASSWORD = "password";
+    String TOKEN = "token";
+    String PHONE = "phone";
+    String HASMODIFYPSWD = "hasmodifypswd";
 }

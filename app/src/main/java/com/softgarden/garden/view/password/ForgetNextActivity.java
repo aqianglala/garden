@@ -2,25 +2,24 @@ package com.softgarden.garden.view.password;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
-import com.google.gson.JsonObject;
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseCallBack;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.engine.UserEngine;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.volleyUtils.VolleyRequestUtil;
+import com.softgarden.garden.utils.SPUtils;
+import com.softgarden.garden.utils.ToastUtil;
+import com.softgarden.garden.view.login.LoginActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ForgetNextActivity extends BaseActivity {
 
 
-    private Button btn_complete;
     private EditText et_new_pswd;
     private EditText et_confirm_pswd;
     private String phone;
@@ -30,7 +29,7 @@ public class ForgetNextActivity extends BaseActivity {
         setContentView(R.layout.activity_forget_next);
         et_new_pswd = getViewById(R.id.et_new_pswd);
         et_confirm_pswd = getViewById(R.id.et_confirm_pswd);
-        phone = getIntent().getStringExtra(UrlsAndKeys.USERNAME);
+        phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
     }
 
     @Override
@@ -54,12 +53,11 @@ public class ForgetNextActivity extends BaseActivity {
                     showToast("输入不能为空！");
                 }else{
                     if(newPswd.equals(confirmPswd)){
-                        JsonObject data = new JsonObject();
-                        data.addProperty("phone",phone);
-                        data.addProperty("newpwd",newPswd);
-                        showLoadingDialog();
-                        VolleyRequestUtil.RequestPost(UrlsAndKeys.modifyPswd,TAG,data,new
-                                NewPswdListener());
+                        if(newPswd.matches("^(?=.*\\d)(?=.*[a-z A-Z]).{6,12}$")){
+                            modifyPswd(newPswd);
+                        }else{
+                            showToast("密码必须是6~12位的字母数字的组合");
+                        }
                     }else{
                         showToast("两次密码不一致!");
                     }
@@ -68,32 +66,22 @@ public class ForgetNextActivity extends BaseActivity {
         }
     }
 
-    private class NewPswdListener implements VolleyRequestUtil.VolleyListener{
-
-        @Override
-        public void onSuccess(String data) {
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                String status = jsonObject.optString("status");
-                if(status.equals("1")){
-                    showToast("验证码已发送！");
-                    JSONObject object = new JSONObject(data);
-                    String code = object.optString("data");
-                }else {
-                    String errorMsg = jsonObject.optString("errorMsg");
-                    showToast(errorMsg);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+    /**
+     * 修改密码
+     * @param newPswd
+     */
+    private void modifyPswd(String newPswd){
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.modifyPswd(phone, newPswd, new BaseCallBack(this) {
+            @Override
+            public void onSuccess(JSONObject result) {
+                // 修改密码成功
+                ToastUtil.show("修改密码成功！");
+                // 跳转到登录页面
+                SPUtils.clear(context);
+                goActivity(LoginActivity.class);
             }
-            dismissDialog();
-        }
-
-        @Override
-        public void onError(VolleyError volleyError) {
-            Log.e(TAG,volleyError.getMessage());
-            dismissDialog();
-        }
+        });
     }
 
 }

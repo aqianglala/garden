@@ -1,4 +1,4 @@
-package com.softgarden.garden.utils.volleyUtils;
+package com.softgarden.garden.utils;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;

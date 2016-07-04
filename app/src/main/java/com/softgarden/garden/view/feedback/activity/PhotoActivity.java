@@ -17,7 +17,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.view.feedback.utils.Bimp;

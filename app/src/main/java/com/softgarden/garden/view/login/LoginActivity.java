@@ -1,30 +1,25 @@
 package com.softgarden.garden.view.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.softgarden.garden.global.BaseActivity;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.dialog.ToastDialog;
+import com.softgarden.garden.engine.UserEngine;
+import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.MD5;
 import com.softgarden.garden.utils.SPUtils;
-import com.softgarden.garden.utils.volleyUtils.VolleyRequestUtil;
-import com.softgarden.garden.view.login.entity.LoginBean;
 import com.softgarden.garden.view.main.activity.MainActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class LoginActivity extends BaseActivity {
 
@@ -64,55 +59,41 @@ public class LoginActivity extends BaseActivity {
                     showToast("用户名或密码为空！");
                 }else{
                     // TODO: 2016/6/30 请求网络
-                    JsonObject data = new JsonObject();
-                    data.addProperty("username",account);
-                    data.addProperty("password",MD5.getMD5(password+ UrlsAndKeys.md5Str));// 密码加密
-
-                    showLoadingDialog();
-                    VolleyRequestUtil.RequestPost(UrlsAndKeys.login,TAG,data,new LoginListener());
-
+                    sendLogin(account,password);
                 }
                 break;
         }
     }
 
-    private class LoginListener implements VolleyRequestUtil.VolleyListener{
+    /**
+     * 发送登录请求。登录成功时保存账号密码，并跳转到主页
+     *
+     * @param name
+     * @param password
+     */
+    private void sendLogin(final String name, String password) {
 
-        @Override
-        public void onSuccess(String data) {
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                String status = jsonObject.optString("status");
-                if(status.equals("1")){
-                    showToast("登录成功");
-                    Gson gson = new Gson();
-                    LoginBean loginBean = gson.fromJson(data, LoginBean.class);
-                    // 保存用户名和密码
-                    SPUtils.put(LoginActivity.this,UrlsAndKeys.USERNAME,loginBean.getData().getUsername());
-                    SPUtils.put(LoginActivity.this,UrlsAndKeys.PASSWORD,loginBean.getData().getPassword
-                            ());
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.login(name, password, new ObjectCallBack<UserEntity>(this) {
+            @Override
+            public void onSuccess(UserEntity data) {
+                ToastDialog.showSuccess(LoginActivity.this, "登录成功！");
 
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    if(loginBean.getErrorMsg().equals("强制改密")){
-                        intent.putExtra("isShowDiaog",true);
-                    }
-                    startActivity(intent);
-                    finish();
-                }else {
-                    String errorMsg = jsonObject.optString("errorMsg");
-                    showToast(errorMsg);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                // 保存用户名和密码
+                SPUtils.put(LoginActivity.this, UrlsAndKeys.USERNAME,data.getData()
+                        .getUsername());
+                SPUtils.put(LoginActivity.this,UrlsAndKeys.TOKEN,data.getData()
+                        .getToken());
+                SPUtils.put(LoginActivity.this,UrlsAndKeys.PHONE,data.getData()
+                        .getPhone());
+                SPUtils.put(LoginActivity.this,UrlsAndKeys.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
+                        ?false:true);
+
+                goActivity(MainActivity.class);
+                finish();
             }
-            dismissDialog();
-        }
 
-        @Override
-        public void onError(VolleyError volleyError) {
-            Log.e(TAG,volleyError.getMessage());
-            dismissDialog();
-        }
+        });
     }
 
     private long mExitTime;
@@ -122,7 +103,7 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
-                finish();
+                BaseApplication.finishAllActivity();
             }
             return true;
         }

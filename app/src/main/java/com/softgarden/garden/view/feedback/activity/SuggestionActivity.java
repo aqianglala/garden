@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
-import com.softgarden.garden.global.BaseActivity;
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;

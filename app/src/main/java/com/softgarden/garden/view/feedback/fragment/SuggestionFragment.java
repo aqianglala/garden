@@ -2,7 +2,7 @@ package com.softgarden.garden.view.feedback.fragment;
 
 import android.os.Bundle;
 
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 
 /**

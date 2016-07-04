@@ -3,7 +3,7 @@ package com.softgarden.garden.view.back.fragment;
 import android.os.Bundle;
 import android.widget.GridView;
 
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.back.adapter.BannerGridAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;

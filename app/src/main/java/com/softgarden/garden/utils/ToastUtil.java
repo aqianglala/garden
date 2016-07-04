@@ -3,7 +3,7 @@ package com.softgarden.garden.utils;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
-import com.softgarden.garden.global.BaseApplication;
+import com.softgarden.garden.base.BaseApplication;
 
 
 /**

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.buy.adapter.ContentAdapter;
 import com.softgarden.garden.view.buy.entity.TestDataBean;

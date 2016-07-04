@@ -23,12 +23,14 @@
         <EditText
             android:id="@+id/et_new_pswd"
             style="@style/et_match_style"
+            android:inputType="textPassword"
             android:hint="@string/input_new_pswd"/>
 
         <EditText
             android:id="@+id/et_confirm_pswd"
             style="@style/et_match_style"
             android:layout_marginTop="30px"
+            android:inputType="textPassword"
             android:hint="@string/confirm_pswd"/>
 
         <Button

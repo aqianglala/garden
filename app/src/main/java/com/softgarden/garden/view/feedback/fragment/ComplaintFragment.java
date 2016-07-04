@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 
-import com.softgarden.garden.global.BaseFragment;
+import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.feedback.activity.PhotoActivity;
 import com.softgarden.garden.view.feedback.activity.SuggestionActivity;

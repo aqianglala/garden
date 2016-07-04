@@ -1,6 +1,7 @@
-package com.softgarden.garden.global;
+package com.softgarden.garden.base;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -9,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.softgarden.garden.utils.L;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
 public abstract class BaseFragment extends Fragment implements View.OnClickListener{
@@ -52,7 +53,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onDestroy() {
-        L.i(TAG,"关闭请求");
+        LogUtils.i(TAG,"关闭请求");
         super.onDestroy();
     }
 
@@ -100,5 +101,9 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void goActivity(Class clazz){
+        startActivity(new Intent(mActivity,clazz));
     }
 }
