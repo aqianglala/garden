@@ -6,6 +6,7 @@ import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.MD5;
 
 import org.json.JSONException;
@@ -27,7 +28,9 @@ public class UserEngine extends BaseEngine{
         JSONObject object=new JSONObject();
         try {
             object.put("username",phone);
-            object.put("password", MD5.getMD5(password+ UrlsAndKeys.md5Str));
+            String pswd = MD5.getMD5(password + UrlsAndKeys.md5Str);
+            LogUtils.e(pswd);
+            object.put("password", pswd);
         } catch (JSONException e) {
             e.printStackTrace();
         }

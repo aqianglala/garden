@@ -120,6 +120,13 @@
             android:textColor="@color/colorPrimary"
             android:textSize="28px"/>
 
+        <TextView
+            android:id="@+id/tv_delete"
+            style="@style/item_gray_text"
+            android:layout_toRightOf="@id/tv_price"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:text="￥2.50"/>
 
         <com.zhy.autolayout.AutoRelativeLayout
             android:layout_width="180px"

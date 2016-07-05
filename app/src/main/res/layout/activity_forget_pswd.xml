@@ -36,7 +36,6 @@
                 android:drawablePadding="20px"
                 android:hint="@string/input_phone_number"
                 android:singleLine="true"
-                android:enabled="false"
                 android:textColorHint="@color/gray_c"
                 android:textSize="32px"/>
 

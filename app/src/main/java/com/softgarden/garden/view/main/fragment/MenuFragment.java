@@ -16,6 +16,7 @@ import android.view.WindowManager;
 
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
 import com.softgarden.garden.view.login.LoginActivity;
@@ -61,7 +62,9 @@ public class MenuFragment extends BaseFragment {
                 mActivity.startActivity(new Intent(mActivity,SuggestionActivity.class));
                 break;
             case R.id.rl_modify_pswd:
-                mActivity.startActivity(new Intent(mActivity,ForgetPswdActivity.class));
+                Intent intent = new Intent(mActivity, ForgetPswdActivity.class);
+                intent.putExtra("title","修改密码");
+                mActivity.startActivity(intent);
                 break;
             case R.id.rl_contact:
                 // 弹出提示框
@@ -76,6 +79,7 @@ public class MenuFragment extends BaseFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO: 2016/6/30 清除本地账号信息，跳转到登录界面
+                                SPUtils.clear(mActivity);
                                 mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
                                 mActivity.finish();
                             }

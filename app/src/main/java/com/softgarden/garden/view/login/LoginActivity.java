@@ -1,5 +1,6 @@
 package com.softgarden.garden.view.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.view.main.activity.MainActivity;
+import com.softgarden.garden.view.password.ForgetPswdActivity;
 
 public class LoginActivity extends BaseActivity {
 
@@ -40,6 +42,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void setListener() {
         btn_login.setOnClickListener(this);
+        getViewById(R.id.tv_forget_pswd).setOnClickListener(this);
     }
 
     @Override
@@ -61,6 +64,12 @@ public class LoginActivity extends BaseActivity {
                     // TODO: 2016/6/30 请求网络
                     sendLogin(account,password);
                 }
+                break;
+
+            case R.id.tv_forget_pswd:
+                Intent intent = new Intent(this, ForgetPswdActivity.class);
+                intent.putExtra("title","忘记密码");
+                startActivity(intent);
                 break;
         }
     }

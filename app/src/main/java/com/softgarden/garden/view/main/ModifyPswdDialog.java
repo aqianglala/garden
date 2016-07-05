@@ -31,7 +31,9 @@ public class ModifyPswdDialog extends Dialog {
         findViewById(R.id.btn_modify).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, ForgetPswdActivity.class));
+                Intent intent = new Intent(context, ForgetPswdActivity.class);
+                intent.putExtra("title","忘记密码");
+                context.startActivity(intent);
                 dismiss();
             }
         });

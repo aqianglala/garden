@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseCallBack;
@@ -31,6 +34,7 @@ public class ForgetPswdActivity extends BaseActivity {
 
     private EditText et_phone_number;
     private EditText et_verification_code;
+    private Button btn_get_code;
     private String phone;
 
     @Override
@@ -39,20 +43,27 @@ public class ForgetPswdActivity extends BaseActivity {
 
         et_phone_number = getViewById(R.id.et_phone_number);
         et_verification_code = getViewById(R.id.et_verification_code);
+        btn_get_code = getViewById(R.id.btn_get_code);
     }
 
     @Override
     protected void setListener() {
         getViewById(R.id.btn_next).setOnClickListener(this);
         getViewById(R.id.ll_call).setOnClickListener(this);
-        getViewById(R.id.btn_get_code).setOnClickListener(this);
-
+        btn_get_code.setOnClickListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
-        et_phone_number.setText(phone);
+        String title = getIntent().getStringExtra("title");
+        if(title.equals("忘记密码")){
+            et_phone_number.setEnabled(true);
+        }else{
+            phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
+            et_phone_number.setEnabled(false);
+            et_phone_number.setText(phone);
+        }
+        ((TextView)getViewById(R.id.tv_title)).setText(title);
     }
 
     @Override
@@ -96,6 +107,9 @@ public class ForgetPswdActivity extends BaseActivity {
      * 获取验证码
      */
     private void getCode() {
+        // 倒计时开始
+        mc.start();
+        btn_get_code.setEnabled(false);
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
         engine.getCode(phone, new BaseCallBack(this) {
             @Override
@@ -144,5 +158,49 @@ public class ForgetPswdActivity extends BaseActivity {
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
         window.setAttributes(attributes);
+    }
+
+    private MyCountDownTimer mc = new MyCountDownTimer(12000,1000); //倒计时线程
+    /**
+     * 继承 CountDownTimer 防范
+     *
+     * 重写 父类的方法 onTick() 、 onFinish()
+     */
+
+    class MyCountDownTimer extends CountDownTimer {
+        /**
+         *
+         * @param millisInFuture
+         *      表示以毫秒为单位 倒计时的总数
+         *
+         *      例如 millisInFuture=1000 表示1秒
+         *
+         * @param countDownInterval
+         *      表示 间隔 多少微秒 调用一次 onTick 方法
+         *
+         *      例如: countDownInterval =1000 ; 表示每1000毫秒调用一次onTick()
+         *
+         */
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            mc.cancel();
+            btn_get_code.setText("获取验证码");
+            btn_get_code.setEnabled(true);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            btn_get_code.setText(millisUntilFinished/1000 + "秒");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mc.cancel();
+        super.onDestroy();
     }
 }
