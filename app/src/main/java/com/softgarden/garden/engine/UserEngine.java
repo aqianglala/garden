@@ -7,7 +7,7 @@ import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.utils.LogUtils;
-import com.softgarden.garden.utils.MD5;
+import com.softgarden.garden.utils.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,13 +28,13 @@ public class UserEngine extends BaseEngine{
         JSONObject object=new JSONObject();
         try {
             object.put("username",phone);
-            String pswd = MD5.getMD5(password + UrlsAndKeys.md5Str);
+            String pswd = StringUtils.getMd5String(password + UrlsAndKeys.md5Str);
             LogUtils.e(pswd);
             object.put("password", pswd);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post("index.php/App/Api/login",object,callBack);
+        HttpHelper.post(UrlsAndKeys.login,object,callBack);
     }
 
     /**
@@ -49,7 +49,7 @@ public class UserEngine extends BaseEngine{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post("index.php/App/Api/getregVerify",object,callBack);
+        HttpHelper.post(UrlsAndKeys.getCode,object,callBack);
     }
 
     /**
@@ -66,7 +66,7 @@ public class UserEngine extends BaseEngine{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post("index.php/App/Api/checkfindverify",object,callBack);
+        HttpHelper.post(UrlsAndKeys.verifyCode,object,callBack);
     }
 
     /**
@@ -79,10 +79,10 @@ public class UserEngine extends BaseEngine{
         JSONObject object=new JSONObject();
         try {
             object.put("phone",phone);
-            object.put("newpwd",MD5.getMD5(newpswd+ UrlsAndKeys.md5Str));
+            object.put("newpwd",StringUtils.getMd5String(newpswd+ UrlsAndKeys.md5Str));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post("index.php/App/Api/modifyPassword",object,callBack);
+        HttpHelper.post(UrlsAndKeys.modifyPswd,object,callBack);
     }
 }

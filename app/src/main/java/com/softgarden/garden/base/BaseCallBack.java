@@ -45,9 +45,6 @@ public abstract class BaseCallBack implements RequestManager.RequestListener {
             this.message = jsonObject.optString("errorMsg");
             this.success = jsonObject.optInt("status");
             this.errcode = jsonObject.optInt("errorCode");
-//            jsonObject.remove("errorMsg");
-//            jsonObject.remove("status");
-//            jsonObject.remove("errorCode");
             if (success != 1) {
                 if (success == -1) {
                     message = "服务器繁忙";

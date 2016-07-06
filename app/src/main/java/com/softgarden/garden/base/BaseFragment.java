@@ -1,6 +1,7 @@
 package com.softgarden.garden.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -15,7 +16,7 @@ import com.softgarden.garden.utils.ToastUtil;
 
 public abstract class BaseFragment extends Fragment implements View.OnClickListener{
     public String TAG;
-    protected BaseApplication mApp;
+    protected Context mApp;
     public View mContentView;
     protected BaseActivity mActivity;
 
@@ -23,7 +24,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         TAG = this.getClass().getSimpleName();
-        mApp = BaseApplication.getInstance();
+        mApp = BaseApplication.getContext();
         mActivity = (BaseActivity) activity;
     }
 

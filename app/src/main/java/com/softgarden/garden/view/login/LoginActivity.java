@@ -91,10 +91,10 @@ public class LoginActivity extends BaseActivity {
                 // 保存用户名和密码
                 SPUtils.put(LoginActivity.this, UrlsAndKeys.USERNAME,data.getData()
                         .getUsername());
-                SPUtils.put(LoginActivity.this,UrlsAndKeys.TOKEN,data.getData()
-                        .getToken());
                 SPUtils.put(LoginActivity.this,UrlsAndKeys.PHONE,data.getData()
                         .getPhone());
+                SPUtils.put(LoginActivity.this,UrlsAndKeys.USERID,data.getData()
+                        .getId());
                 SPUtils.put(LoginActivity.this,UrlsAndKeys.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
                         ?false:true);
 

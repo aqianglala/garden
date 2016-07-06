@@ -18,14 +18,14 @@ public class ToastUtil {
 
     public static void show(CharSequence text) {
         if (text.length() < 10) {
-            Toast.makeText(BaseApplication.getInstance(), text, Toast.LENGTH_SHORT).show();
+            Toast.makeText(BaseApplication.getContext(), text, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(BaseApplication.getInstance(), text, Toast.LENGTH_LONG).show();
+            Toast.makeText(BaseApplication.getContext(), text, Toast.LENGTH_LONG).show();
         }
     }
 
     public static void show(@StringRes int resId) {
-        show(BaseApplication.getInstance().getString(resId));
+        show(BaseApplication.getContext().getString(resId));
     }
 
 }

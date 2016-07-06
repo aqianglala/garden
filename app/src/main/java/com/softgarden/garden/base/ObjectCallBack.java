@@ -35,7 +35,7 @@ public abstract class ObjectCallBack<T extends BaseDao> extends BaseCallBack {
                 Class<T> cls = (Class<T>) trueType;
 
                 t = new Gson().fromJson(result.toString(), cls);
-                LogUtils.i("data:"+result.toString());
+                LogUtils.e("data:"+result.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

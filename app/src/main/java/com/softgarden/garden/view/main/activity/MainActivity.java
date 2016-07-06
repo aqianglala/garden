@@ -9,11 +9,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.engine.BuyEngine;
+import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.LogUtils;
@@ -22,8 +27,8 @@ import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
 import com.softgarden.garden.view.buy.fragment.BuyFragment;
 import com.softgarden.garden.view.historyOrders.fragment.OrderFragment;
-import com.softgarden.garden.view.main.entity.MessageBean;
 import com.softgarden.garden.view.main.ModifyPswdDialog;
+import com.softgarden.garden.view.main.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -50,6 +55,7 @@ public class MainActivity extends BaseActivity {
         hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
         menu = getViewById(R.id.slidingmenulayout);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioButton rb_back = getViewById(R.id.rb_change);
     }
 
     @Override
@@ -64,12 +70,13 @@ public class MainActivity extends BaseActivity {
                     case R.id.rb_buy:
                         LogUtils.e(TAG,"buy");
                         if (buyFragment == null) {
-                            buyFragment = new BuyFragment();
-                            ft.add(R.id.fl_content, buyFragment);
+
                         } else {
                             ft.show(buyFragment);
                         }
-                        buyFragment.startTurning();
+                        if(buyFragment!=null){
+                            buyFragment.startTurning();
+                        }
                         break;
                     case R.id.rb_back:
                         if (backFragment == null) {
@@ -81,7 +88,9 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(backFragment);
                         }
-                        buyFragment.stopTurning();
+                        if(buyFragment!=null){
+                            buyFragment.stopTurning();
+                        }
                         break;
                     case R.id.rb_change:
                         if (changeFragment == null) {
@@ -93,7 +102,9 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(changeFragment);
                         }
-                        buyFragment.stopTurning();
+                        if(buyFragment!=null){
+                            buyFragment.stopTurning();
+                        }
                         break;
                     case R.id.rb_orders:
                         if (orderFragment == null) {
@@ -102,7 +113,9 @@ public class MainActivity extends BaseActivity {
                         } else {
                             ft.show(orderFragment);
                         }
-                        buyFragment.stopTurning();
+                        if(buyFragment!=null){
+                            buyFragment.stopTurning();
+                        }
                         break;
                 }
                 ft.commit();
@@ -112,9 +125,32 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        radioGroup.check(R.id.rb_buy);
         if(!hasModify){
             showDialog();
+        }else{
+            // 访问网络
+            BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
+            String userId = getUserId();
+            engine.getProducts(userId, null, null, new ObjectCallBack<IndexEntity>(this) {
+                @Override
+                public void onSuccess(IndexEntity data) {
+                    // 是否显示退换货tab
+                    String thh_tui = data.getData().getThh().getThh_tui();
+                    String thh_huan = data.getData().getThh().getThh_huan();
+                    getViewById(R.id.rb_back).setVisibility("1".equals(thh_tui)?View.VISIBLE:View.GONE);
+                    getViewById(R.id.rb_change).setVisibility("1".equals(thh_huan)?View.VISIBLE:View.GONE);
+
+                    buyFragment = new BuyFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("defaultData",data);
+                    buyFragment.setArguments(bundle);
+                    FragmentTransaction ft = getSupportFragmentManager()
+                            .beginTransaction();
+                    ft.add(R.id.fl_content, buyFragment);
+                    ft.commit();
+                    radioGroup.check(R.id.rb_buy);
+                }
+            });
         }
     }
 

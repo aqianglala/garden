@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.bigkoo.convenientbanner.holder.Holder;
+import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.helper.ImageLoaderHelper;
 
 /**
@@ -23,6 +24,6 @@ public class NetworkImageHolderView implements Holder<String> {
 
     @Override
     public void UpdateUI(Context context,int position, String data) {
-        imageView.setImageUrl(data,ImageLoaderHelper.getInstance());
+        imageView.setImageUrl(HttpHelper.HOST+data,ImageLoaderHelper.getInstance());
     }
 }

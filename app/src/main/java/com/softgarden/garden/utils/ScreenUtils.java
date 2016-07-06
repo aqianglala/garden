@@ -14,13 +14,13 @@ public class ScreenUtils {
     /******************************************dip转px, px转dp*****************************/
     // dp = px / 设备密度
     public static int dip2px(float dip) {
-        float density = BaseApplication.getInstance().getResources().getDisplayMetrics().density;// 设备密度
+        float density = BaseApplication.getContext().getResources().getDisplayMetrics().density;// 设备密度
         int px = (int) (dip * density + 0.5f);// 3.1->3, 3.9+0.5->4.4->4
         return px;
     }
 
     public static float px2dip(int px) {
-        float density = BaseApplication.getInstance().getResources().getDisplayMetrics().density;// 设备密度
+        float density = BaseApplication.getContext().getResources().getDisplayMetrics().density;// 设备密度
         return px / density;
     }
 

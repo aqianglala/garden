@@ -14,6 +14,10 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.nineoldandroids.view.ViewHelper;
 import com.softgarden.garden.base.BaseFragment;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.engine.BuyEngine;
+import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.LocalImageHolderView;
@@ -21,9 +25,9 @@ import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
 import com.softgarden.garden.view.main.activity.MainActivity;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
+import com.softgarden.garden.widget.CustomViewPager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
@@ -42,7 +46,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
 
     private ConvenientBanner convenientBanner;//顶部广告栏控件
     private ArrayList<Integer> localImages = new ArrayList<Integer>();
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private int tabWidth;
     private RelativeLayout rl_indicator;
     private TextView tv_bread;
@@ -69,26 +73,15 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         convenientBanner = getViewById(R.id.convenientBanner);
         tv_bread = getViewById(R.id.tv_bread);
         tv_cake = getViewById(R.id.tv_cake);
-        // 设置tab的宽度
-        setTabWidth();
+
 
         viewPager = getViewById(R.id.viewPager);
-        // TODO: 2016/6/29 当获取到数据之后，需要将其传递给对应的fragment 
-        ArrayList<BaseFragment> fragments = new ArrayList<>();
-        FragmentProduct fragmentProduct1 = new FragmentProduct();
-        FragmentProduct fragmentProduct2 = new FragmentProduct();
-        fragments.add(fragmentProduct1);
-        fragments.add(fragmentProduct2);
-
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
-        viewPager.setAdapter(myPagerAdapter);
-
         initRefreshLayout();
 //        mRefreshLayout.beginRefreshing();
     }
 
     private void setTabWidth() {
-        tabWidth = ScreenUtils.getScreenWidth(mActivity)/2;
+        tabWidth = ScreenUtils.getScreenWidth(mActivity)/tabCount;
         rl_indicator = getViewById(R.id.rl_indicator);
         ViewGroup.LayoutParams layoutParams = rl_indicator
                 .getLayoutParams();
@@ -111,7 +104,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                 int black = mActivity.getResources().getColor(R.color.black_text);
                 tv_bread.setTextColor(position ==0?pink:black);
                 tv_cake.setTextColor(!(position ==0)?pink:black);
-                float translationx = position * tabWidth + positionOffsetPixels/2;
+                float translationx = position * tabWidth + positionOffsetPixels/tabCount;
                 ViewHelper.setTranslationX(rl_indicator,translationx);
             }
 
@@ -126,19 +119,40 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             }
         });
     }
-
+    int tabCount;
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        //本地图片例子
-//        initData();
-//        localBanner();
-        //网络加载例子
-        networkBanner();
         startTurning();
+        Bundle arguments = getArguments();
+        IndexEntity indexEntity = (IndexEntity) arguments.getSerializable("defaultData");
+        //网络加载例子
+        networkImages = indexEntity.getData().getBanner();
+        networkBanner();
+        tabCount = indexEntity.getData().getYiji().size();
+        // 设置tab的宽度
+        setTabWidth();
+
+        ArrayList<BaseFragment> fragments = new ArrayList<>();
+        for(int i=0;i<tabCount;i++){
+            FragmentProduct fragmentProduct = new FragmentProduct();
+            String yiji_id = indexEntity.getData().getYiji().get(i).getId();
+            if(i == 0){
+                arguments.putString("yiji_id",yiji_id );
+                fragmentProduct.setArguments(arguments);
+            }else{
+                Bundle bundle = new Bundle();
+                bundle.putString("yiji_id",yiji_id );
+                fragmentProduct.setArguments(bundle);
+            }
+            fragments.add(fragmentProduct);
+        }
+        // TODO: 2016/6/29 当获取到数据之后，需要将其传递给对应的fragment
+
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
+        viewPager.setAdapter(myPagerAdapter);
     }
 
     private void networkBanner() {
-        networkImages= Arrays.asList(images);
         convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
             @Override
             public NetworkImageHolderView createHolder() {
@@ -225,16 +239,28 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             @Override
             public void run() {
                 super.run();
-                SystemClock.sleep(3000);
+                SystemClock.sleep(2000);
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        getData();
+                        getData();
                         refreshLayout.endRefreshing();
                     }
                 });
             }
         }.start();
+    }
+
+    public void getData(){
+        // 访问网络
+        BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
+        String userId = mActivity.getUserId();
+        engine.getProducts(userId, null, null, new ObjectCallBack<IndexEntity>(mActivity) {
+            @Override
+            public void onSuccess(IndexEntity data) {
+
+            }
+        });
     }
 
     @Override

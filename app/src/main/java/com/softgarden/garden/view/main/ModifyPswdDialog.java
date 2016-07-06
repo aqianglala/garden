@@ -32,7 +32,7 @@ public class ModifyPswdDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ForgetPswdActivity.class);
-                intent.putExtra("title","忘记密码");
+                intent.putExtra("title","修改密码");
                 context.startActivity(intent);
                 dismiss();
             }

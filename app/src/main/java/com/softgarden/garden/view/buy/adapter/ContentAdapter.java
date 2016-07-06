@@ -1,15 +1,20 @@
 package com.softgarden.garden.view.buy.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.helper.HttpHelper;
+import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.buy.entity.TestDataBean;
 
 import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
@@ -17,7 +22,7 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 /**
  * Created by qiang-pc on 2016/6/14.
  */
-public class ContentAdapter extends BGAAdapterViewAdapter<TestDataBean.DataBean.ArrBean> {
+public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.SanjiBean> {
 
     private Context context;
     public ContentAdapter(Context context, int itemLayoutId) {
@@ -26,12 +31,20 @@ public class ContentAdapter extends BGAAdapterViewAdapter<TestDataBean.DataBean.
     }
 
     @Override
-    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position, TestDataBean.DataBean
-            .ArrBean arrBean) {
-        bgaViewHolderHelper.setText(R.id.tv_name,arrBean.getName()).setText(R.id.tv_number,
-                arrBean.getNumber()).setText(R.id.tv_prediction,arrBean.getPrediction()+"").setText
-                (R.id.tv_weight,arrBean.getWeight()+"").setText(R.id.tv_back,arrBean.getBack())
-                .setText(R.id.tv_price,arrBean.getPrice()+"");
+    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position,
+                            IndexEntity.DataBean.SanjiBean bean) {
+        bgaViewHolderHelper
+                .setText(R.id.tv_name,bean.getName())
+                .setText(R.id.tv_number, bean.getNumber())
+                .setText(R.id.tv_weight,bean.getGuige()+"")
+                .setText(R.id.tv_price,bean.getPrice()+"")
+                .setText(R.id.tv_special,bean.getSpecial());
+        TextView tv_price = bgaViewHolderHelper.getView(R.id.tv_price);
+        tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
+        NetworkImageView iv_product = bgaViewHolderHelper.getView(R.id.iv_product);
+        iv_product.setImageUrl(HttpHelper.HOST+bean.getPicture(), ImageLoaderHelper.getInstance());
+
         final EditText et_total = bgaViewHolderHelper.getView(R.id.et_total);
         et_total.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

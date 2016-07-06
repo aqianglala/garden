@@ -5,7 +5,7 @@ import com.android.http.RequestMap;
 import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.utils.LogUtils;
-import com.softgarden.garden.utils.MD5;
+import com.softgarden.garden.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -46,7 +46,7 @@ public class HttpHelper {
         if (obc != null) {
             RequestMap params = new RequestMap();
             String data = obc.toString();
-            String sign = MD5.getMD5("Ysljsd&sfli%87wirioew3^534rjkljl" + data);
+            String sign = StringUtils.getMd5String("Ysljsd&sfli%87wirioew3^534rjkljl" + data);
             LogUtils.i("post_data:" + data);
             LogUtils.i("sign:"+sign);
             params.put("data", data);
@@ -66,7 +66,7 @@ public class HttpHelper {
 
 
         RequestMap params = new RequestMap();
-        String sign = MD5.getMD5("Ysljsd&sfli%87wirioew3^534rjkljl");
+        String sign = StringUtils.getMd5String("Ysljsd&sfli%87wirioew3^534rjkljl");
         params.put("pic", pic);
         params.put("apisign", sign);
         post(HttpHelper.getUrl(url), params, callBack);
@@ -86,7 +86,7 @@ public class HttpHelper {
 
             RequestMap params = new RequestMap();
             String data = gson.toJson(obc);
-            String sign = MD5.getMD5("Ysljsd&sfli%87wirioew3^534rjkljl" + data);
+            String sign = StringUtils.getMd5String("Ysljsd&sfli%87wirioew3^534rjkljl" + data);
             LogUtils.i("data:" + data);
             LogUtils.i("apisign:" + sign);
             params.put("data", data);

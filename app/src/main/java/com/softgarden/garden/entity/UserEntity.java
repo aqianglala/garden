@@ -9,10 +9,10 @@ public class UserEntity extends BaseDao {
 
     /**
      * status : 1
-     * errorMsg :
+     * errorMsg : 强制改密
      * data : {"id":"1","username":"GZ_0001","nickname":"广州真好面包店","phone":"18873563438",
-     * "last_login_time":"0","state":"1","address":"广州市天河区棠下村","telephone":"18873563438",
-     * "status":"1","token":"cc076b76bc001ff54d6090142d473e34"}
+     * "password":"1b1dc7ce30120c3cf8734e26100bf145","last_login_time":"0","state":"0",
+     * "address":"广州市天河区棠下村","telephone":"18873563438","status":"1"}
      */
 
     private String status;
@@ -22,12 +22,12 @@ public class UserEntity extends BaseDao {
      * username : GZ_0001
      * nickname : 广州真好面包店
      * phone : 18873563438
+     * password : 1b1dc7ce30120c3cf8734e26100bf145
      * last_login_time : 0
-     * state : 1
+     * state : 0
      * address : 广州市天河区棠下村
      * telephone : 18873563438
      * status : 1
-     * token : cc076b76bc001ff54d6090142d473e34
      */
 
     private DataBean data;
@@ -61,12 +61,12 @@ public class UserEntity extends BaseDao {
         private String username;
         private String nickname;
         private String phone;
+        private String password;
         private String last_login_time;
         private String state;
         private String address;
         private String telephone;
         private String status;
-        private String token;
 
         public String getId() {
             return id;
@@ -98,6 +98,14 @@ public class UserEntity extends BaseDao {
 
         public void setPhone(String phone) {
             this.phone = phone;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         public String getLast_login_time() {
@@ -138,14 +146,6 @@ public class UserEntity extends BaseDao {
 
         public void setStatus(String status) {
             this.status = status;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
         }
     }
 }

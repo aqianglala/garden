@@ -1,24 +1,28 @@
 package com.softgarden.garden.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     public String TAG;
-    protected BaseApplication mApp;
+    protected Context mApp;
     private TextView tv_title;
     protected BaseActivity context;
 
@@ -28,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         context = this;
         BaseApplication.addActivity(this);
         TAG = this.getClass().getSimpleName();
-        mApp = BaseApplication.getInstance();
+        mApp = BaseApplication.getContext();
 
 
         initView(savedInstanceState);
@@ -115,5 +119,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public void goActivity(Class clazz){
         startActivity(new Intent(this,clazz));
+    }
+
+    private String userId;
+    public String getUserId(){
+        if(TextUtils.isEmpty(userId)){
+            userId = (String) SPUtils.get(this, UrlsAndKeys.USERID,"");
+        }
+        return userId;
     }
 }

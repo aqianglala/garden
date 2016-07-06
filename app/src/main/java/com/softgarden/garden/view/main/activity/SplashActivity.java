@@ -27,8 +27,8 @@ public class SplashActivity extends BaseActivity {
     protected void processLogic(Bundle savedInstanceState) {
         // TODO: 2016/7/1 从本地中获取账号密码信息，如果有的话则直接进入到mainActivity，否则进入登录页面
         final Intent intent;
-        String token = (String) SPUtils.get(this, UrlsAndKeys.TOKEN, "");
-        if(TextUtils.isEmpty(token)){
+        String phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE, "");
+        if(TextUtils.isEmpty(phone)){
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }else{
             intent = new Intent(SplashActivity.this, MainActivity.class);
