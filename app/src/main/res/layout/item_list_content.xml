@@ -127,8 +127,8 @@
                 style="@style/item_gray_text"
                 android:text="团购"/>
 
-            <EditText
-                android:id="@+id/et_group"
+            <TextView
+                android:id="@+id/tv_group"
                 android:layout_width="62px"
                 android:layout_height="32px"
                 android:layout_marginLeft="20px"
@@ -164,8 +164,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="10dp">
 
-                <EditText
-                    android:id="@+id/et_total"
+                <TextView
+                    android:id="@+id/tv_total"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"

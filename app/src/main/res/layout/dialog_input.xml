@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_white"
+    android:paddingBottom="30px"
+    android:paddingLeft="50px"
+    android:paddingRight="50px"
+    android:paddingTop="30px">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30px"
+        android:text="请输入数量"
+        android:textColor="@color/black_text"
+        android:textSize="@dimen/text_middle"/>
+
+    <EditText
+        android:id="@+id/et_count"
+        android:layout_width="match_parent"
+        android:layout_height="80px"
+        android:textColor="@color/black_text"
+        android:textColorHint="#dbdbdb"
+        android:inputType="number"
+        android:paddingLeft="20px"
+        android:background="@drawable/shape_et_group_bg">
+        <requestFocus />
+    </EditText>
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24px"
+        >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="194px"
+            android:layout_height="76px"
+            android:background="@drawable/shape_et_group_bg"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/black_text"
+            android:text="取消"/>
+
+        <Button
+            android:id="@+id/btn_add_car"
+            android:layout_width="194px"
+            android:layout_height="76px"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/shape_get_code_normal"
+            android:textSize="@dimen/text_middle"
+            android:textColor="@color/pink_text"
+            android:text="加入购物车"/>
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+</com.zhy.autolayout.AutoLinearLayout>

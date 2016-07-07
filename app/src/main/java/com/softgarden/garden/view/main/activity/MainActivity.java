@@ -15,13 +15,8 @@ import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.softgarden.garden.base.BaseActivity;
-import com.softgarden.garden.base.EngineFactory;
-import com.softgarden.garden.base.ObjectCallBack;
-import com.softgarden.garden.engine.BuyEngine;
-import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
@@ -42,10 +37,16 @@ public class MainActivity extends BaseActivity {
     private OrderFragment orderFragment;
     private SlidingMenu menu;
     private boolean hasModify;
+    private RadioButton rb_back;
+    private RadioButton rb_change;
+    private RadioButton rb_buy;
+    private RadioButton rb_orders;
+    private int lastCheckId;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
+        // 由于有slidingmenu，因此需要
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             setViewHeight();
@@ -54,8 +55,11 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
         menu = getViewById(R.id.slidingmenulayout);
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        RadioButton rb_back = getViewById(R.id.rb_change);
+        rb_back = getViewById(R.id.rb_back);
+        rb_change = getViewById(R.id.rb_change);
+        rb_buy = getViewById(R.id.rb_buy);
+        rb_orders = getViewById(R.id.rb_orders);
+        radioGroup = getViewById(R.id.radioGroup);
     }
 
     @Override
@@ -65,56 +69,67 @@ public class MainActivity extends BaseActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 FragmentTransaction ft = getSupportFragmentManager()
                         .beginTransaction();
-                hideFragments(ft);//先隐藏掉所有的fragment
                 switch (checkedId){
                     case R.id.rb_buy:
-                        LogUtils.e(TAG,"buy");
+                        lastCheckId = checkedId;
+                        hideFragments(ft);//先隐藏掉所有的fragment
                         if (buyFragment == null) {
-
+                            buyFragment = new BuyFragment();
+                            ft.add(R.id.fl_content, buyFragment);
                         } else {
                             ft.show(buyFragment);
-                        }
-                        if(buyFragment!=null){
                             buyFragment.startTurning();
                         }
                         break;
                     case R.id.rb_back:
-                        if (backFragment == null) {
-                            backFragment = new BackFragment();
-                            Bundle backBundle = new Bundle();
-                            backBundle.putBoolean("isBack",true);
-                            backFragment.setArguments(backBundle);
-                            ft.add(R.id.fl_content, backFragment);
-                        } else {
-                            ft.show(backFragment);
-                        }
-                        if(buyFragment!=null){
-                            buyFragment.stopTurning();
+                        rb_back.setChecked(thh_tui == 1?true:false);
+                        if(rb_back.isChecked()){
+                            lastCheckId = checkedId;
+                            hideFragments(ft);//先隐藏掉所有的fragment
+                            if (backFragment == null) {
+                                backFragment = new BackFragment();
+                                Bundle backBundle = new Bundle();
+                                backBundle.putBoolean("isBack",true);
+                                backFragment.setArguments(backBundle);
+                                ft.add(R.id.fl_content, backFragment);
+                            } else {
+                                ft.show(backFragment);
+                            }
+                        }else{
+                            setcheck(lastCheckId);
+                            // 显示对话框
+                            showToast("弹出对话框");
                         }
                         break;
                     case R.id.rb_change:
-                        if (changeFragment == null) {
-                            changeFragment = new BackFragment();
-                            Bundle changeBundle = new Bundle();
-                            changeBundle.putBoolean("isBack",false);
-                            changeFragment.setArguments(changeBundle);
-                            ft.add(R.id.fl_content, changeFragment);
-                        } else {
-                            ft.show(changeFragment);
-                        }
-                        if(buyFragment!=null){
-                            buyFragment.stopTurning();
+                        rb_change.setChecked(thh_huan == 1?true:false);
+                        if(rb_change.isChecked()){
+                            lastCheckId = checkedId;
+                            hideFragments(ft);//先隐藏掉所有的fragment
+                            if (changeFragment == null) {
+                                changeFragment = new BackFragment();
+                                Bundle changeBundle = new Bundle();
+                                changeBundle.putBoolean("isBack",false);
+                                changeFragment.setArguments(changeBundle);
+                                ft.add(R.id.fl_content, changeFragment);
+                            } else {
+                                ft.show(changeFragment);
+                            }
+                        }else{
+                            // 上一个要check
+                            setcheck(lastCheckId);
+                            // 显示对话框
+                            showToast("您没有此类的权限！");
                         }
                         break;
                     case R.id.rb_orders:
+                        lastCheckId = checkedId;
+                        hideFragments(ft);//先隐藏掉所有的fragment
                         if (orderFragment == null) {
                             orderFragment = new OrderFragment();
                             ft.add(R.id.fl_content, orderFragment);
                         } else {
                             ft.show(orderFragment);
-                        }
-                        if(buyFragment!=null){
-                            buyFragment.stopTurning();
                         }
                         break;
                 }
@@ -123,34 +138,28 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private void setcheck(int lastCheckId) {
+        switch (lastCheckId){
+            case R.id.rb_buy:
+                rb_buy.setChecked(true);
+                break;
+            case R.id.rb_back:
+                rb_back.setChecked(true);
+                break;
+            case R.id.rb_change:
+                rb_change.setChecked(true);
+                break;
+            case R.id.rb_orders:
+                rb_orders.setChecked(true);
+                break;
+        }
+    }
+
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        radioGroup.check(R.id.rb_buy);
         if(!hasModify){
             showDialog();
-        }else{
-            // 访问网络
-            BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
-            String userId = getUserId();
-            engine.getProducts(userId, null, null, new ObjectCallBack<IndexEntity>(this) {
-                @Override
-                public void onSuccess(IndexEntity data) {
-                    // 是否显示退换货tab
-                    String thh_tui = data.getData().getThh().getThh_tui();
-                    String thh_huan = data.getData().getThh().getThh_huan();
-                    getViewById(R.id.rb_back).setVisibility("1".equals(thh_tui)?View.VISIBLE:View.GONE);
-                    getViewById(R.id.rb_change).setVisibility("1".equals(thh_huan)?View.VISIBLE:View.GONE);
-
-                    buyFragment = new BuyFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("defaultData",data);
-                    buyFragment.setArguments(bundle);
-                    FragmentTransaction ft = getSupportFragmentManager()
-                            .beginTransaction();
-                    ft.add(R.id.fl_content, buyFragment);
-                    ft.commit();
-                    radioGroup.check(R.id.rb_buy);
-                }
-            });
         }
     }
 
@@ -163,6 +172,16 @@ public class MainActivity extends BaseActivity {
         attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
         attributes.height = (int) (ScreenUtils.getScreenWidth(this)*0.9);
         dialog.getWindow().setAttributes(attributes);
+    }
+
+    /**
+     * 是否显示退换货页面
+     */
+    private int thh_tui ;
+    private int thh_huan ;
+    public void isShowThh(String thh_tui, String thh_huan){
+        this.thh_tui = Integer.parseInt(thh_tui);
+        this.thh_huan = Integer.parseInt(thh_huan);
     }
 
     /**

@@ -1,10 +1,10 @@
 package com.softgarden.garden.view.buy.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.base.EngineFactory;
@@ -14,10 +14,6 @@ import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.buy.adapter.ContentAdapter;
 import com.softgarden.garden.view.buy.adapter.TitleAdapter;
-import com.softgarden.garden.view.main.entity.MessageBean;
-
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +32,13 @@ public class FragmentProduct extends BaseFragment{
     private TitleAdapter titleAdapter;
     private ContentAdapter contentAdapter;
     private String yiji_id;
+    private TextView tv_title;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_list);
 
-        // register the receiver object
-        EventBus.getDefault().register(this);
-
+        tv_title = getViewById(R.id.tv_title);
         lv_titles = getViewById(R.id.lv_titles);
         lv_content = getViewById(R.id.lv_content);
     }
@@ -56,6 +51,7 @@ public class FragmentProduct extends BaseFragment{
                 if(position != mCurrentPosition){
                     mData.clear();
                     IndexEntity.DataBean.ErjiBean item = (IndexEntity.DataBean.ErjiBean) parent.getAdapter().getItem(position);
+                    tv_title.setText(item.getTitle());
                     BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
                     engine.getProducts(mActivity.getUserId(), yiji_id, item.getId(), new
                             ObjectCallBack<IndexEntity>(mActivity) {
@@ -76,15 +72,8 @@ public class FragmentProduct extends BaseFragment{
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        IndexEntity indexEntity = (IndexEntity) arguments.getSerializable("defaultData");
         yiji_id = arguments.getString("yiji_id");
-        if(indexEntity == null){
-            // TODO: 2016/7/6 从网络中获取
-            loadData();
-        }else{
-            // 设置数据
-            getData(indexEntity.getData().getErji(),indexEntity.getData().getSanji());
-        }
+        loadData();
     }
 
     private void loadData() {
@@ -93,7 +82,7 @@ public class FragmentProduct extends BaseFragment{
                 ObjectCallBack<IndexEntity>(mActivity) {
             @Override
             public void onSuccess(IndexEntity data) {
-                getData(data.getData().getErji(),data.getData().getSanji());
+                setData(data.getData().getErji(),data.getData().getSanji());
             }
         });
     }
@@ -102,14 +91,17 @@ public class FragmentProduct extends BaseFragment{
     protected void onUserVisible() {
 
     }
+    private void setData(List<IndexEntity.DataBean.ErjiBean> erji, List<IndexEntity.DataBean.SanjiBean> sanji) {
 
-    private void getData(List<IndexEntity.DataBean.ErjiBean> erji, List<IndexEntity.DataBean.SanjiBean> sanji) {
         mTitles.clear();
         mData.clear();
         if (sanji!=null)
-        mData.addAll(sanji);
-        if (erji!=null)
-        mTitles.addAll(erji);
+            mData.addAll(sanji);
+        if (erji!=null){
+            String title = erji.get(0).getTitle();
+            tv_title.setText(title);
+            mTitles.addAll(erji);
+        }
         if(titleAdapter==null){
             titleAdapter = new TitleAdapter(mActivity,R.layout.item_list_title);
             titleAdapter.setDatas(mTitles);
@@ -126,20 +118,4 @@ public class FragmentProduct extends BaseFragment{
         }
     }
 
-    public void setSelection(int position){
-        lv_content.setSelection(position);
-    }
-
-    @Override
-    public void onDestroyView() {
-        // Don’t forget to unregister !!
-        EventBus.getDefault().unregister(this);
-        super.onDestroyView();
-    }
-
-    @Subscriber(tag = "refresh")
-    private void refresh(MessageBean user) {
-        Log.e("", "### update user with my_tag, name = " + user.message);
-        loadData();
-    }
 }

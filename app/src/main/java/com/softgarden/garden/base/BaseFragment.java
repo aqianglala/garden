@@ -31,6 +31,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        LogUtils.e(isVisibleToUser?"可见":"不可见");
         if (isVisibleToUser) {
             onUserVisible();
         }
@@ -82,7 +83,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     /**
      * 当fragment对用户可见时，会调用该方法，可在该方法中懒加载网络数据
      */
-    protected abstract void onUserVisible();
+    protected void onUserVisible(){};
 
     /**
      * 查找View
