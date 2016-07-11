@@ -11,7 +11,7 @@ public class TableConfig {
      */
     public static class Product{
 
-        public static final String PRODUCT_ID = "car_id";
+        public static final String PRODUCT_ID = "product_id";
         public static final String PRODUCT_NAME = "product_name";
         public static final String PRODUCT_NUMBER = "product_number";
         public static final String PRODUCT_PICTURE = "product_picture";

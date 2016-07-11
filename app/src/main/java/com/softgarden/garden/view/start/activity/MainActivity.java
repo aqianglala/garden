@@ -1,4 +1,4 @@
-package com.softgarden.garden.view.main.activity;
+package com.softgarden.garden.view.start.activity;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -22,8 +22,8 @@ import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
 import com.softgarden.garden.view.buy.fragment.BuyFragment;
 import com.softgarden.garden.view.historyOrders.fragment.OrderFragment;
-import com.softgarden.garden.view.main.ModifyPswdDialog;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.ModifyPswdDialog;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;

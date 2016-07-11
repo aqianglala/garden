@@ -7,7 +7,7 @@ import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.back.adapter.BannerGridAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;

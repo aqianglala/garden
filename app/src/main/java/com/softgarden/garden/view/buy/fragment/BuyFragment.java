@@ -23,7 +23,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
-import com.softgarden.garden.view.main.activity.MainActivity;
+import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 import com.softgarden.garden.widget.CustomViewPager;
 

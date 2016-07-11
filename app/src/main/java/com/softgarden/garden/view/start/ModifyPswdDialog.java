@@ -1,4 +1,4 @@
-package com.softgarden.garden.view.main;
+package com.softgarden.garden.view.start;
 
 import android.app.Dialog;
 import android.content.Context;

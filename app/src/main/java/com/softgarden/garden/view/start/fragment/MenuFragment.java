@@ -1,4 +1,4 @@
-package com.softgarden.garden.view.main.fragment;
+package com.softgarden.garden.view.start.fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -20,7 +20,7 @@ import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
 import com.softgarden.garden.view.login.LoginActivity;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.entity.MessageBean;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 
 import org.simple.eventbus.EventBus;

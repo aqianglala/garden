@@ -23,7 +23,7 @@ import com.softgarden.garden.view.back.adapter.BannerPagerAdapter;
 import com.softgarden.garden.view.back.adapter.CheckProductAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
 import com.softgarden.garden.view.change.ChangePromptDialog;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 

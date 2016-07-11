@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.softgarden.garden.view.main.activity.MainActivity;
+import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;

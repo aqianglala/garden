@@ -14,7 +14,7 @@ import com.softgarden.garden.view.feedback.activity.PhotoActivity;
 import com.softgarden.garden.view.feedback.activity.SuggestionActivity;
 import com.softgarden.garden.view.feedback.adapter.GridAdapter;
 import com.softgarden.garden.view.feedback.utils.Bimp;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;

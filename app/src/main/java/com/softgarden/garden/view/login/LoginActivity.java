@@ -20,7 +20,7 @@ import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.SPUtils;
-import com.softgarden.garden.view.main.activity.MainActivity;
+import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 
 public class LoginActivity extends BaseActivity {

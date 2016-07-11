@@ -1,4 +1,4 @@
-package com.softgarden.garden.view.main.activity;
+package com.softgarden.garden.view.start.activity;
 
 import android.content.Intent;
 import android.os.Handler;

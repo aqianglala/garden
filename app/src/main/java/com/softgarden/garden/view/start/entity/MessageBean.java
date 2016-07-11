@@ -1,4 +1,4 @@
-package com.softgarden.garden.view.main.entity;
+package com.softgarden.garden.view.start.entity;
 
 /**
  * Created by qiang-pc on 2016/6/16.

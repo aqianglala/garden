@@ -29,12 +29,12 @@
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"/>
         <activity
-            android:name="com.softgarden.garden.view.main.activity.MainActivity"
+            android:name="com.softgarden.garden.view.start.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name="com.softgarden.garden.view.main.activity.SplashActivity"
+            android:name="com.softgarden.garden.view.start.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

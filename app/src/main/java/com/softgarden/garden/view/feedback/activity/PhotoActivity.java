@@ -22,7 +22,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.view.feedback.utils.Bimp;
 import com.softgarden.garden.view.feedback.utils.FileUtils;
-import com.softgarden.garden.view.main.entity.MessageBean;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
 
