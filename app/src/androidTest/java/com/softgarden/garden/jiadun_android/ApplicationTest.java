@@ -4,11 +4,10 @@ import android.app.Application;
 import android.test.ApplicationTestCase;
 import android.util.Log;
 
-import com.softgarden.garden.dao.ProductBean;
-import com.softgarden.garden.dao.TableConfig;
-import com.softgarden.garden.dao.TableOperate;
+import com.softgarden.garden.dao.ProductDao;
+import com.softgarden.garden.entity.ProductItem;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
@@ -19,50 +18,24 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     }
 
     public void testInsert(){
-        TableOperate tableOperate = new TableOperate();
-        for(int i=0;i<10;i++){
-            ProductBean productBean = new ProductBean();
-            productBean.setCar_id("id_"+i);
-            productBean.setProduct_name("name_"+i);
-            productBean.setProduct_number("number_"+i);
-            productBean.setProduct_price("price_"+i);
-            productBean.setProduct_special("special_"+i);
-            productBean.setProduct_category("category_"+i);
-            productBean.setProduct_guige("guige_"+i);
-            tableOperate.insert(TableConfig.TABLE_NAME,productBean);
+        ProductDao dao = ProductDao.getDao();
+        for (int i=0;i<10;i++){
+            ProductItem productItem = new ProductItem(i+"","蛋糕"+i,i+"",null,"22",i+"",null,"1",
+                    "22","22","22/克","998");
+            dao.insert(productItem);
         }
-    }
-
-    public void testDelete(){
-        TableOperate tableOperate = new TableOperate();
-        tableOperate.delete(TableConfig.TABLE_NAME,TableConfig.Product.PRODUCT_ID,"id_9");
     }
 
     public void testUpdate(){
-        ProductBean productBean = new ProductBean();
-        productBean.setProduct_name("修改了");
-        TableOperate tableOperate = new TableOperate();
-        tableOperate.uptate(TableConfig.TABLE_NAME,TableConfig.Product.PRODUCT_ID,"id_8",
-                productBean);
+        ProductItem productItem = new ProductItem("8","蛋糕88","",null,"88","",null,"1",
+                "22","22","22/克","998");
+        ProductDao dao = ProductDao.getDao();
+        dao.updateByProductId(productItem);
     }
 
     public void testQuery(){
-        TableOperate tableOperate = new TableOperate();
-        ArrayList<ProductBean> query = tableOperate.query(TableConfig.TABLE_NAME, ProductBean
-                .class, TableConfig.Product.PRODUCT_NAME, "修改了");
-        for(int i = 0;i<query.size();i++){
-            ProductBean productBean = query.get(i);
-            Log.e("query",productBean.getProduct_name());
-        }
-    }
-
-    public void testQueryAll(){
-        TableOperate tableOperate = new TableOperate();
-        ArrayList<ProductBean> query = tableOperate.queryAll(TableConfig.TABLE_NAME, ProductBean
-                .class);
-        for(int i = 0;i<query.size();i++){
-            ProductBean productBean = query.get(i);
-            Log.e("query",productBean.getProduct_name());
-        }
+        ProductDao dao = ProductDao.getDao();
+        List<ProductItem> all = dao.findAll();
+        Log.e("way",all.size()+"");
     }
 }

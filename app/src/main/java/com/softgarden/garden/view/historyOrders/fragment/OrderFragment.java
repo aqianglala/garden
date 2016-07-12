@@ -18,6 +18,7 @@ import com.softgarden.garden.view.historyOrders.adapter.OrderExAdapter;
 import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
 import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
 import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
+import com.softgarden.garden.view.historyOrders.widget.OrderDecorator;
 import com.softgarden.garden.view.start.activity.MainActivity;
 
 import java.text.SimpleDateFormat;
@@ -90,8 +91,8 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             CalendarDay day = CalendarDay.from(calendar);
             oldDates.add(day);
         }
-        Drawable greenDrawable = getResources().getDrawable(R.drawable.layer_green);
-        widget.addDecorator(new EventDecorator(greenDrawable, oldDates));
+        Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
+        widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
 
         expandableListView.addFooterView(calenderLayout);
     }

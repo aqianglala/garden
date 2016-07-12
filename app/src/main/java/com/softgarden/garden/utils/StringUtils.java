@@ -296,6 +296,17 @@ public class StringUtils {
     }
 
     /**
+     * 获取当前时间日期
+     *
+     * @return
+     */
+    public static String getCurrDay() {
+        Long timestamp = System.currentTimeMillis();
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(timestamp));
+        return date;
+    }
+
+    /**
      * 返回.00格式的数字
      * @param num
      * @return

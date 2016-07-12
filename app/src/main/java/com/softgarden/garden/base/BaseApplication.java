@@ -9,18 +9,23 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.android.http.RequestManager;
+import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.utils.GlobalParams;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BaseApplication extends Application{
 
-    private  static Context context;
-    private  static Thread mainThread;
-    private  static long mainThreadId;
-    private  static Handler mainHandler;
-    private  static Looper mainlooper;
+    private static Context context;
+    private static Thread mainThread;
+    private static long mainThreadId;
+    private static Handler mainHandler;
+    private static Looper mainlooper;
+    public static IndexEntity indexEntity ;
+    public static List<TempDataBean> tempDataBeans = new ArrayList<>();
 
     @Override
     public void onCreate() {

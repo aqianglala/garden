@@ -1,7 +1,5 @@
 package com.softgarden.garden.engine;
 
-import android.text.TextUtils;
-
 import com.softgarden.garden.base.BaseEngine;
 import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.entity.IndexEntity;
@@ -16,16 +14,12 @@ import org.json.JSONObject;
  */
 public class BuyEngine extends BaseEngine{
 
-    public void getProducts(String uid, String yiji_id, String erji_id, ObjectCallBack<IndexEntity>
+    public void getProducts(String username, ObjectCallBack<IndexEntity>
             callBack){
 
         JSONObject object=new JSONObject();
         try {
-            object.put("uid",uid);
-            if(!TextUtils.isEmpty(yiji_id))
-            object.put("yiji_id",yiji_id);
-            if(!TextUtils.isEmpty(erji_id))
-            object.put("erji_id",erji_id);
+            object.put("CustomerNo",username);
         } catch (JSONException e) {
             e.printStackTrace();
         }

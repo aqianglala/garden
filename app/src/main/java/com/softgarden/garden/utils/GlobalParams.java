@@ -17,7 +17,5 @@ public class GlobalParams {
 	public static int heightPixels;
 
 	//保存的key
-	public static final String USER_INFO_PHONE="user_info_phone";
-	public static final String USER_INFO_NAME="user_info_name";
-	public static final String USER_INFO_PWD="user_info_pwd";
+	public static final String LAST_UPDATE_TIME="last_update_time";
 }

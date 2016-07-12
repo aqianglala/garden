@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zhy.autolayout.AutoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
 
     <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@mipmap/back_dialog_bg"
-        android:paddingBottom="30px">
+        android:layout_width="660px"
+        android:layout_height="660px">
+
+        <ImageView
+            android:layout_width="580px"
+            android:layout_height="660px"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/back_dialog_bg"/>
 
         <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="580px"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
+            android:layout_centerInParent="true"
             android:orientation="vertical"
+            android:paddingTop="70px"
             android:paddingLeft="30px"
             android:paddingRight="30px">
 
@@ -33,8 +36,8 @@
                 android:id="@+id/et_pswd"
                 android:layout_width="match_parent"
                 android:layout_height="80px"
-                android:layout_marginBottom="40px"
-                android:layout_marginTop="30px"
+                android:layout_marginBottom="20px"
+                android:layout_marginTop="20px"
                 android:background="@drawable/shape_et_group_bg"
                 android:hint="请输入登录密码"
                 android:inputType="textPassword"
@@ -99,21 +102,23 @@
             android:id="@+id/btn_yes"
             android:layout_width="350px"
             android:layout_height="70px"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30px"
             android:background="@drawable/shape_modify"
             android:text="确认"
             android:textColor="@color/white_text"
             android:textSize="36px"/>
 
+        <ImageView
+            android:id="@+id/iv_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/quxiao_dialog"/>
+
     </com.zhy.autolayout.AutoRelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_cancle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="50px"
-        android:src="@mipmap/quxiao_dialog"/>
+
 
 </com.zhy.autolayout.AutoRelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 /**
  * Created by qiang-pc on 2016/6/14.
  */
-public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.SanjiBean> {
+public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> {
 
     private Context context;
     public ContentAdapter(Context context, int itemLayoutId) {
@@ -33,20 +34,37 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
 
     @Override
     protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position,
-                            IndexEntity.DataBean.SanjiBean bean) {
-        TextView tv_price = bgaViewHolderHelper.getView(R.id.tv_price);
-        tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                            IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean bean) {
         bgaViewHolderHelper
-                .setText(R.id.tv_name,bean.getName())
-                .setText(R.id.tv_number, bean.getNumber())
-                .setText(R.id.tv_weight,bean.getGuige()+"")
-                .setText(R.id.tv_price,bean.getPrice()+"")
-                .setText(R.id.tv_special,bean.getSpecial());
-        // 设置图片
+                .setText(R.id.tv_name,bean.getItemName())
+                .setText(R.id.tv_number, bean.getIetmNo())
+                .setText(R.id.tv_weight,bean.getSpec())
+                .setText(R.id.tv_back,bean.getReturnrate()+"")
+                .setText(R.id.tv_prediction,bean.getProQty()+"")
+                .setText(R.id.tv_weight,bean.getSpec());
+
+        TextView tv_price = bgaViewHolderHelper.getView(R.id.tv_price);
+        TextView tv_special = bgaViewHolderHelper.getView(R.id.tv_special);
+        tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        ImageView iv_tejia = bgaViewHolderHelper.getView(R.id.iv_tejia);
+
+        int price = bean.getPrice();
+        if(price == 0 || bean.getIsSpecial() == 0){// 没有特价，使用标准价
+            tv_special.setText(bean.getBzj());
+            tv_price.setVisibility(View.GONE);
+            iv_tejia.setVisibility(View.GONE);
+        }else{// 特价
+            tv_special.setText(bean.getPrice()+"");
+            tv_price.setText(bean.getBzj());
+            tv_price.setVisibility(View.VISIBLE);
+            iv_tejia.setVisibility(View.VISIBLE);
+        }
+        // TODO: 2016/7/12
         NetworkImageView iv_product = bgaViewHolderHelper.getView(R.id.iv_product);
         iv_product.setImageUrl(HttpHelper.HOST+bean.getPicture(), ImageLoaderHelper.getInstance());
 
         final TextView tv_total = bgaViewHolderHelper.getView(R.id.tv_total);
+        tv_total.setText(bean.getProQty()+"");
         tv_total.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

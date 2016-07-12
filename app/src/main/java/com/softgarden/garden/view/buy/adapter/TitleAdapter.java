@@ -1,7 +1,7 @@
 package com.softgarden.garden.view.buy.adapter;
 
 import android.content.Context;
-import android.view.View;
+import android.widget.TextView;
 
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
@@ -12,7 +12,7 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 /**
  * Created by qiang-pc on 2016/6/14.
  */
-public class TitleAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ErjiBean>{
+public class TitleAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ShopBean.ChildBean>{
     private int currentPosition;
     private Context mContext;
     public TitleAdapter(Context context, int itemLayoutId) {
@@ -22,13 +22,15 @@ public class TitleAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.Erj
 
     @Override
     protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, int i, IndexEntity.DataBean
-            .ErjiBean bean) {
-        bgaViewHolderHelper.setText(R.id.tv_title, bean.getTitle());
-        View view = bgaViewHolderHelper.getView(R.id.tv_title);
+            .ShopBean.ChildBean bean) {
+        bgaViewHolderHelper.setText(R.id.tv_title, bean.getItemGroupName());
+        TextView view = bgaViewHolderHelper.getView(R.id.tv_title);
         if(i == currentPosition){
-            view.setBackgroundColor(mContext.getResources().getColor(R.color.bg_white));
-        }else{
+            view.setTextColor(mContext.getResources().getColor(R.color.pink_text));
             view.setBackgroundColor(mContext.getResources().getColor(R.color.bg_gray));
+        }else{
+            view.setTextColor(mContext.getResources().getColor(R.color.black_text));
+            view.setBackgroundColor(mContext.getResources().getColor(R.color.bg_white));
         }
     }
 

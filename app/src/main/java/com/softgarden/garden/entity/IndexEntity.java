@@ -2,6 +2,7 @@ package com.softgarden.garden.entity;
 
 import com.softgarden.garden.base.BaseDao;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,46 +13,33 @@ public class IndexEntity extends BaseDao{
     /**
      * status : 1
      * errorMsg :
-     * data : {"yiji":[{"id":"1","number":"3","title":"面包","pid":"0","sort":"0"},{"id":"2",
-     * "number":"4","title":"蛋糕","pid":"0","sort":"0"}],"erji":[{"id":"3","number":"B01",
-     * "title":"生命包","pid":"1","sort":"0"},{"id":"4","number":"B02","title":"三文治","pid":"1",
-     * "sort":"0"}],"sanji":[{"id":"1","number":"3001","name":"嘉顿生命面包(蜡纸)",
-     * "picture":"/Uploads/Picture/2016-07-01/57761aa26ebfa.jpg","category":"3","guige":"450克/袋",
-     * "price":"0.02","whether":"1","special":"0.02","sort":"0"},{"id":"2","number":"3107",
-     * "name":"蜜糖甜生命面包","picture":"/Uploads/Picture/2016-07-01/57761aa26ebfa.jpg","category":"3",
-     * "guige":"450克/袋","price":"0.01","whether":"0","special":"0.02","sort":"0"},{"id":"3",
-     * "number":"3117","name":"高纤维生命麦包","picture":"/Uploads/Picture/2016-07-06/577c6bdc37eb5
-     * .jpg","category":"3","guige":"450克/袋","price":"0.02","whether":"0","special":"0.01",
-     * "sort":"0"},{"id":"4","number":"3288","name":"高蛋白生命面包",
-     * "picture":"/Uploads/Picture/2016-07-06/577c6c03c0dfb.jpg","category":"3","guige":"450克/袋",
-     * "price":"0.03","whether":"0","special":"0.01","sort":"0"}],
-     * "banner":["/Uploads/Picture/2016-07-06/577ccc4feb6f5.jpg",
-     * "/Uploads/Picture/2016-07-06/577ccc5dbc654.jpg","/Uploads/Picture/2016-07-06/577ccc68bbca6
-     * .jpg"],"thh":{"thh_tui":"1","thh_huan":"0"}}
+     * data : {"shop":[{"itemclassName":"面包","itemclassCode":"3","child":[{"itemclassCode":"3",
+     * "ItemGroupName":"生命包","Itemgroupcdoe":"B01","goods":[{"itemclassCode":"3",
+     * "itemclassName":"面包","Itemgroupcdoe":"B01","ItemGroupName":"生命包","IetmNo":"3001",
+     * "ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","Unit":"包","bzj":"1.0000","picture":"","proQty":0,
+     * "Price":0,"IsSpecial":0,"returnrate":0},{"itemclassCode":"3","itemclassName":"面包",
+     * "Itemgroupcdoe":"B01","ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包",
+     * "spec":"450g/袋","Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
+     * "returnrate":0}]},{"itemclassCode":"3","ItemGroupName":"三文治","Itemgroupcdoe":"B02",
+     * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B02",
+     * "ItemGroupName":"三文治","IetmNo":"3155","ItemName":"小平方包","spec":"350g/袋","Unit":"包",
+     * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
+     * {"itemclassCode":"3","ItemGroupName":"忌廉槟","Itemgroupcdoe":"B03",
+     * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B03",
+     * "ItemGroupName":"忌廉槟","IetmNo":"3064","ItemName":"菠萝椰丝忌廉包","spec":"80g/袋","Unit":"袋",
+     * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]}]},
+     * {"itemclassName":"蛋糕","itemclassCode":"4","child":[{"itemclassCode":"4",
+     * "ItemGroupName":"牛油蛋糕","Itemgroupcdoe":"K01","goods":[{"itemclassCode":"4",
+     * "itemclassName":"蛋糕","Itemgroupcdoe":"K01","ItemGroupName":"牛油蛋糕","IetmNo":"4001",
+     * "ItemName":"宝宝蛋糕","spec":"1篮X42包","Unit":"包","bzj":"1.0000","picture":"","proQty":0,
+     * "Price":0,"IsSpecial":0,"returnrate":0}]}]}],
+     * "banner":["/Uploads/Picture/2016-07-12/578491c2d2704.png",
+     * "/Uploads/Picture/2016-07-12/578491b8b9ce3.png","/Uploads/Picture/2016-07-12/578491af2651e
+     * .png"]}
      */
 
     private String status;
     private String errorMsg;
-    /**
-     * yiji : [{"id":"1","number":"3","title":"面包","pid":"0","sort":"0"},{"id":"2","number":"4",
-     * "title":"蛋糕","pid":"0","sort":"0"}]
-     * erji : [{"id":"3","number":"B01","title":"生命包","pid":"1","sort":"0"},{"id":"4",
-     * "number":"B02","title":"三文治","pid":"1","sort":"0"}]
-     * sanji : [{"id":"1","number":"3001","name":"嘉顿生命面包(蜡纸)",
-     * "picture":"/Uploads/Picture/2016-07-01/57761aa26ebfa.jpg","category":"3","guige":"450克/袋",
-     * "price":"0.02","whether":"1","special":"0.02","sort":"0"},{"id":"2","number":"3107",
-     * "name":"蜜糖甜生命面包","picture":"/Uploads/Picture/2016-07-01/57761aa26ebfa.jpg","category":"3",
-     * "guige":"450克/袋","price":"0.01","whether":"0","special":"0.02","sort":"0"},{"id":"3",
-     * "number":"3117","name":"高纤维生命麦包","picture":"/Uploads/Picture/2016-07-06/577c6bdc37eb5
-     * .jpg","category":"3","guige":"450克/袋","price":"0.02","whether":"0","special":"0.01",
-     * "sort":"0"},{"id":"4","number":"3288","name":"高蛋白生命面包",
-     * "picture":"/Uploads/Picture/2016-07-06/577c6c03c0dfb.jpg","category":"3","guige":"450克/袋",
-     * "price":"0.03","whether":"0","special":"0.01","sort":"0"}]
-     * banner : ["/Uploads/Picture/2016-07-06/577ccc4feb6f5.jpg","/Uploads/Picture/2016-07-06
-     * /577ccc5dbc654.jpg","/Uploads/Picture/2016-07-06/577ccc68bbca6.jpg"]
-     * thh : {"thh_tui":"1","thh_huan":"0"}
-     */
-
     private DataBean data;
 
     public String getStatus() {
@@ -78,77 +66,36 @@ public class IndexEntity extends BaseDao{
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         /**
-         * thh_tui : 1
-         * thh_huan : 0
+         * itemclassName : 面包
+         * itemclassCode : 3
+         * child : [{"itemclassCode":"3","ItemGroupName":"生命包","Itemgroupcdoe":"B01",
+         * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
+         * "ItemGroupName":"生命包","IetmNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+         * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
+         * "returnrate":0},{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
+         * "ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包","spec":"450g/袋","Unit":"包",
+         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
+         * {"itemclassCode":"3","ItemGroupName":"三文治","Itemgroupcdoe":"B02",
+         * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B02",
+         * "ItemGroupName":"三文治","IetmNo":"3155","ItemName":"小平方包","spec":"350g/袋","Unit":"包",
+         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
+         * {"itemclassCode":"3","ItemGroupName":"忌廉槟","Itemgroupcdoe":"B03",
+         * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B03",
+         * "ItemGroupName":"忌廉槟","IetmNo":"3064","ItemName":"菠萝椰丝忌廉包","spec":"80g/袋","Unit":"袋",
+         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]}]
          */
 
-        private ThhBean thh;
-        /**
-         * id : 1
-         * number : 3
-         * title : 面包
-         * pid : 0
-         * sort : 0
-         */
-
-        private List<YijiBean> yiji;
-        /**
-         * id : 3
-         * number : B01
-         * title : 生命包
-         * pid : 1
-         * sort : 0
-         */
-
-        private List<ErjiBean> erji;
-        /**
-         * id : 1
-         * number : 3001
-         * name : 嘉顿生命面包(蜡纸)
-         * picture : /Uploads/Picture/2016-07-01/57761aa26ebfa.jpg
-         * category : 3
-         * guige : 450克/袋
-         * price : 0.02
-         * whether : 1
-         * special : 0.02
-         * sort : 0
-         */
-
-        private List<SanjiBean> sanji;
+        private List<ShopBean> shop;
         private List<String> banner;
 
-        public ThhBean getThh() {
-            return thh;
+        public List<ShopBean> getShop() {
+            return shop;
         }
 
-        public void setThh(ThhBean thh) {
-            this.thh = thh;
-        }
-
-        public List<YijiBean> getYiji() {
-            return yiji;
-        }
-
-        public void setYiji(List<YijiBean> yiji) {
-            this.yiji = yiji;
-        }
-
-        public List<ErjiBean> getErji() {
-            return erji;
-        }
-
-        public void setErji(List<ErjiBean> erji) {
-            this.erji = erji;
-        }
-
-        public List<SanjiBean> getSanji() {
-            return sanji;
-        }
-
-        public void setSanji(List<SanjiBean> sanji) {
-            this.sanji = sanji;
+        public void setShop(List<ShopBean> shop) {
+            this.shop = shop;
         }
 
         public List<String> getBanner() {
@@ -159,213 +106,231 @@ public class IndexEntity extends BaseDao{
             this.banner = banner;
         }
 
-        public static class ThhBean {
-            private String thh_tui;
-            private String thh_huan;
+        public static class ShopBean implements Serializable{
+            private String itemclassName;
+            private String itemclassCode;
+            /**
+             * itemclassCode : 3
+             * ItemGroupName : 生命包
+             * Itemgroupcdoe : B01
+             * goods : [{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
+             * "ItemGroupName":"生命包","IetmNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+             * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
+             * "returnrate":0},{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
+             * "ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包","spec":"450g/袋",
+             * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
+             * "returnrate":0}]
+             */
 
-            public String getThh_tui() {
-                return thh_tui;
+            private List<ChildBean> child;
+
+            public String getItemclassName() {
+                return itemclassName;
             }
 
-            public void setThh_tui(String thh_tui) {
-                this.thh_tui = thh_tui;
+            public void setItemclassName(String itemclassName) {
+                this.itemclassName = itemclassName;
             }
 
-            public String getThh_huan() {
-                return thh_huan;
+            public String getItemclassCode() {
+                return itemclassCode;
             }
 
-            public void setThh_huan(String thh_huan) {
-                this.thh_huan = thh_huan;
-            }
-        }
-
-        public static class YijiBean {
-            private String id;
-            private String number;
-            private String title;
-            private String pid;
-            private String sort;
-
-            public String getId() {
-                return id;
+            public void setItemclassCode(String itemclassCode) {
+                this.itemclassCode = itemclassCode;
             }
 
-            public void setId(String id) {
-                this.id = id;
+            public List<ChildBean> getChild() {
+                return child;
             }
 
-            public String getNumber() {
-                return number;
+            public void setChild(List<ChildBean> child) {
+                this.child = child;
             }
 
-            public void setNumber(String number) {
-                this.number = number;
-            }
+            public static class ChildBean implements Serializable{
+                private String itemclassCode;
+                private String ItemGroupName;
+                private String Itemgroupcdoe;
+                /**
+                 * itemclassCode : 3
+                 * itemclassName : 面包
+                 * Itemgroupcdoe : B01
+                 * ItemGroupName : 生命包
+                 * IetmNo : 3001
+                 * ItemName : 嘉顿生命面包(蜡纸)
+                 * spec : 450g/袋
+                 * Unit : 包
+                 * bzj : 1.0000
+                 * picture :
+                 * proQty : 0
+                 * Price : 0
+                 * IsSpecial : 0
+                 * returnrate : 0
+                 */
 
-            public String getTitle() {
-                return title;
-            }
+                private List<GoodsBean> goods;
 
-            public void setTitle(String title) {
-                this.title = title;
-            }
+                public String getItemclassCode() {
+                    return itemclassCode;
+                }
 
-            public String getPid() {
-                return pid;
-            }
+                public void setItemclassCode(String itemclassCode) {
+                    this.itemclassCode = itemclassCode;
+                }
 
-            public void setPid(String pid) {
-                this.pid = pid;
-            }
+                public String getItemGroupName() {
+                    return ItemGroupName;
+                }
 
-            public String getSort() {
-                return sort;
-            }
+                public void setItemGroupName(String ItemGroupName) {
+                    this.ItemGroupName = ItemGroupName;
+                }
 
-            public void setSort(String sort) {
-                this.sort = sort;
-            }
-        }
+                public String getItemgroupcdoe() {
+                    return Itemgroupcdoe;
+                }
 
-        public static class ErjiBean {
-            private String id;
-            private String number;
-            private String title;
-            private String pid;
-            private String sort;
+                public void setItemgroupcdoe(String Itemgroupcdoe) {
+                    this.Itemgroupcdoe = Itemgroupcdoe;
+                }
 
-            public String getId() {
-                return id;
-            }
+                public List<GoodsBean> getGoods() {
+                    return goods;
+                }
 
-            public void setId(String id) {
-                this.id = id;
-            }
+                public void setGoods(List<GoodsBean> goods) {
+                    this.goods = goods;
+                }
 
-            public String getNumber() {
-                return number;
-            }
+                public static class GoodsBean implements Serializable{
+                    private String itemclassCode;
+                    private String itemclassName;
+                    private String Itemgroupcdoe;
+                    private String ItemGroupName;
+                    private String IetmNo;
+                    private String ItemName;
+                    private String spec;
+                    private String Unit;
+                    private String bzj;
+                    private String picture;
+                    private int proQty;
+                    private int Price;
+                    private int IsSpecial;
+                    private int returnrate;
 
-            public void setNumber(String number) {
-                this.number = number;
-            }
+                    public String getItemclassCode() {
+                        return itemclassCode;
+                    }
 
-            public String getTitle() {
-                return title;
-            }
+                    public void setItemclassCode(String itemclassCode) {
+                        this.itemclassCode = itemclassCode;
+                    }
 
-            public void setTitle(String title) {
-                this.title = title;
-            }
+                    public String getItemclassName() {
+                        return itemclassName;
+                    }
 
-            public String getPid() {
-                return pid;
-            }
+                    public void setItemclassName(String itemclassName) {
+                        this.itemclassName = itemclassName;
+                    }
 
-            public void setPid(String pid) {
-                this.pid = pid;
-            }
+                    public String getItemgroupcdoe() {
+                        return Itemgroupcdoe;
+                    }
 
-            public String getSort() {
-                return sort;
-            }
+                    public void setItemgroupcdoe(String Itemgroupcdoe) {
+                        this.Itemgroupcdoe = Itemgroupcdoe;
+                    }
 
-            public void setSort(String sort) {
-                this.sort = sort;
-            }
-        }
+                    public String getItemGroupName() {
+                        return ItemGroupName;
+                    }
 
-        public static class SanjiBean {
-            private String id;
-            private String number;
-            private String name;
-            private String picture;
-            private String category;
-            private String guige;
-            private String price;
-            private String whether;
-            private String special;
-            private String sort;
+                    public void setItemGroupName(String ItemGroupName) {
+                        this.ItemGroupName = ItemGroupName;
+                    }
 
-            public String getId() {
-                return id;
-            }
+                    public String getIetmNo() {
+                        return IetmNo;
+                    }
 
-            public void setId(String id) {
-                this.id = id;
-            }
+                    public void setIetmNo(String IetmNo) {
+                        this.IetmNo = IetmNo;
+                    }
 
-            public String getNumber() {
-                return number;
-            }
+                    public String getItemName() {
+                        return ItemName;
+                    }
 
-            public void setNumber(String number) {
-                this.number = number;
-            }
+                    public void setItemName(String ItemName) {
+                        this.ItemName = ItemName;
+                    }
 
-            public String getName() {
-                return name;
-            }
+                    public String getSpec() {
+                        return spec;
+                    }
 
-            public void setName(String name) {
-                this.name = name;
-            }
+                    public void setSpec(String spec) {
+                        this.spec = spec;
+                    }
 
-            public String getPicture() {
-                return picture;
-            }
+                    public String getUnit() {
+                        return Unit;
+                    }
 
-            public void setPicture(String picture) {
-                this.picture = picture;
-            }
+                    public void setUnit(String Unit) {
+                        this.Unit = Unit;
+                    }
 
-            public String getCategory() {
-                return category;
-            }
+                    public String getBzj() {
+                        return bzj;
+                    }
 
-            public void setCategory(String category) {
-                this.category = category;
-            }
+                    public void setBzj(String bzj) {
+                        this.bzj = bzj;
+                    }
 
-            public String getGuige() {
-                return guige;
-            }
+                    public String getPicture() {
+                        return picture;
+                    }
 
-            public void setGuige(String guige) {
-                this.guige = guige;
-            }
+                    public void setPicture(String picture) {
+                        this.picture = picture;
+                    }
 
-            public String getPrice() {
-                return price;
-            }
+                    public int getProQty() {
+                        return proQty;
+                    }
 
-            public void setPrice(String price) {
-                this.price = price;
-            }
+                    public void setProQty(int proQty) {
+                        this.proQty = proQty;
+                    }
 
-            public String getWhether() {
-                return whether;
-            }
+                    public int getPrice() {
+                        return Price;
+                    }
 
-            public void setWhether(String whether) {
-                this.whether = whether;
-            }
+                    public void setPrice(int Price) {
+                        this.Price = Price;
+                    }
 
-            public String getSpecial() {
-                return special;
-            }
+                    public int getIsSpecial() {
+                        return IsSpecial;
+                    }
 
-            public void setSpecial(String special) {
-                this.special = special;
-            }
+                    public void setIsSpecial(int IsSpecial) {
+                        this.IsSpecial = IsSpecial;
+                    }
 
-            public String getSort() {
-                return sort;
-            }
+                    public int getReturnrate() {
+                        return returnrate;
+                    }
 
-            public void setSort(String sort) {
-                this.sort = sort;
+                    public void setReturnrate(int returnrate) {
+                        this.returnrate = returnrate;
+                    }
+                }
             }
         }
     }
