@@ -12,6 +12,12 @@ public class TempDataBean {
     // 产品编号
     private String IetmNo;
 
+    public TempDataBean(int tuangou, int shuliang, String ietmNo) {
+        this.tuangou = tuangou;
+        this.shuliang = shuliang;
+        IetmNo = ietmNo;
+    }
+
     public int getTuangou() {
         return tuangou;
     }

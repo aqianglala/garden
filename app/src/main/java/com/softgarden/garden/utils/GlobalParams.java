@@ -18,4 +18,5 @@ public class GlobalParams {
 
 	//保存的key
 	public static final String LAST_UPDATE_TIME="last_update_time";
+	public static final String DATA="data";
 }

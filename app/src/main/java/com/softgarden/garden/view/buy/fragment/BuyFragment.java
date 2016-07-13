@@ -2,6 +2,7 @@ package com.softgarden.garden.view.buy.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,22 @@ import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.google.gson.Gson;
 import com.nineoldandroids.view.ViewHelper;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.dialog.LoadDialog;
 import com.softgarden.garden.engine.BuyEngine;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.utils.StringUtils;
+import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
@@ -32,6 +37,8 @@ import com.softgarden.garden.widget.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
 import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
@@ -41,7 +48,7 @@ import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
  * Created by Hasee on 2016/6/6.
  */
 public class BuyFragment extends BaseFragment implements BGARefreshLayout
-        .BGARefreshLayoutDelegate{
+        .BGARefreshLayoutDelegate,Observer{
 
     private ImageView iv_me;
     private ImageView iv_shopcar;
@@ -58,12 +65,14 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     private int tabCount;
     private ArrayList<BaseFragment> fragments = new ArrayList<>();
     private MyPagerAdapter myPagerAdapter;
+    private TextView tv_count;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_buy);
         mActivity = (MainActivity)getActivity();
 
+        tv_count = getViewById(R.id.tv_count);
         ll_tab_container = getViewById(R.id.ll_tab_container);
         iv_me = getViewById(R.id.iv_me);
         iv_shopcar = getViewById(R.id.iv_shopCar);
@@ -99,8 +108,29 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         // 访问网络
         // 当天不重复请求，隔天才请求新的数据
         String time = (String) SPUtils.get(mActivity, GlobalParams.LAST_UPDATE_TIME, "");
-        if(StringUtils.getCurrDay().equals(time)){// 当天,从数据库中获取
-
+        String data = (String) SPUtils.get(mActivity, GlobalParams.DATA, "");
+        if(StringUtils.getCurrDay().equals(time) && !TextUtils.isEmpty(data)){// 当天,从数据库中获取
+            IndexEntity indexEntity = new Gson().fromJson(data, IndexEntity.class);
+            BaseApplication.indexEntity = indexEntity;
+            setData(indexEntity);
+            final LoadDialog loadDialog = LoadDialog.show(mActivity);
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    final ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                    // 添加监听
+                    shoppingCart.addObserver(BuyFragment.this);
+                    shoppingCart.initCartList();
+                    UIUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadDialog.dismiss();
+                            showToast(shoppingCart.getTotalNum()+"");
+                        }
+                    });
+                }
+            }.start();
         }else{// 访问网络
             loadData();
         }
@@ -116,32 +146,25 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             public void onSuccess(IndexEntity indexEntity) {
                 // 将此数据做为全局变量，为了减少对数据库的操作
                 SPUtils.put(mActivity, GlobalParams.LAST_UPDATE_TIME,StringUtils.getCurrDay());
+                SPUtils.put(mActivity,GlobalParams.DATA,new Gson().toJson(indexEntity));
                 BaseApplication.indexEntity = indexEntity;
-                //设置banner
-                networkImages = indexEntity.getData().getBanner();
-                networkBanner();
-                // 设置tab的宽度
-                tabCount = indexEntity.getData().getShop().size();
-                setTabWidth();
-                // 动态生成fragment，并设置其一级id，让对应的fragment请求自己的数据
-                fragments.clear();
-                tabViews.clear();
-                ll_tab_container.removeAllViews();
-                for(int i=0;i<tabCount;i++){
-                    // 动态生成tab
-                    addTab(indexEntity, i);
-                    // 动态生成fragment
-                    addFragment(indexEntity, fragments, i);
-                }
-                // 设置能否滚动
-                if (myPagerAdapter == null){
-                    myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
-                    viewPager.setAdapter(myPagerAdapter);
-                }else{
-                    // 暂时无效
-                    myPagerAdapter.notifyDataSetChanged();
-                }
-                mRefreshLayout.endRefreshing();
+                setData(indexEntity);
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        final ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                        // 添加监听
+                        shoppingCart.addObserver(BuyFragment.this);
+                        shoppingCart.initCartList();
+                        UIUtils.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showToast(shoppingCart.getTotalNum()+"");
+                            }
+                        });
+                    }
+                }.start();
             }
 
             @Override
@@ -150,6 +173,34 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                 mRefreshLayout.endRefreshing();
             }
         });
+    }
+
+    private void setData(IndexEntity indexEntity) {
+        //设置banner
+        networkImages = indexEntity.getData().getBanner();
+        networkBanner();
+        // 设置tab的宽度
+        tabCount = indexEntity.getData().getShop().size();
+        setTabWidth();
+        // 动态生成fragment，并设置其一级id，让对应的fragment请求自己的数据
+        fragments.clear();
+        tabViews.clear();
+        ll_tab_container.removeAllViews();
+        for(int i=0;i<tabCount;i++){
+            // 动态生成tab
+            addTab(indexEntity, i);
+            // 动态生成fragment
+            addFragment(indexEntity, fragments, i);
+        }
+        // 设置能否滚动
+        if (myPagerAdapter == null){
+            myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
+            viewPager.setAdapter(myPagerAdapter);
+        }else{
+            // 暂时无效
+            myPagerAdapter.notifyDataSetChanged();
+        }
+        mRefreshLayout.endRefreshing();
     }
 
     /**
@@ -274,5 +325,11 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     @Override
     public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
         return false;
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        int totalNum = ShoppingCart.getInstance().getTotalNum();
+        tv_count.setText(totalNum+"");
     }
 }

@@ -12,8 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.softgarden.garden.interfaces.DialogInputListener;
 import com.softgarden.garden.jiadun_android.R;
 
 
@@ -62,9 +62,15 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
                 break;
             case R.id.btn_add_car:
                 String count = et_count.getText().toString().trim();
-                Toast.makeText(context,count,Toast.LENGTH_SHORT).show();
+                listener.inputNum(count);
                 dismiss();
                 break;
         }
     }
+
+    private DialogInputListener listener;
+    public void setDialogInputListener(DialogInputListener listener){
+        this.listener = listener;
+    }
+
 }

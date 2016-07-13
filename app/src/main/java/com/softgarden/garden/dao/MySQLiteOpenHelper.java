@@ -37,6 +37,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 				"proQty varchar(20)," +
 				"Price varchar(20)," +
 				"IsSpecial varchar(20)," +
+				"tuangou varchar(20)," +
+				"shuliang varchar(20)," +
 				"returnrate varchar(20));";
 		db.execSQL(sql);
 	}

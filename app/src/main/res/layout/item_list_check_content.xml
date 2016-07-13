@@ -126,6 +126,7 @@
             android:layout_toRightOf="@id/tv_price"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20px"
+            android:visibility="gone"
             android:text="￥2.50"/>
 
         <com.zhy.autolayout.AutoRelativeLayout

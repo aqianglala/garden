@@ -158,9 +158,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         radioGroup.check(R.id.rb_buy);
-        if(!hasModify){
-            showDialog();
-        }
+//        if(!hasModify){
+//            showDialog();
+//        }
     }
 
     private void showDialog() {

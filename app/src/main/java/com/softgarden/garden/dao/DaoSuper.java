@@ -55,8 +55,8 @@ public class 	DaoSuper<T> implements Dao<T> {
 	public int updateByProductId(T bean) {
 		// TODO Auto-generated method stub
 		ContentValues values = getvalues(bean);
-		return db.update(getTablegame(), values, "product_id =?",
-				new String[] { getProduct_id(bean) });
+		return db.update(getTablegame(), values, "IetmNo =?",
+				new String[] { getIetmNo(bean) });
 	}
 
 	/**
@@ -178,21 +178,21 @@ public class 	DaoSuper<T> implements Dao<T> {
 	}
 
 	/**
-	 * 获取主键product_id字段
+	 * 获取主键IetmNo字段
 	 *
 	 * @param t
 	 * @return
 	 */
-	public String getProduct_id(T t) {
+	public String getIetmNo(T t) {
 		Field[] fields = t.getClass().getDeclaredFields();
 		for (Field f : fields) {
 			f.setAccessible(true);
 			ColmanName colmanname = f.getAnnotation(ColmanName.class);
-			if (colmanname != null && colmanname.value().equals("product_id")) {
+			if (colmanname != null && colmanname.value().equals("IetmNo")) {
 
-				String product_id = "";
+				String IetmNo = "";
 				try {
-					product_id = f.get(t).toString();
+					IetmNo = f.get(t).toString();
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -200,7 +200,7 @@ public class 	DaoSuper<T> implements Dao<T> {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return product_id;
+				return IetmNo;
 			}
 		}
 

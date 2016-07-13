@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.shopcar.CommitOrderDialog;
@@ -30,9 +34,6 @@ import java.util.Map;
 
 public class ShopcarActivity extends BaseActivity implements ShopcartExpandableListViewAdapter
         .CheckInterface,ShopcartExpandableListViewAdapter.ModifyCountInterface{
-
-    private List<GroupInfo> groups = new ArrayList<GroupInfo>();// 组元素数据列表
-    private Map<String, List<ProductInfo>> children = new HashMap<String, List<ProductInfo>>();// 子元素数据列表
 
     private CheckBox cb_all;
     private ExpandableListView exListView;
@@ -52,8 +53,8 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         tv_right.setVisibility(View.VISIBLE);
         tv_right.setText("编辑");
 
-        // 模拟数据,事实上的数据应该是从本地数据库中获取的
-        virtualData();
+        // 获取数据
+        getData();
         cb_all = getViewById(R.id.cb_all);
         tv_totalprice = getViewById(R.id.tv_totalprice);
         tv_amount = getViewById(R.id.tv_amount);
@@ -71,6 +72,83 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
             exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
         }
     }
+
+    private ArrayList<GroupInfo>groups = new ArrayList<>();
+    private Map<String, List<ProductInfo>> children = new HashMap<String, List<ProductInfo>>();//
+    // 子元素数据列表
+    private void getData() {
+        // 遍历所有数据，只要团购数和数量两个字段不为0就为购物车的数据
+        List<IndexEntity.DataBean.ShopBean> shop = BaseApplication.indexEntity.getData()
+                .getShop();
+        int classSize = shop.size();
+        for(int i = 0;i<classSize;i++){// 一级分类
+            int groupSize = shop.get(i).getChild().size();
+            for(int j = 0;j<groupSize;j++){// 二级分类
+                int goodsSize = shop.get(i).getChild().get(j).getGoods()
+                        .size();
+                ArrayList<ProductInfo> products = new ArrayList<>();
+                for(int k = 0;k<goodsSize;k++){// 所有子项
+                    IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = shop.get(i)
+                            .getChild().get(j).getGoods().get(k);
+                    boolean isInTempData = false;
+                    for (TempDataBean item: BaseApplication.tempDataBeans){
+                        if(goodsBean.getIetmNo().equals(item.getIetmNo())){
+                            // tempDataBeans存在，即用户操作过此数据，判断此bean的tuangou和shuliang字段如果有一个不为0，则为购物车数据
+                            if(item.getTuangou() != 0 || item.getShuliang() != 0) {
+                                addGroup(goodsBean);
+                                ProductInfo productinfo = generateProductInfo(goodsBean, item
+                                        .getTuangou(),item.getShuliang());
+                                products.add(productinfo);
+                            }
+                            isInTempData = true;
+                            break;
+                        }
+                    }
+                    if(!isInTempData){
+                        int count = goodsBean.getProQty();
+                        if(count!=0) {
+                            addGroup(goodsBean);
+                            ProductInfo productinfo = generateProductInfo(goodsBean,0,goodsBean.getProQty());
+                            products.add(productinfo);
+                        }
+                    }
+                }
+                if (products.size()>0) {
+                    children.put(shop.get(i).getChild().get(j).getItemgroupcdoe(),products);
+                }
+            }
+        }
+    }
+
+    private ProductInfo generateProductInfo(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean
+                                                goodsBean, int tuangou, int shuliang) {
+        ProductInfo productinfo = new ProductInfo(goodsBean.getItemclassCode(),
+                goodsBean
+                .getItemclassName(), goodsBean.getItemgroupcdoe(),
+                goodsBean.getItemGroupName(), goodsBean.getIetmNo(),
+                goodsBean.getItemName(), goodsBean.getSpec(), goodsBean
+                .getUnit(), goodsBean.getBzj(), goodsBean.getPicture(),
+                goodsBean.getProQty(), goodsBean.getPrice(), goodsBean
+                .getIsSpecial(),
+                goodsBean.getReturnrate(), false, tuangou, shuliang);
+        return productinfo;
+    }
+
+    private void addGroup(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean) {
+        boolean hasInGroups = false;
+        for(GroupInfo group: groups) {
+            if(group.getGroupName().equals(goodsBean.getItemGroupName())) {
+                hasInGroups = true;
+                break;
+            }
+        }
+        if (!hasInGroups) {
+            GroupInfo groupInfo = new GroupInfo(goodsBean.getItemgroupcdoe(),goodsBean.getItemGroupName());
+            groups.add(groupInfo);
+        }
+    }
+
+
 
     @Override
     protected void setListener() {
@@ -149,34 +227,10 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
     }
 
-    /**
-     * 模拟数据<br>
-     * 遵循适配器的数据列表填充原则，组元素被放在一个List中，对应的组元素下辖的子元素被放在Map中，<br>
-     * 其键是组元素的Id(通常是一个唯一指定组元素身份的值)
-     */
-    private void virtualData()
-    {
-
-        for (int i = 0; i < 6; i++)
-        {
-
-            groups.add(new GroupInfo(i + "", "第" + (i + 1) + "种面包"));
-
-            List<ProductInfo> products = new ArrayList<ProductInfo>();
-            for (int j = 0; j <= i; j++)
-            {
-
-                products.add(new ProductInfo(j + "", groups.get(i).getName() + "的第" + (j + 1) +
-                        "个商品",30,j+1));
-            }
-            children.put(groups.get(i).getId(), products);// 将组元素的一个唯一值，这里取Id，作为子元素List的Key
-        }
-    }
-
     @Override
     public void checkGroup(int groupPosition, boolean isChecked) {
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getId());
+        List<ProductInfo> childs = children.get(group.getGroupId());
         for (int i = 0; i < childs.size(); i++)
         {
             childs.get(i).setChoosed(isChecked);
@@ -193,7 +247,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     public void checkChild(int groupPosition, int childPosition, boolean isChecked) {
         boolean allChildSameState = true;// 判断改组下面的所有子元素是否是同一种状态
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getId());
+        List<ProductInfo> childs = children.get(group.getGroupId());
         for (int i = 0; i < childs.size(); i++)
         {
             if (childs.get(i).isChoosed() != isChecked)
@@ -222,28 +276,27 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean
             isChecked) {
         ProductInfo product = (ProductInfo) adapter.getChild(groupPosition, childPosition);
-        int currentCount = product.getCount();
+        int currentCount = Integer.parseInt(((EditText)showCountView).getText().toString().trim());
         currentCount++;
-        product.setCount(currentCount);
+//        product.setCount(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
-
-        adapter.notifyDataSetChanged();
-        calculate();
+//        adapter.notifyDataSetChanged();
+//        calculate();
     }
 
     @Override
     public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
         ProductInfo product = (ProductInfo) adapter.getChild(groupPosition, childPosition);
-        int currentCount = product.getCount();
-        if (currentCount == 1)
+        int currentCount = Integer.parseInt(((EditText)showCountView).getText().toString().trim());
+        if (currentCount <=0)
             return;
         currentCount--;
 
-        product.setCount(currentCount);
+//        product.setCount(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
 
-        adapter.notifyDataSetChanged();
-        calculate();
+//        adapter.notifyDataSetChanged();
+//        calculate();
     }
 
     private boolean isAllCheck()
@@ -265,7 +318,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         {
             groups.get(i).setChoosed(cb_all.isChecked());
             GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductInfo> childs = children.get(group.getGroupId());
             for (int j = 0; j < childs.size(); j++)
             {
                 childs.get(j).setChoosed(cb_all.isChecked());
@@ -292,7 +345,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 toBeDeleteGroups.add(group);
             }
             List<ProductInfo> toBeDeleteProducts = new ArrayList<ProductInfo>();// 待删除的子元素列表
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductInfo> childs = children.get(group.getGroupId());
             for (int j = 0; j < childs.size(); j++)
             {
                 if (childs.get(j).isChoosed())
@@ -325,14 +378,14 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         for (int i = 0; i < groups.size(); i++)
         {
             GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getId());
+            List<ProductInfo> childs = children.get(group.getGroupId());
             for (int j = 0; j < childs.size(); j++)
             {
                 ProductInfo product = childs.get(j);
                 if (product.isChoosed())
                 {
                     totalCount++;
-                    totalPrice += product.getPrice() * product.getCount();
+//                    totalPrice += product.getPrice() * product.getCount();
                 }
             }
         }

@@ -2,7 +2,6 @@ package com.softgarden.garden.view.buy.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,13 +9,15 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.dialog.InputCountDialog;
 import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.helper.ImageLoaderHelper;
-import com.softgarden.garden.interfaces.CheckInterface;
-import com.softgarden.garden.interfaces.ModifyCountInterface;
+import com.softgarden.garden.interfaces.DialogInputListener;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
 
 import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
@@ -34,7 +35,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
 
     @Override
     protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position,
-                            IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean bean) {
+                            final IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean bean) {
         bgaViewHolderHelper
                 .setText(R.id.tv_name,bean.getItemName())
                 .setText(R.id.tv_number, bean.getIetmNo())
@@ -45,7 +46,6 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
 
         TextView tv_price = bgaViewHolderHelper.getView(R.id.tv_price);
         TextView tv_special = bgaViewHolderHelper.getView(R.id.tv_special);
-        tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         ImageView iv_tejia = bgaViewHolderHelper.getView(R.id.iv_tejia);
 
         int price = bean.getPrice();
@@ -57,6 +57,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
             tv_special.setText(bean.getPrice()+"");
             tv_price.setText(bean.getBzj());
             tv_price.setVisibility(View.VISIBLE);
+            tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             iv_tejia.setVisibility(View.VISIBLE);
         }
         // TODO: 2016/7/12
@@ -65,66 +66,75 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
 
         final TextView tv_total = bgaViewHolderHelper.getView(R.id.tv_total);
         tv_total.setText(bean.getProQty()+"");
+        final TextView tv_group = bgaViewHolderHelper.getView(R.id.tv_group);
+
+        for (TempDataBean item: BaseApplication.tempDataBeans){
+            if(bean.getIetmNo().equals(item.getIetmNo())){
+                tv_total.setText(item.getShuliang()+"");
+                tv_group.setText(item.getTuangou()+"");
+                break;
+            }
+        }
+
         tv_total.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputCountDialog.show((BaseActivity)context);
+                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context);
+                dialog.setDialogInputListener(new DialogInputListener() {
+                    @Override
+                    public void inputNum(String num) {
+                        tv_total.setText(num);
+                        ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                        int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
+                        shoppingCart.changeItem(new TempDataBean(tuangou,Integer.parseInt(num),
+                                bean.getIetmNo()));
+                    }
+                });
             }
         });
-        final TextView tv_group = bgaViewHolderHelper.getView(R.id.tv_group);
         tv_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputCountDialog.show((BaseActivity)context);
+                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context);
+                dialog.setDialogInputListener(new DialogInputListener() {
+                    @Override
+                    public void inputNum(String num) {
+                        tv_group.setText(num);
+                        ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                        int count = Integer.parseInt(tv_total.getText().toString().trim());
+                        shoppingCart.changeItem(new TempDataBean(Integer.parseInt(num),count,bean.getIetmNo()));
+                    }
+                });
             }
         });
 
         bgaViewHolderHelper.getView(R.id.tv_minus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                int count = Integer.parseInt(et_total.getText().toString().trim());
-//                modifyCountInterface.doDecrease(et_total,position,count);
-
-                String trim = tv_total.getText().toString().trim();
-                if(TextUtils.isEmpty(trim)){
-                    Toast.makeText(context,"宝贝不能再少了哦！",Toast.LENGTH_SHORT).show();
+                int count = Integer.parseInt(tv_total.getText().toString().trim());
+                int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
+                if(count>0){
+                    tv_total.setText(--count+"");
+                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo());
+                    ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                    shoppingcart.changeItem(item);
                 }else{
-                    int total = Integer.parseInt(trim);
-                    if(total>1){
-                        total--;
-                        tv_total.setText(total+"");
-                    }
+                    Toast.makeText(context,"宝贝不能再少了哦！",Toast.LENGTH_SHORT).show();
                 }
             }
         });
         bgaViewHolderHelper.getView(R.id.tv_plus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int count = Integer.parseInt(tv_total.getText().toString().trim());
+                int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
+                tv_total.setText(++count+"");
+                TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo());
+                ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                shoppingcart.changeItem(item);
+                // 更新全局变量
 
-//                int count = Integer.parseInt(et_total.getText().toString().trim());
-//                modifyCountInterface.doIncrease(et_total,position,count);
-                String trim = tv_total.getText().toString().trim();
-                if(TextUtils.isEmpty(trim)){
-                    tv_total.setText("1");
-                }else{
-                    int total = Integer.parseInt(trim);
-                    tv_total.setText((++total)+"");
-                }
             }
         });
-    }
-
-
-    private CheckInterface checkInterface;
-    private ModifyCountInterface modifyCountInterface;
-    public void setCheckInterface(CheckInterface checkInterface)
-    {
-        this.checkInterface = checkInterface;
-    }
-
-    public void setModifyCountInterface(ModifyCountInterface modifyCountInterface)
-    {
-        this.modifyCountInterface = modifyCountInterface;
     }
 }

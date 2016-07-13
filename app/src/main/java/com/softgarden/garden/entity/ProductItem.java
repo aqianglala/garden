@@ -13,7 +13,7 @@ public class ProductItem extends BaseDao {
 
     @ColmanName("_id")
     @TablePrimaryKey(isautocurment = true)
-    public int id;
+    public int _id;
     //一级分类码
     @ColmanName("itemclassCode")
     public String itemclassCode;
@@ -59,14 +59,21 @@ public class ProductItem extends BaseDao {
     @ColmanName("returnrate")
     public String returnrate;
 
+    // 团购
+    @ColmanName("tuangou")
+    public String tuangou;
+
+    // 数量
+    @ColmanName("shuliang")
+    public String shuliang;
+
     public ProductItem() {
     }
 
-    public ProductItem(int id, String itemclassCode, String itemclassName, String itemgroupcdoe,
+    public ProductItem( String itemclassCode, String itemclassName, String itemgroupcdoe,
                        String itemGroupName, String ietmNo, String itemName, String spec, String
                                unit, String bzj, String picture, String proQty, String price,
-                       String isSpecial, String returnrate) {
-        this.id = id;
+                       String isSpecial, String returnrate, String tuangou, String shuliang) {
         this.itemclassCode = itemclassCode;
         this.itemclassName = itemclassName;
         Itemgroupcdoe = itemgroupcdoe;
@@ -81,6 +88,8 @@ public class ProductItem extends BaseDao {
         Price = price;
         IsSpecial = isSpecial;
         this.returnrate = returnrate;
+        this.tuangou = tuangou;
+        this.shuliang = shuliang;
     }
 
     /**

@@ -4,6 +4,7 @@ package com.softgarden.garden.other;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempDataBean;
+import com.softgarden.garden.utils.LogUtils;
 
 import java.util.List;
 import java.util.Observable;
@@ -47,6 +48,8 @@ public class ShoppingCart extends Observable {
      * 初始化购物车
      */
     public void initCartList(){
+        totalNum = 0;
+        total = 0;
         if(BaseApplication.indexEntity!=null && BaseApplication.tempDataBeans!=null){
             List<IndexEntity.DataBean.ShopBean> shop = BaseApplication.indexEntity.getData()
                     .getShop();
@@ -65,8 +68,8 @@ public class ShoppingCart extends Observable {
                             if(goodsBean.getIetmNo().equals(item.getIetmNo())){
                                 int count = item.getShuliang() + item.getTuangou();
                                 totalNum += count;
-                                int price = goodsBean.getIsSpecial() == 0?Integer.parseInt(goodsBean
-                                        .getBzj()): goodsBean.getPrice();
+                                double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
+                                        (goodsBean.getBzj()): (double) goodsBean.getPrice();
                                 total += (price * count);
                                 isInTempData = true;
                                 break;
@@ -75,7 +78,7 @@ public class ShoppingCart extends Observable {
                         if(!isInTempData){
                             int count = goodsBean.getProQty();
                             totalNum += count;
-                            int price = goodsBean.getIsSpecial() == 0?Integer.parseInt(goodsBean
+                            double price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
                                     .getBzj()): goodsBean.getPrice();
                             total += (price * count);
                         }
@@ -83,6 +86,7 @@ public class ShoppingCart extends Observable {
                 }
             }
         }
+        LogUtils.e("total:"+total+" totalnum:"+totalNum);
     }
 
     /**
@@ -91,20 +95,22 @@ public class ShoppingCart extends Observable {
      * @param item
      */
     public void changeItem(TempDataBean item){
+        boolean hasFind = false;
         for(int i = 0;i<BaseApplication.tempDataBeans.size();i++){
             if(BaseApplication.tempDataBeans.get(i).getIetmNo().equals(item.getIetmNo())){
                 BaseApplication.tempDataBeans.get(i).setShuliang(item.getShuliang());
                 BaseApplication.tempDataBeans.get(i).setTuangou(item.getTuangou());
-                break;
-            }else{
-                BaseApplication.tempDataBeans.add(item);
+                hasFind = true;
                 break;
             }
+        }
+        if(!hasFind){
+          BaseApplication.tempDataBeans.add(item);
         }
         // TODO: 2016/7/12 重新计算总价和总数量
         initCartList();
         setChanged();
-        notifyObservers();
+        notifyObservers(this);
     }
 
 }

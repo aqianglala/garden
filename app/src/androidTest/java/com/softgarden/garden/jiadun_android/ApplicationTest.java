@@ -20,15 +20,15 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public void testInsert(){
         ProductDao dao = ProductDao.getDao();
         for (int i=0;i<10;i++){
-            ProductItem productItem = new ProductItem(i+"","蛋糕"+i,i+"",null,"22",i+"",null,"1",
-                    "22","22","22/克","998");
+            ProductItem productItem = new ProductItem(i+"","面包"+i,i+"","生命包",i+"","sss","30/kg",
+                    "包",i+"","",i+"",i+"",i+"",i+"",i+"",i+"");
             dao.insert(productItem);
         }
     }
 
     public void testUpdate(){
-        ProductItem productItem = new ProductItem("8","蛋糕88","",null,"88","",null,"1",
-                "22","22","22/克","998");
+        ProductItem productItem = new ProductItem("ss","ss","ss","ss","0","ss","ss","ss","ss",
+                "ss","ss","ss","ss","ss","ss","ss");
         ProductDao dao = ProductDao.getDao();
         dao.updateByProductId(productItem);
     }

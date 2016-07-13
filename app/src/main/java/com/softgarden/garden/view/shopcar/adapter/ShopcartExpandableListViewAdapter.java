@@ -30,8 +30,8 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
 
-    public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String,
-            List<ProductInfo>> children, Context context) {
+    public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String, List<ProductInfo>>
+            children, Context context) {
         this.groups = groups;
         this.children = children;
         this.context = context;
@@ -45,7 +45,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        String groupId = groups.get(groupPosition).getId();
+        String groupId = groups.get(groupPosition).getGroupId();
         return children.get(groupId).size();
     }
 
@@ -56,7 +56,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        String groupId = groups.get(groupPosition).getId();
+        String groupId = groups.get(groupPosition).getGroupId();
         return children.get(groupId).get(childPosition);
     }
 
@@ -89,7 +89,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             holder = (GroupHolder) convertView.getTag();
         }
         final GroupInfo group = (GroupInfo) getGroup(groupPosition);
-        holder.tv_group.setText(group.getName());
+        holder.tv_group.setText(group.getGroupName());
         holder.checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +135,12 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                     checkInterface.checkChild(groupPosition, childPosition, cholder.checkbox.isChecked());// 暴露子选接口
                 }
             });
-            cholder.et_total.setText(product.getCount()+"");
-            cholder.tv_price.setText(product.getPrice()+"");
-            cholder.tv_name.setText(product.getName());
+            cholder.et_total.setText(product.getTuangou()+product.getShuliang()+"");
+            int count = product.getTuangou() + product.getShuliang();
+            double price = product.getIsSpecial() == 0?Double.parseDouble
+                    (product.getBzj()): (double) product.getPrice();
+            cholder.tv_price.setText(price*count+"");
+            cholder.tv_name.setText(product.getItemName());
             cholder.checkbox.setChecked(product.isChoosed());
             cholder.checkbox.setOnClickListener(new View.OnClickListener()
             {
