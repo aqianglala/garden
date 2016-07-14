@@ -44,6 +44,7 @@ public class HttpHelper {
      */
     public static void post(String url, JSONObject obc, BaseCallBack callBack) {
         if (obc != null) {
+            LogUtils.e(obc.toString());
             RequestMap params = new RequestMap();
             String data = obc.toString();
             String sign = StringUtils.getMd5String("Ysljsd&sfli%87wirioew3^534rjkljl" + data);

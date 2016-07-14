@@ -6,6 +6,7 @@ import com.android.http.RequestManager;
 import com.softgarden.garden.dialog.LoadDialog;
 import com.softgarden.garden.dialog.ToastDialog;
 import com.softgarden.garden.jiadun_android.BuildConfig;
+import com.softgarden.garden.utils.LogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +71,7 @@ public abstract class BaseCallBack implements RequestManager.RequestListener {
     @Override
     public void onError(String s, String s1, int i) {
         if (dialog != null && !dialog.isCancelable()) dialog.dismiss();
+        LogUtils.e(s);
         ToastDialog.showError(activity, "请求异常", null);
     }
 

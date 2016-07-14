@@ -1,6 +1,7 @@
 package com.softgarden.garden.view.buy.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -11,6 +12,10 @@ import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.buy.adapter.ContentAdapter;
 import com.softgarden.garden.view.buy.adapter.TitleAdapter;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +38,8 @@ public class FragmentProduct extends BaseFragment{
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_list);
+        // 注册监听
+        EventBus.getDefault().register(this);
 
         tv_title = getViewById(R.id.tv_title);
         lv_titles = getViewById(R.id.lv_titles);
@@ -78,6 +85,12 @@ public class FragmentProduct extends BaseFragment{
         goods.addAll(mData.getChild().get(0).getGoods());
         contentAdapter.setDatas(goods);
         lv_content.setAdapter(contentAdapter);
+    }
+
+    @Subscriber(tag = "notifyDataSetChange")
+    private void notifyDataSetChange(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        contentAdapter.notifyDataSetChanged();
     }
 
 }

@@ -7,33 +7,43 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.TempDataBean;
+import com.softgarden.garden.helper.HttpHelper;
+import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.shopcar.CommitOrderDialog;
 import com.softgarden.garden.view.shopcar.OverTimePromptDialog;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
-import com.softgarden.garden.view.shopcar.entity.ProductInfo;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 public class ShopcarActivity extends BaseActivity implements ShopcartExpandableListViewAdapter
-        .CheckInterface,ShopcartExpandableListViewAdapter.ModifyCountInterface{
+        .CheckInterface,Observer{
 
     private CheckBox cb_all;
     private ExpandableListView exListView;
@@ -44,11 +54,15 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     private RelativeLayout rl_date;
     private Button btn_delete;
     private LinearLayout ll_commit_order;
+    private LinearLayout ll_check_all;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shopcar);
+        // 设置监听
+        ShoppingCart.getInstance().addObserver(this);
 
+        ll_check_all = getViewById(R.id.ll_check_all);
         tv_right = getViewById(R.id.tv_right);
         tv_right.setVisibility(View.VISIBLE);
         tv_right.setText("编辑");
@@ -65,7 +79,6 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         exListView = getViewById(R.id.exListView);
         adapter = new ShopcartExpandableListViewAdapter(groups, children, this);
         adapter.setCheckInterface(this);
-        adapter.setModifyCountInterface(this);
         exListView.setAdapter(adapter);
         for (int i = 0; i < adapter.getGroupCount(); i++)
         {
@@ -74,7 +87,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     }
 
     private ArrayList<GroupInfo>groups = new ArrayList<>();
-    private Map<String, List<ProductInfo>> children = new HashMap<String, List<ProductInfo>>();//
+    private Map<String, List<OrderCommitEntity.ZstailBean>> children = new HashMap<String, List<OrderCommitEntity.ZstailBean>>();//
     // 子元素数据列表
     private void getData() {
         // 遍历所有数据，只要团购数和数量两个字段不为0就为购物车的数据
@@ -86,7 +99,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
             for(int j = 0;j<groupSize;j++){// 二级分类
                 int goodsSize = shop.get(i).getChild().get(j).getGoods()
                         .size();
-                ArrayList<ProductInfo> products = new ArrayList<>();
+                ArrayList<OrderCommitEntity.ZstailBean> products = new ArrayList<>();
                 for(int k = 0;k<goodsSize;k++){// 所有子项
                     IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = shop.get(i)
                             .getChild().get(j).getGoods().get(k);
@@ -96,7 +109,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                             // tempDataBeans存在，即用户操作过此数据，判断此bean的tuangou和shuliang字段如果有一个不为0，则为购物车数据
                             if(item.getTuangou() != 0 || item.getShuliang() != 0) {
                                 addGroup(goodsBean);
-                                ProductInfo productinfo = generateProductInfo(goodsBean, item
+                                OrderCommitEntity.ZstailBean productinfo = generateProductInfo(goodsBean, item
                                         .getTuangou(),item.getShuliang());
                                 products.add(productinfo);
                             }
@@ -108,7 +121,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                         int count = goodsBean.getProQty();
                         if(count!=0) {
                             addGroup(goodsBean);
-                            ProductInfo productinfo = generateProductInfo(goodsBean,0,goodsBean.getProQty());
+                            OrderCommitEntity.ZstailBean productinfo = generateProductInfo(goodsBean,0,goodsBean.getProQty());
                             products.add(productinfo);
                         }
                     }
@@ -120,17 +133,19 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
     }
 
-    private ProductInfo generateProductInfo(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean
+    private OrderCommitEntity.ZstailBean generateProductInfo(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean
                                                 goodsBean, int tuangou, int shuliang) {
-        ProductInfo productinfo = new ProductInfo(goodsBean.getItemclassCode(),
-                goodsBean
-                .getItemclassName(), goodsBean.getItemgroupcdoe(),
-                goodsBean.getItemGroupName(), goodsBean.getIetmNo(),
-                goodsBean.getItemName(), goodsBean.getSpec(), goodsBean
-                .getUnit(), goodsBean.getBzj(), goodsBean.getPicture(),
-                goodsBean.getProQty(), goodsBean.getPrice(), goodsBean
-                .getIsSpecial(),
-                goodsBean.getReturnrate(), false, tuangou, shuliang);
+        // 计算总价
+        float price = goodsBean.getIsSpecial() == 0?Float.parseFloat
+                (goodsBean.getBzj()): (float) goodsBean.getPrice();
+        int count = tuangou + shuliang;
+        OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
+                .ZstailBean(count*price, goodsBean.getIsSpecial(),
+                goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getIetmNo(), goodsBean
+                .getItemgroupcdoe(), goodsBean.getPrice(), shuliang, goodsBean.getUnit(),
+                goodsBean.getBzj(), false, goodsBean.getItemclassCode(), goodsBean
+                .getItemclassName(), goodsBean.getPicture(), goodsBean.getProQty(), goodsBean
+                .getReturnrate(), goodsBean.getSpec(), tuangou);
         return productinfo;
     }
 
@@ -160,7 +175,10 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-
+        int totalNum = ShoppingCart.getInstance().getTotalNum();
+        double totalPrice = ShoppingCart.getInstance().getTotal();
+        tv_amount.setText(totalNum+"");
+        tv_totalprice.setText(totalPrice+"");
     }
 
     @Override
@@ -168,17 +186,40 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         super.onClick(v);
         switch (v.getId()){
             case R.id.btn_commit_order:// 提交订单
-                // 需要验证时间
-                Calendar instance = Calendar.getInstance();
-                instance.set(Calendar.HOUR_OF_DAY,16);
-                instance.set(Calendar.MINUTE,0);
-                instance.set(Calendar.SECOND,0);
-                Date time = instance.getTime();
-                if(System.currentTimeMillis()<time.getTime()){// 4点内,弹出对话框提示输入登录密码
-                    showCommitDialog();
-                }else{// 4点后不允许提交订单
-                    showOverTimeDialog();
+                //将购物车数据转换成数组
+                ArrayList<OrderCommitEntity.ZstailBean> productInfos = new ArrayList<>();
+                for (Map.Entry<String,List<OrderCommitEntity.ZstailBean>> entry: children.entrySet()){
+                    productInfos.addAll(entry.getValue());
                 }
+                OrderCommitEntity orderCommitEntity = new OrderCommitEntity();
+                orderCommitEntity.setCustomerNo(BaseApplication.userInfo.getData().getCustomerNo());
+                orderCommitEntity.setOrderDate("2016-7-15");
+                orderCommitEntity.setZstail(productInfos);
+
+                try {
+                    String s = new Gson().toJson(orderCommitEntity);
+                    LogUtils.e(s);
+                    HttpHelper.post(UrlsAndKeys.order, new JSONObject(s), new BaseCallBack(context) {
+                        @Override
+                        public void onSuccess(JSONObject result) {
+                            showToast("提交订单成功！");
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 需要验证时间,由后台判断
+//                Calendar instance = Calendar.getInstance();
+//                instance.set(Calendar.HOUR_OF_DAY,16);
+//                instance.set(Calendar.MINUTE,0);
+//                instance.set(Calendar.SECOND,0);
+//                Date time = instance.getTime();
+//                if(System.currentTimeMillis()<time.getTime()){// 4点内,弹出对话框提示输入登录密码
+//                    showCommitDialog();
+//                }else{// 4点后不允许提交订单
+//                    showOverTimeDialog();
+//                }
                 break;
             case R.id.cb_all:
                 doCheckAll();
@@ -190,15 +231,21 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                     ll_commit_order.setVisibility(View.GONE);
                     btn_delete.setVisibility(View.VISIBLE);
                     tv_right.setText("完成");
+                    ll_check_all.setVisibility(View.VISIBLE);
+                    adapter.setIsEditMode(true);
+                    adapter.notifyDataSetChanged();
                 }else if(tv_right.getText().equals("完成")){
                     rl_date.setVisibility(View.VISIBLE);
                     ll_commit_order.setVisibility(View.VISIBLE);
                     btn_delete.setVisibility(View.GONE);
                     tv_right.setText("编辑");
+                    ll_check_all.setVisibility(View.GONE);
+                    adapter.setIsEditMode(false);
+                    adapter.notifyDataSetChanged();
                 }
                 break;
             case R.id.btn_delete:
-                if (totalCount == 0)
+                if (!hasProduct())
                 {
                     showToast("请选择要移除的商品");
                     return;
@@ -227,30 +274,42 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
     }
 
+    private boolean hasProduct() {
+        boolean hasProdut = false;
+        for(Map.Entry<String,List<OrderCommitEntity.ZstailBean>> entry:children.entrySet()){
+            for(OrderCommitEntity.ZstailBean item: entry.getValue()){
+                if(item.isIsChoosed()){
+                    hasProdut = true;
+                    break;
+                }
+            }
+        }
+        return hasProdut;
+    }
+
     @Override
     public void checkGroup(int groupPosition, boolean isChecked) {
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getGroupId());
+        List<OrderCommitEntity.ZstailBean> childs = children.get(group.getGroupId());
         for (int i = 0; i < childs.size(); i++)
         {
-            childs.get(i).setChoosed(isChecked);
+            childs.get(i).setIsChoosed(isChecked);
         }
         if (isAllCheck())
             cb_all.setChecked(true);
         else
             cb_all.setChecked(false);
         adapter.notifyDataSetChanged();
-        calculate();
     }
 
     @Override
     public void checkChild(int groupPosition, int childPosition, boolean isChecked) {
         boolean allChildSameState = true;// 判断改组下面的所有子元素是否是同一种状态
         GroupInfo group = groups.get(groupPosition);
-        List<ProductInfo> childs = children.get(group.getGroupId());
+        List<OrderCommitEntity.ZstailBean> childs = children.get(group.getGroupId());
         for (int i = 0; i < childs.size(); i++)
         {
-            if (childs.get(i).isChoosed() != isChecked)
+            if (childs.get(i).isIsChoosed() != isChecked)
             {
                 allChildSameState = false;
                 break;
@@ -269,35 +328,8 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         else
             cb_all.setChecked(false);
         adapter.notifyDataSetChanged();
-        calculate();
     }
 
-    @Override
-    public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean
-            isChecked) {
-        ProductInfo product = (ProductInfo) adapter.getChild(groupPosition, childPosition);
-        int currentCount = Integer.parseInt(((EditText)showCountView).getText().toString().trim());
-        currentCount++;
-//        product.setCount(currentCount);
-        ((TextView) showCountView).setText(currentCount + "");
-//        adapter.notifyDataSetChanged();
-//        calculate();
-    }
-
-    @Override
-    public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
-        ProductInfo product = (ProductInfo) adapter.getChild(groupPosition, childPosition);
-        int currentCount = Integer.parseInt(((EditText)showCountView).getText().toString().trim());
-        if (currentCount <=0)
-            return;
-        currentCount--;
-
-//        product.setCount(currentCount);
-        ((TextView) showCountView).setText(currentCount + "");
-
-//        adapter.notifyDataSetChanged();
-//        calculate();
-    }
 
     private boolean isAllCheck()
     {
@@ -318,14 +350,13 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         {
             groups.get(i).setChoosed(cb_all.isChecked());
             GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getGroupId());
+            List<OrderCommitEntity.ZstailBean> childs = children.get(group.getGroupId());
             for (int j = 0; j < childs.size(); j++)
             {
-                childs.get(j).setChoosed(cb_all.isChecked());
+                childs.get(j).setIsChoosed(cb_all.isChecked());
             }
         }
         adapter.notifyDataSetChanged();
-        calculate();
     }
 
     /**
@@ -341,16 +372,19 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
             GroupInfo group = groups.get(i);
             if (group.isChoosed())
             {
-
                 toBeDeleteGroups.add(group);
             }
-            List<ProductInfo> toBeDeleteProducts = new ArrayList<ProductInfo>();// 待删除的子元素列表
-            List<ProductInfo> childs = children.get(group.getGroupId());
+            List<OrderCommitEntity.ZstailBean> toBeDeleteProducts = new ArrayList<OrderCommitEntity.ZstailBean>();// 待删除的子元素列表
+            List<OrderCommitEntity.ZstailBean> childs = children.get(group.getGroupId());
             for (int j = 0; j < childs.size(); j++)
             {
-                if (childs.get(j).isChoosed())
+                if (childs.get(j).isIsChoosed())
                 {
-                    toBeDeleteProducts.add(childs.get(j));
+                    OrderCommitEntity.ZstailBean productInfo = childs.get(j);
+                    TempDataBean bean = new TempDataBean(0, 0, productInfo.getItemNo(), true);
+                    ShoppingCart.getInstance().changeItem(bean);
+
+                    toBeDeleteProducts.add(productInfo);
                 }
             }
             childs.removeAll(toBeDeleteProducts);
@@ -358,39 +392,13 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
 
         groups.removeAll(toBeDeleteGroups);
-
+        // 更新首页数据
+        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
         adapter.notifyDataSetChanged();
-        calculate();
-    }
-
-    private double totalPrice = 0.00;// 购买的商品总价
-    private int totalCount = 0;// 购买的商品总数量
-    /**
-     * 统计操作<br>
-     * 1.先清空全局计数器<br>
-     * 2.遍历所有子元素，只要是被选中状态的，就进行相关的计算操作<br>
-     * 3.给底部的textView进行数据填充
-     */
-    private void calculate()
-    {
-        totalCount = 0;
-        totalPrice = 0.00;
-        for (int i = 0; i < groups.size(); i++)
-        {
-            GroupInfo group = groups.get(i);
-            List<ProductInfo> childs = children.get(group.getGroupId());
-            for (int j = 0; j < childs.size(); j++)
-            {
-                ProductInfo product = childs.get(j);
-                if (product.isChoosed())
-                {
-                    totalCount++;
-//                    totalPrice += product.getPrice() * product.getCount();
-                }
-            }
-        }
-        tv_totalprice.setText("￥" + totalPrice);
-        tv_amount.setText(totalCount + "件");
+        // 判断购物车是否为空，如果为空则关闭当前页面
+        ShoppingCart instance = ShoppingCart.getInstance();
+        int totalNum = instance.getTotalNum();
+        if(totalNum == 0) finish();
     }
 
     private void showOverTimeDialog() {
@@ -413,4 +421,11 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         dialog.getWindow().setAttributes(attributes);
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        int totalNum = ShoppingCart.getInstance().getTotalNum();
+        double totalPrice = ShoppingCart.getInstance().getTotal();
+        tv_amount.setText(totalNum+"");
+        tv_totalprice.setText(totalPrice+"");
+    }
 }

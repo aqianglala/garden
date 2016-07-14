@@ -18,6 +18,7 @@ import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.interfaces.DialogInputListener;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.ToastUtil;
 
 import cn.bingoogolapple.androidcommon.adapter.BGAAdapterViewAdapter;
 import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
@@ -36,6 +37,9 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
     @Override
     protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position,
                             final IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean bean) {
+        // 商品数量上限
+        final int maxCount = bean.getProQty() * Integer.parseInt(BaseApplication.userInfo.getData().getKxd
+                ());
         bgaViewHolderHelper
                 .setText(R.id.tv_name,bean.getItemName())
                 .setText(R.id.tv_number, bean.getIetmNo())
@@ -79,7 +83,10 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         tv_total.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context);
+                int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
+                int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
+                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,tuangou,
+                        shuliang,maxCount,false);
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {
@@ -95,7 +102,10 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         tv_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context);
+                int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
+                int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
+                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,tuangou,
+                        shuliang,maxCount,true);
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {
@@ -115,7 +125,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 if(count>0){
                     tv_total.setText(--count+"");
-                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo());
+                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
                     ShoppingCart shoppingcart = ShoppingCart.getInstance();
                     shoppingcart.changeItem(item);
                 }else{
@@ -128,12 +138,21 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
             public void onClick(View v) {
                 int count = Integer.parseInt(tv_total.getText().toString().trim());
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
-                tv_total.setText(++count+"");
-                TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo());
-                ShoppingCart shoppingcart = ShoppingCart.getInstance();
-                shoppingcart.changeItem(item);
-                // 更新全局变量
-
+                if(maxCount != 0){// 有数量上限
+                    if(count<maxCount){
+                        tv_total.setText(++count+"");
+                        TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
+                        ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                        shoppingcart.changeItem(item);
+                    }else{
+                        ToastUtil.show("数量已达上限！");
+                    }
+                }else{// 无数量上限
+                    tv_total.setText(++count+"");
+                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
+                    ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                    shoppingcart.changeItem(item);
+                }
             }
         });
     }

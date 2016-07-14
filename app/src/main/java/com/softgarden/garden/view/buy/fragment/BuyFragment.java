@@ -22,6 +22,7 @@ import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.dialog.LoadDialog;
 import com.softgarden.garden.engine.BuyEngine;
 import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.entity.TempData;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.utils.GlobalParams;
@@ -111,6 +112,12 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         String data = (String) SPUtils.get(mActivity, GlobalParams.DATA, "");
         if(StringUtils.getCurrDay().equals(time) && !TextUtils.isEmpty(data)){// 当天,从数据库中获取
             IndexEntity indexEntity = new Gson().fromJson(data, IndexEntity.class);
+            // 获取购物车数据
+            String shopcart_data = (String) SPUtils.get(mActivity, GlobalParams.SHOPCART_DATA, "");
+            TempData tempData = new Gson().fromJson(shopcart_data, TempData.class);
+            if(tempData!=null){
+                BaseApplication.tempDataBeans = tempData.getTempDataBeans();
+            }
             BaseApplication.indexEntity = indexEntity;
             setData(indexEntity);
             final LoadDialog loadDialog = LoadDialog.show(mActivity);
@@ -127,6 +134,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                         public void run() {
                             loadDialog.dismiss();
                             showToast(shoppingCart.getTotalNum()+"");
+                            int totalNum = ShoppingCart.getInstance().getTotalNum();
+                            tv_count.setText(totalNum+"");
                         }
                     });
                 }
@@ -134,6 +143,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         }else{// 访问网络
             loadData();
         }
+        int totalNum = ShoppingCart.getInstance().getTotalNum();
+        tv_count.setText(totalNum+"");
     }
 
     /**
@@ -144,9 +155,14 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         engine.getProducts("GZ_0001", new ObjectCallBack<IndexEntity>(mActivity) {
             @Override
             public void onSuccess(IndexEntity indexEntity) {
+                if(shouldClearCart()){//隔天了，清掉了购物车
+                    SPUtils.clear(mActivity);
+                }
+                // 更新数据
+                SPUtils.put(mActivity,GlobalParams.DATA,new Gson().toJson(indexEntity));
                 // 将此数据做为全局变量，为了减少对数据库的操作
                 SPUtils.put(mActivity, GlobalParams.LAST_UPDATE_TIME,StringUtils.getCurrDay());
-                SPUtils.put(mActivity,GlobalParams.DATA,new Gson().toJson(indexEntity));
+
                 BaseApplication.indexEntity = indexEntity;
                 setData(indexEntity);
                 new Thread(){
@@ -283,7 +299,12 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                 mActivity.toggle();
                 break;
             case R.id.iv_shopCar:
-                startActivity(new Intent(mActivity, ShopcarActivity.class));
+                int count = Integer.parseInt(tv_count.getText().toString().trim());
+                if(count == 0){
+                    showToast("购物车空空如也~~");
+                }else{
+                    startActivity(new Intent(mActivity, ShopcarActivity.class));
+                }
                 break;
         }
     }
@@ -297,6 +318,15 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     public void stopTurning(){
         if(convenientBanner!=null){
             convenientBanner.stopTurning();
+        }
+    }
+
+    public boolean shouldClearCart(){
+        String last_update_time = (String) SPUtils.get(mActivity, GlobalParams.LAST_UPDATE_TIME, "");
+        if(StringUtils.getCurrDay().equals(last_update_time)){
+            return false;
+        }else{
+            return true;
         }
     }
     private BGARefreshLayout mRefreshLayout;

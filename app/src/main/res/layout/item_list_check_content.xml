@@ -15,12 +15,13 @@
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="30px"
+        android:visibility="gone"
         style="@style/checkbox"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin"
         android:orientation="vertical">
 
     <com.zhy.autolayout.AutoLinearLayout

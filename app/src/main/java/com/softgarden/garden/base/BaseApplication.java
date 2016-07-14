@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.android.http.RequestManager;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempDataBean;
+import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.utils.GlobalParams;
 
@@ -25,12 +26,14 @@ public class BaseApplication extends Application{
     private static Handler mainHandler;
     private static Looper mainlooper;
     public static IndexEntity indexEntity ;
-    public static List<TempDataBean> tempDataBeans = new ArrayList<>();
+    public static List<TempDataBean> tempDataBeans;
+    public static UserEntity userInfo;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context=this;
+        tempDataBeans = new ArrayList<>();
         //获取主线程
         mainThread=Thread.currentThread();
         //获取当前的线程id

@@ -11,11 +11,28 @@ public class TempDataBean {
     private int shuliang;
     // 产品编号
     private String IetmNo;
+    // 是否已从购物车删除
+    private boolean isDeleted;
 
     public TempDataBean(int tuangou, int shuliang, String ietmNo) {
         this.tuangou = tuangou;
         this.shuliang = shuliang;
         IetmNo = ietmNo;
+    }
+
+    public TempDataBean(int tuangou, int shuliang, String ietmNo, boolean isDeleted) {
+        this.tuangou = tuangou;
+        this.shuliang = shuliang;
+        IetmNo = ietmNo;
+        this.isDeleted = isDeleted;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public int getTuangou() {

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.EngineFactory;
@@ -17,11 +18,11 @@ import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.dialog.ToastDialog;
 import com.softgarden.garden.engine.UserEngine;
 import com.softgarden.garden.entity.UserEntity;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
-import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
+import com.softgarden.garden.view.start.activity.MainActivity;
 
 public class LoginActivity extends BaseActivity {
 
@@ -87,17 +88,11 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onSuccess(UserEntity data) {
                 ToastDialog.showSuccess(LoginActivity.this, "登录成功！");
-
+                BaseApplication.userInfo = data;
                 // 保存用户名和密码
-                SPUtils.put(LoginActivity.this, UrlsAndKeys.USERNAME,data.getData()
-                        .getUsername());
-                SPUtils.put(LoginActivity.this,UrlsAndKeys.PHONE,data.getData()
-                        .getPhone());
-                SPUtils.put(LoginActivity.this,UrlsAndKeys.USERID,data.getData()
-                        .getId());
-                SPUtils.put(LoginActivity.this,UrlsAndKeys.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
+                SPUtils.put(LoginActivity.this, GlobalParams.USERINFO,new Gson().toJson(data));
+                SPUtils.put(LoginActivity.this,GlobalParams.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
                         ?false:true);
-
                 goActivity(MainActivity.class);
                 finish();
             }

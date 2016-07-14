@@ -1,18 +1,32 @@
 package com.softgarden.garden.view.shopcar.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.dialog.InputCountDialog;
+import com.softgarden.garden.entity.OrderCommitEntity;
+import com.softgarden.garden.entity.TempDataBean;
+import com.softgarden.garden.helper.HttpHelper;
+import com.softgarden.garden.helper.ImageLoaderHelper;
+import com.softgarden.garden.interfaces.DialogInputListener;
+import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.ToastUtil;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
-import com.softgarden.garden.view.shopcar.entity.ProductInfo;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.List;
 import java.util.Map;
@@ -24,13 +38,13 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     private final LayoutInflater inflater;
     private List<GroupInfo> groups;
-    private Map<String, List<ProductInfo>> children;
+    private Map<String, List<OrderCommitEntity.ZstailBean>> children;
     private Context context;
 
     private CheckInterface checkInterface;
     private ModifyCountInterface modifyCountInterface;
 
-    public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String, List<ProductInfo>>
+    public ShopcartExpandableListViewAdapter(List<GroupInfo> groups, Map<String, List<OrderCommitEntity.ZstailBean>>
             children, Context context) {
         this.groups = groups;
         this.children = children;
@@ -99,6 +113,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             }
         });
         holder.checkbox.setChecked(group.isChoosed());
+        holder.checkbox.setVisibility(isEditMode?View.VISIBLE:View.GONE);
         return convertView;
     }
 
@@ -109,13 +124,21 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
         if (convertView == null)
         {
             cholder = new ChildHolder();
-            convertView = inflater.inflate(R.layout.item_list_check_content,parent,false);
+            convertView = inflater.inflate(R.layout.item_list_content,parent,false);
             cholder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
             cholder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            cholder.tv_number = (TextView) convertView.findViewById(R.id.tv_number);
+            cholder.tv_prediction = (TextView) convertView.findViewById(R.id.tv_prediction);
+            cholder.tv_weight = (TextView) convertView.findViewById(R.id.tv_weight);
+            cholder.tv_back = (TextView) convertView.findViewById(R.id.tv_back);
             cholder.tv_minus = (TextView) convertView.findViewById(R.id.tv_minus);
             cholder.tv_plus = (TextView) convertView.findViewById(R.id.tv_plus);
             cholder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-            cholder.et_total = (EditText) convertView.findViewById(R.id.et_total);
+            cholder.tv_total = (TextView) convertView.findViewById(R.id.tv_total);
+            cholder.tv_group = (TextView) convertView.findViewById(R.id.tv_group);
+            cholder.tv_special = (TextView) convertView.findViewById(R.id.tv_special);
+            cholder.iv_tejia = (ImageView) convertView.findViewById(R.id.iv_tejia);
+            cholder.iv_product = (NetworkImageView) convertView.findViewById(R.id.iv_product);
             // childrenMap.put(groupPosition, convertView);
             convertView.setTag(cholder);
         } else
@@ -123,42 +146,55 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             // convertView = childrenMap.get(groupPosition);
             cholder = (ChildHolder) convertView.getTag();
         }
-        final ProductInfo product = (ProductInfo) getChild(groupPosition, childPosition);
+        final OrderCommitEntity.ZstailBean product = (OrderCommitEntity.ZstailBean) getChild(groupPosition, childPosition);
 
         if (product != null)
         {
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    product.setChoosed(!(cholder.checkbox.isChecked()));
-                    cholder.checkbox.setChecked(!(cholder.checkbox.isChecked()));
-                    checkInterface.checkChild(groupPosition, childPosition, cholder.checkbox.isChecked());// 暴露子选接口
-                }
-            });
-            cholder.et_total.setText(product.getTuangou()+product.getShuliang()+"");
-            int count = product.getTuangou() + product.getShuliang();
-            double price = product.getIsSpecial() == 0?Double.parseDouble
-                    (product.getBzj()): (double) product.getPrice();
-            cholder.tv_price.setText(price*count+"");
+            // 设置网络图片
+            cholder.iv_product.setImageUrl(HttpHelper.HOST+product.getPicture(), ImageLoaderHelper
+                    .getInstance());
+            // 设置价格
+            int price = product.getPrice();
+            if(price == 0 || product.getIsSpecial() == 0){// 没有特价，使用标准价
+                cholder.tv_special.setText(product.getBzj());
+                cholder.tv_price.setVisibility(View.GONE);
+                cholder.iv_tejia.setVisibility(View.GONE);
+            }else{// 特价
+                cholder.tv_special.setText(product.getPrice()+"");
+                cholder.tv_price.setText(product.getBzj());
+                cholder.tv_price.setVisibility(View.VISIBLE);
+                cholder.tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                cholder.iv_tejia.setVisibility(View.VISIBLE);
+            }
+
             cholder.tv_name.setText(product.getItemName());
-            cholder.checkbox.setChecked(product.isChoosed());
-            cholder.checkbox.setOnClickListener(new View.OnClickListener()
+            cholder.tv_number.setText(product.getItemNo());
+            cholder.tv_prediction.setText(product.getProQty()+"");
+            cholder.tv_weight.setText(product.getSpec());
+            cholder.tv_back.setText(product.getReturnrate()+"");
+            cholder.tv_total.setText(product.getQty()+"");
+            cholder.tv_group.setText(product.getTgs()+"");
+
+            cholder.checkbox.setChecked(product.isIsChoosed());
+            cholder.checkbox.setVisibility(isEditMode?View.VISIBLE:View.GONE);
+            // 商品数量上限
+            final int maxCount = product.getProQty() * Integer.parseInt(BaseApplication.userInfo
+                    .getData().getKxd
+                    ());
+            cholder.tv_minus.setOnClickListener(new View.OnClickListener()
             {
                 @Override
-                public void onClick(View v) {
-                    product.setChoosed(((CheckBox) v).isChecked());
-                    cholder.checkbox.setChecked(((CheckBox) v).isChecked());
-                    checkInterface.checkChild(groupPosition, childPosition, ((CheckBox) v).isChecked());// 暴露子选接口
-                }
-            });
-            cholder.et_total.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus){
-                        String trim = cholder.et_total.getText().toString().trim();
-                        if(TextUtils.isEmpty(trim)){
-                            cholder.et_total.setText("1");
-                        }
+                public void onClick(View v)
+                {
+                    int count = Integer.parseInt(cholder.tv_total.getText().toString().trim());
+                    int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
+                    if(count>1){
+                        cholder.tv_total.setText(--count+"");
+                        TempDataBean item = new TempDataBean(tuangou, count, product.getItemNo());
+                        ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                        shoppingcart.changeItem(item);
+                        // 更新首页数据
+                        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
                     }
                 }
             });
@@ -167,17 +203,81 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    modifyCountInterface.doIncrease(groupPosition, childPosition, cholder.et_total,
-                            cholder.checkbox.isChecked());// 暴露增加接口
+                    int count = Integer.parseInt(cholder.tv_total.getText().toString().trim());
+                    int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
+                    if(maxCount != 0){
+                        if(count+tuangou<maxCount){
+                            cholder.tv_total.setText(++count+"");
+                            TempDataBean item = new TempDataBean(tuangou, count, product.getItemNo());
+                            ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                            shoppingcart.changeItem(item);
+                            // 更新首页数据
+                            EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
+                        }else{
+                            ToastUtil.show("数量已达上限！");
+                        }
+                    }else{
+                        cholder.tv_total.setText(++count+"");
+                        TempDataBean item = new TempDataBean(tuangou, count, product.getItemNo());
+                        ShoppingCart shoppingcart = ShoppingCart.getInstance();
+                        shoppingcart.changeItem(item);
+                        // 更新首页数据
+                        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
+
+                    }
                 }
             });
-            cholder.tv_minus.setOnClickListener(new View.OnClickListener()
+
+
+            cholder.tv_total.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
+                    int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
+                    InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
+                            tuangou,shuliang,maxCount,false);
+                    dialog.setDialogInputListener(new DialogInputListener() {
+                        @Override
+                        public void inputNum(String num) {
+                            cholder.tv_total.setText(num);
+                            ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                            int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
+                            shoppingCart.changeItem(new TempDataBean(tuangou,Integer.parseInt(num),
+                                    product.getItemNo()));
+                            // 更新首页数据
+                            EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
+                        }
+                    });
+                }
+            });
+            cholder.tv_group.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
+                    int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
+                    InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
+                            tuangou,shuliang,maxCount,true);
+                    dialog.setDialogInputListener(new DialogInputListener() {
+                        @Override
+                        public void inputNum(String num) {
+                            cholder.tv_group.setText(num);
+                            ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                            int count = Integer.parseInt(cholder.tv_total.getText().toString().trim());
+                            shoppingCart.changeItem(new TempDataBean(Integer.parseInt(num),count,
+                                    product.getItemNo()));
+                            // 更新首页数据
+                            EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
+                        }
+                    });
+                }
+            });
+            cholder.checkbox.setOnClickListener(new View.OnClickListener()
             {
                 @Override
-                public void onClick(View v)
-                {
-                    modifyCountInterface.doDecrease(groupPosition, childPosition, cholder
-                            .et_total, cholder.checkbox.isChecked());// 暴露删减接口
+                public void onClick(View v) {
+                    product.setIsChoosed(((CheckBox) v).isChecked());
+                    cholder.checkbox.setChecked(((CheckBox) v).isChecked());
+                    checkInterface.checkChild(groupPosition, childPosition, ((CheckBox) v).isChecked());// 暴露子选接口
                 }
             });
         }
@@ -210,20 +310,28 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
         CheckBox checkbox;
 
         TextView tv_name;
+        TextView tv_number;
+        TextView tv_prediction;
+        TextView tv_weight;
+        TextView tv_back;
         TextView tv_price;
         TextView tv_minus;
         TextView tv_plus;
-        EditText et_total;
+        TextView tv_total;
+        TextView tv_group;
+        TextView tv_special;
+        ImageView iv_tejia;
+        NetworkImageView iv_product;
+    }
+
+    private boolean isEditMode;
+    public void setIsEditMode(boolean isEditMode){
+        this.isEditMode = isEditMode;
     }
 
     public void setCheckInterface(CheckInterface checkInterface)
     {
         this.checkInterface = checkInterface;
-    }
-
-    public void setModifyCountInterface(ModifyCountInterface modifyCountInterface)
-    {
-        this.modifyCountInterface = modifyCountInterface;
     }
 
     /**
@@ -256,39 +364,4 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
         public void checkChild(int groupPosition, int childPosition, boolean isChecked);
     }
 
-    /**
-     * 改变数量的接口
-     *
-     *
-     */
-    public interface ModifyCountInterface
-    {
-        /**
-         * 增加操作
-         *
-         * @param groupPosition
-         *            组元素位置
-         * @param childPosition
-         *            子元素位置
-         * @param showCountView
-         *            用于展示变化后数量的View
-         * @param isChecked
-         *            子元素选中与否
-         */
-        public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-
-        /**
-         * 删减操作
-         *
-         * @param groupPosition
-         *            组元素位置
-         * @param childPosition
-         *            子元素位置
-         * @param showCountView
-         *            用于展示变化后数量的View
-         * @param isChecked
-         *            子元素选中与否
-         */
-        public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked);
-    }
 }

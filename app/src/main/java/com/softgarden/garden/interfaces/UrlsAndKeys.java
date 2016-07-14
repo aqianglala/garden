@@ -11,9 +11,8 @@ public interface UrlsAndKeys {
     String verifyCode = "index.php/App/Api/checkfindverify";
     String modifyPswd = "index.php/App/Api/modifyPassword";
     String index = "index.php/App/Api/index";
+    String order = "index.php/App/Api/order";
+    String historyOrder = "index.php/App/Api/historyOrder";
 
-    String USERNAME = "username";
-    String PHONE = "phone";
-    String USERID = "id";
     String HASMODIFYPSWD = "hasmodifypswd";
 }

@@ -25,7 +25,6 @@
             android:layout_width="44px"
             android:layout_height="44px"
             android:layout_marginLeft="24px"
-            android:layout_marginRight="36px"
             app:layout_auto_baseheight="width"/>
 
         <TextView
@@ -34,6 +33,7 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@mipmap/leibie"
             android:drawablePadding="20px"
+            android:layout_marginLeft="@dimen/margin"
             android:text="忌廉饼"
             android:textColor="@color/black_text"
             android:textSize="@dimen/text_middle"/>

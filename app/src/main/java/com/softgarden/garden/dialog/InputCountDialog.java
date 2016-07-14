@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 
 import com.softgarden.garden.interfaces.DialogInputListener;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.ToastUtil;
 
 
 /**
@@ -44,7 +46,17 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
     }
 
-    public static InputCountDialog show(FragmentActivity activity) {
+    private static int tuangou;
+    private static int shuliang;
+    private static int max;
+    private static boolean isTuangou;
+    public static InputCountDialog show(FragmentActivity activity,int group,int count,int
+            maxCount,boolean isTuan) {
+        tuangou = group;
+        shuliang = count;
+        max = maxCount;
+        isTuangou = isTuan;
+
         context = activity;
         InputCountDialog dialog = new InputCountDialog();
         dialog.setCancelable(true);
@@ -61,9 +73,33 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
                 dismiss();
                 break;
             case R.id.btn_add_car:
-                String count = et_count.getText().toString().trim();
-                listener.inputNum(count);
-                dismiss();
+                String trim = et_count.getText().toString().trim();
+                if (TextUtils.isEmpty(trim)){
+                    ToastUtil.show("输入不能为空！");
+                    return;
+                }
+                int count = Integer.parseInt(trim);
+                if(max!=0){
+                    if(isTuangou){// 如果是点击团购框
+                        if(count+shuliang<max){
+                            listener.inputNum(count+"");
+                            dismiss();
+                        }else{
+                            ToastUtil.show("您输入的数量达到商品上限,请重新输入!");
+                        }
+                    }else{
+                        if(count+tuangou<max){
+                            listener.inputNum(count+"");
+                            dismiss();
+                        }else{
+                            ToastUtil.show("您输入的数量达到商品上限,请重新输入!");
+                        }
+                    }
+                }else{
+                    listener.inputNum(count+"");
+                    dismiss();
+                }
+
                 break;
         }
     }

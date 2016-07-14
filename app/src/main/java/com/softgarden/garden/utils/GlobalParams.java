@@ -19,4 +19,7 @@ public class GlobalParams {
 	//保存的key
 	public static final String LAST_UPDATE_TIME="last_update_time";
 	public static final String DATA="data";
+	public static final String SHOPCART_DATA="shopcart_data";
+	public static final String USERINFO="userinfo";
+	public static final String HASMODIFYPSWD = "hasmodifypswd";
 }

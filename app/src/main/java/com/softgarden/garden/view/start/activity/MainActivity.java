@@ -13,10 +13,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.entity.TempData;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
@@ -42,6 +47,7 @@ public class MainActivity extends BaseActivity {
     private RadioButton rb_buy;
     private RadioButton rb_orders;
     private int lastCheckId;
+    private int returnType;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class MainActivity extends BaseActivity {
         }
         // register the receiver object
         EventBus.getDefault().register(this);
+        returnType = Integer.parseInt(BaseApplication.userInfo.getData()
+                .getReturnType());
         hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
         menu = getViewById(R.id.slidingmenulayout);
         rb_back = getViewById(R.id.rb_back);
@@ -82,7 +90,7 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case R.id.rb_back:
-                        rb_back.setChecked(thh_tui == 1?true:false);
+                        rb_back.setChecked(returnType == 1 || returnType ==3?true:false);
                         if(rb_back.isChecked()){
                             lastCheckId = checkedId;
                             hideFragments(ft);//先隐藏掉所有的fragment
@@ -98,11 +106,11 @@ public class MainActivity extends BaseActivity {
                         }else{
                             setcheck(lastCheckId);
                             // 显示对话框
-                            showToast("弹出对话框");
+                            showToast("您没有此类的权限！");
                         }
                         break;
                     case R.id.rb_change:
-                        rb_change.setChecked(thh_huan == 1?true:false);
+                        rb_change.setChecked(returnType == 2 || returnType ==3?true:false);
                         if(rb_change.isChecked()){
                             lastCheckId = checkedId;
                             hideFragments(ft);//先隐藏掉所有的fragment
@@ -214,6 +222,16 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                     mExitTime = System.currentTimeMillis();
                 } else {
+                    // 保存数据到本地
+                    TempData tempData = new TempData();
+                    tempData.setTempDataBeans(BaseApplication.tempDataBeans);
+                    String shopcart_data = new Gson().toJson(tempData);
+                    SPUtils.put(this, GlobalParams.SHOPCART_DATA,shopcart_data);
+                    // 清空全局变量
+                    BaseApplication.indexEntity = null;
+                    BaseApplication.tempDataBeans.clear();
+                    ShoppingCart instance = ShoppingCart.getInstance();
+                    instance.clearCart();
                     finish();
                 }
             }

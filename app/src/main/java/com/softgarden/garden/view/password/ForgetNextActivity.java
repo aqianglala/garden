@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.engine.UserEngine;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ToastUtil;
@@ -29,7 +29,7 @@ public class ForgetNextActivity extends BaseActivity {
         setContentView(R.layout.activity_forget_next);
         et_new_pswd = getViewById(R.id.et_new_pswd);
         et_confirm_pswd = getViewById(R.id.et_confirm_pswd);
-        phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
+        phone = BaseApplication.userInfo.getData().getPhone();
     }
 
     @Override

@@ -18,12 +18,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.engine.UserEngine;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.utils.ToastUtil;
 
@@ -59,7 +58,7 @@ public class ForgetPswdActivity extends BaseActivity {
         if(title.equals("忘记密码")){
             et_phone_number.setEnabled(true);
         }else{
-            phone = (String) SPUtils.get(this, UrlsAndKeys.PHONE,"");
+            phone = BaseApplication.userInfo.getData().getPhone();
             et_phone_number.setEnabled(false);
             et_phone_number.setText(phone);
         }

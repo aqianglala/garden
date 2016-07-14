@@ -44,6 +44,10 @@ public class ShoppingCart extends Observable {
         return instance;
     }
 
+    public void clearCart(){
+        this.instance = null;
+    }
+
     /**
      * 初始化购物车
      */

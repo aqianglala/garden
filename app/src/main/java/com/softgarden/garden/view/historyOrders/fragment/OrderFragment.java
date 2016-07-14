@@ -12,7 +12,12 @@ import android.widget.Toast;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.engine.HistoryOrderEngine;
+import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.view.historyOrders.adapter.OrderExAdapter;
 import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
@@ -129,7 +134,15 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
+        engine.historyOrder(BaseApplication.userInfo.getData().getCustomerNo(), new
+                ObjectCallBack<HistoryOrderEntity>(mActivity) {
 
+            @Override
+            public void onSuccess(HistoryOrderEntity data) {
+
+            }
+        });
     }
 
     @Override
