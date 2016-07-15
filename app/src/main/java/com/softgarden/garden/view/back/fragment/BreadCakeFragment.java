@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softgarden.garden.base.BaseFragment;
@@ -215,7 +215,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     }
 
     @Override
-    public void doIncrease(EditText et_total,int position, String currentCount) {
+    public void doIncrease(TextView et_total, int position, String currentCount) {
         if(TextUtils.isEmpty(currentCount)){
             et_total.setText("1");
         }else{
@@ -225,7 +225,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     }
 
     @Override
-    public void doDecrease(EditText et_total,int position, String currentCount) {
+    public void doDecrease(TextView et_total,int position, String currentCount) {
 
         if(TextUtils.isEmpty(currentCount)){
             Toast.makeText(mActivity,"宝贝不能再少了哦！",Toast.LENGTH_SHORT).show();

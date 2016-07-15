@@ -10,35 +10,35 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.view.historyOrders.OrderDetailActivity;
-import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by qiang-pc on 2016/6/29.
  */
 public class OrderExAdapter extends BaseExpandableListAdapter{
     private final LayoutInflater inflater;
-    private ArrayList<OrderBeanTest> mData;
-    private ArrayList<OrderBeanTest> groups;
-    private ArrayList<OrderBeanTest> children;
+    private List<HistoryOrderEntity.DataBean> mData;
+    private List<HistoryOrderEntity.DataBean> groups = new ArrayList<>();
+    private List<HistoryOrderEntity.DataBean> children = new ArrayList<>();
     private Context context;
     private ExpandableListView exListView;
 
-    public OrderExAdapter(ArrayList<OrderBeanTest> data, Context context) {
+    public OrderExAdapter(List<HistoryOrderEntity.DataBean> data, Context context) {
         this.mData = data;
         this.context = context;
         inflater = LayoutInflater.from(context);
         groupingData();
     }
 
-    private void groupingData() {
+    public void groupingData() {
         // 分成两组，第一组的组布局为列表项布局，第二组为显示收缩的布局
-        groups = new ArrayList<>();
+        groups.clear();
         for(int i=0;i<2;i++){
             if(i ==0){
                 groups.add(mData.get(i));
@@ -46,7 +46,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 groups.add(null);
             }
         }
-        children = new ArrayList<>();
+        children.clear();
         for(int i = 1;i<mData.size();i++){
             children.add(mData.get(i));
         }
@@ -99,8 +99,12 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
             exListView =  (ExpandableListView) parent;
             convertView = inflater.inflate(R.layout.item_list_orders, parent, false);
             TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
-            OrderBeanTest item = (OrderBeanTest) getGroup(groupPosition);
-            tv_number.setText(item.getNumber());
+            TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
+            TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+            HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
+            tv_number.setText(item.getOrderNo());
+            tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
+            tv_price.setText(item.getAmount());
 
             TextView tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
             tv_detail.setOnClickListener(new View.OnClickListener() {
@@ -148,19 +152,23 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.item_list_orders, parent, false);
             holder.tv_number = (TextView) convertView.findViewById(R.id.tv_number);
+            holder.tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
+            holder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
             holder.tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        OrderBeanTest item = children.get(childPosition);
-        holder.tv_number.setText(item.getNumber());
-
+        final HistoryOrderEntity.DataBean item = children.get(childPosition);
+        holder.tv_number.setText(item.getOrderNo());
+        holder.tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
+        holder.tv_price.setText(item.getAmount());
         holder.tv_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 跳转到详情页,到时还需要传递数据过去
                 Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
                 context.startActivity(intent);
             }
         });
@@ -174,23 +182,12 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
 
     class ViewHolder{
         TextView tv_number;
+        TextView tv_amount;
+        TextView tv_price;
         TextView tv_detail;
     }
 
-    public void showDetail(Date date){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String seletedDate = format.format(date);
-        for(int i=0;i<mData.size();i++){
-            if(seletedDate.equals(mData.get(i).getDate())){
-                // 跳出循环
-                groups.clear();
-                groups.add(mData.get(i));
-                groups.add(null);
-                break;
-            }
-        }
-        isOpen = false;
-        exListView.collapseGroup(0);
-        notifyDataSetChanged();
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 }

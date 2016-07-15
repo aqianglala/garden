@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
@@ -31,6 +34,7 @@ public class SplashActivity extends BaseActivity {
         if(TextUtils.isEmpty(userinfo)){
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }else{
+            BaseApplication.userInfo = new Gson().fromJson(userinfo, UserEntity.class);
             intent = new Intent(SplashActivity.this, MainActivity.class);
         }
         new Handler().postDelayed(new Runnable() {

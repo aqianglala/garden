@@ -15,24 +15,24 @@ public class IndexEntity extends BaseDao{
      * errorMsg :
      * data : {"shop":[{"itemclassName":"面包","itemclassCode":"3","child":[{"itemclassCode":"3",
      * "ItemGroupName":"生命包","Itemgroupcdoe":"B01","goods":[{"itemclassCode":"3",
-     * "itemclassName":"面包","Itemgroupcdoe":"B01","ItemGroupName":"生命包","IetmNo":"3001",
-     * "ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","Unit":"包","bzj":"1.0000","picture":"","proQty":0,
-     * "Price":0,"IsSpecial":0,"returnrate":0},{"itemclassCode":"3","itemclassName":"面包",
-     * "Itemgroupcdoe":"B01","ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包",
-     * "spec":"450g/袋","Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
-     * "returnrate":0}]},{"itemclassCode":"3","ItemGroupName":"三文治","Itemgroupcdoe":"B02",
-     * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B02",
-     * "ItemGroupName":"三文治","IetmNo":"3155","ItemName":"小平方包","spec":"350g/袋","Unit":"包",
-     * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
-     * {"itemclassCode":"3","ItemGroupName":"忌廉槟","Itemgroupcdoe":"B03",
-     * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B03",
-     * "ItemGroupName":"忌廉槟","IetmNo":"3064","ItemName":"菠萝椰丝忌廉包","spec":"80g/袋","Unit":"袋",
-     * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]}]},
-     * {"itemclassName":"蛋糕","itemclassCode":"4","child":[{"itemclassCode":"4",
-     * "ItemGroupName":"牛油蛋糕","Itemgroupcdoe":"K01","goods":[{"itemclassCode":"4",
-     * "itemclassName":"蛋糕","Itemgroupcdoe":"K01","ItemGroupName":"牛油蛋糕","IetmNo":"4001",
-     * "ItemName":"宝宝蛋糕","spec":"1篮X42包","Unit":"包","bzj":"1.0000","picture":"","proQty":0,
-     * "Price":0,"IsSpecial":0,"returnrate":0}]}]}],
+     * "itemclassName":"面包","Itemgroupcdoe":"B01","ItemGroupName":"生命包","ItemNo":"3001",
+     * "ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","Unit":"包","bzj":"2.0000","picture":"",
+     * "proQty":"10","Price":"1.0000","IsSpecial":1,"returnrate":"0.0000"},{"itemclassCode":"3",
+     * "itemclassName":"面包","Itemgroupcdoe":"B01","ItemGroupName":"生命包","ItemNo":"3107",
+     * "ItemName":"蜜糖甜生命面包","spec":"450g/袋","Unit":"包","bzj":"2.0000","picture":"","proQty":"9",
+     * "Price":"1.0000","IsSpecial":0,"returnrate":"0.0000"}]},{"itemclassCode":"3",
+     * "ItemGroupName":"三文治","Itemgroupcdoe":"B02","goods":[{"itemclassCode":"3",
+     * "itemclassName":"面包","Itemgroupcdoe":"B02","ItemGroupName":"三文治","ItemNo":"3155",
+     * "ItemName":"小平方包","spec":"350g/袋","Unit":"包","bzj":"2.0000","picture":"","proQty":0,
+     * "Price":0,"IsSpecial":0,"returnrate":0}]},{"itemclassCode":"3","ItemGroupName":"忌廉槟",
+     * "Itemgroupcdoe":"B03","goods":[{"itemclassCode":"3","itemclassName":"面包",
+     * "Itemgroupcdoe":"B03","ItemGroupName":"忌廉槟","ItemNo":"3064","ItemName":"菠萝椰丝忌廉包",
+     * "spec":"80g/袋","Unit":"袋","bzj":"3.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
+     * "returnrate":0}]}]},{"itemclassName":"蛋糕","itemclassCode":"4",
+     * "child":[{"itemclassCode":"4","ItemGroupName":"牛油蛋糕","Itemgroupcdoe":"K01",
+     * "goods":[{"itemclassCode":"4","itemclassName":"蛋糕","Itemgroupcdoe":"K01",
+     * "ItemGroupName":"牛油蛋糕","ItemNo":"4001","ItemName":"宝宝蛋糕","spec":"1篮X42包","Unit":"包",
+     * "bzj":"3.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]}]}],
      * "banner":["/Uploads/Picture/2016-07-12/578491c2d2704.png",
      * "/Uploads/Picture/2016-07-12/578491b8b9ce3.png","/Uploads/Picture/2016-07-12/578491af2651e
      * .png"]}
@@ -66,25 +66,26 @@ public class IndexEntity extends BaseDao{
         this.data = data;
     }
 
-    public static class DataBean implements Serializable{
+    public static class DataBean implements Serializable {
         /**
          * itemclassName : 面包
          * itemclassCode : 3
          * child : [{"itemclassCode":"3","ItemGroupName":"生命包","Itemgroupcdoe":"B01",
          * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
-         * "ItemGroupName":"生命包","IetmNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
-         * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
-         * "returnrate":0},{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
-         * "ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包","spec":"450g/袋","Unit":"包",
-         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
-         * {"itemclassCode":"3","ItemGroupName":"三文治","Itemgroupcdoe":"B02",
-         * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B02",
-         * "ItemGroupName":"三文治","IetmNo":"3155","ItemName":"小平方包","spec":"350g/袋","Unit":"包",
-         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]},
-         * {"itemclassCode":"3","ItemGroupName":"忌廉槟","Itemgroupcdoe":"B03",
-         * "goods":[{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B03",
-         * "ItemGroupName":"忌廉槟","IetmNo":"3064","ItemName":"菠萝椰丝忌廉包","spec":"80g/袋","Unit":"袋",
-         * "bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,"returnrate":0}]}]
+         * "ItemGroupName":"生命包","ItemNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+         * "Unit":"包","bzj":"2.0000","picture":"","proQty":"10","Price":"1.0000","IsSpecial":1,
+         * "returnrate":"0.0000"},{"itemclassCode":"3","itemclassName":"面包",
+         * "Itemgroupcdoe":"B01","ItemGroupName":"生命包","ItemNo":"3107","ItemName":"蜜糖甜生命面包",
+         * "spec":"450g/袋","Unit":"包","bzj":"2.0000","picture":"","proQty":"9","Price":"1.0000",
+         * "IsSpecial":0,"returnrate":"0.0000"}]},{"itemclassCode":"3","ItemGroupName":"三文治",
+         * "Itemgroupcdoe":"B02","goods":[{"itemclassCode":"3","itemclassName":"面包",
+         * "Itemgroupcdoe":"B02","ItemGroupName":"三文治","ItemNo":"3155","ItemName":"小平方包",
+         * "spec":"350g/袋","Unit":"包","bzj":"2.0000","picture":"","proQty":0,"Price":0,
+         * "IsSpecial":0,"returnrate":0}]},{"itemclassCode":"3","ItemGroupName":"忌廉槟",
+         * "Itemgroupcdoe":"B03","goods":[{"itemclassCode":"3","itemclassName":"面包",
+         * "Itemgroupcdoe":"B03","ItemGroupName":"忌廉槟","ItemNo":"3064","ItemName":"菠萝椰丝忌廉包",
+         * "spec":"80g/袋","Unit":"袋","bzj":"3.0000","picture":"","proQty":0,"Price":0,
+         * "IsSpecial":0,"returnrate":0}]}]
          */
 
         private List<ShopBean> shop;
@@ -114,12 +115,12 @@ public class IndexEntity extends BaseDao{
              * ItemGroupName : 生命包
              * Itemgroupcdoe : B01
              * goods : [{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
-             * "ItemGroupName":"生命包","IetmNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
-             * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
-             * "returnrate":0},{"itemclassCode":"3","itemclassName":"面包","Itemgroupcdoe":"B01",
-             * "ItemGroupName":"生命包","IetmNo":"3107","ItemName":"蜜糖甜生命面包","spec":"450g/袋",
-             * "Unit":"包","bzj":"1.0000","picture":"","proQty":0,"Price":0,"IsSpecial":0,
-             * "returnrate":0}]
+             * "ItemGroupName":"生命包","ItemNo":"3001","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+             * "Unit":"包","bzj":"2.0000","picture":"","proQty":"10","Price":"1.0000",
+             * "IsSpecial":1,"returnrate":"0.0000"},{"itemclassCode":"3","itemclassName":"面包",
+             * "Itemgroupcdoe":"B01","ItemGroupName":"生命包","ItemNo":"3107","ItemName":"蜜糖甜生命面包",
+             * "spec":"450g/袋","Unit":"包","bzj":"2.0000","picture":"","proQty":"9","Price":"1
+             * .0000","IsSpecial":0,"returnrate":"0.0000"}]
              */
 
             private List<ChildBean> child;
@@ -148,7 +149,7 @@ public class IndexEntity extends BaseDao{
                 this.child = child;
             }
 
-            public static class ChildBean implements Serializable{
+            public static class ChildBean {
                 private String itemclassCode;
                 private String ItemGroupName;
                 private String Itemgroupcdoe;
@@ -157,16 +158,16 @@ public class IndexEntity extends BaseDao{
                  * itemclassName : 面包
                  * Itemgroupcdoe : B01
                  * ItemGroupName : 生命包
-                 * IetmNo : 3001
+                 * ItemNo : 3001
                  * ItemName : 嘉顿生命面包(蜡纸)
                  * spec : 450g/袋
                  * Unit : 包
-                 * bzj : 1.0000
+                 * bzj : 2.0000
                  * picture :
-                 * proQty : 0
-                 * Price : 0
-                 * IsSpecial : 0
-                 * returnrate : 0
+                 * proQty : 10
+                 * Price : 1.0000
+                 * IsSpecial : 1
+                 * returnrate : 0.0000
                  */
 
                 private List<GoodsBean> goods;
@@ -208,16 +209,16 @@ public class IndexEntity extends BaseDao{
                     private String itemclassName;
                     private String Itemgroupcdoe;
                     private String ItemGroupName;
-                    private String IetmNo;
+                    private String ItemNo;
                     private String ItemName;
                     private String spec;
                     private String Unit;
                     private String bzj;
                     private String picture;
-                    private int proQty;
-                    private int Price;
+                    private String proQty;
+                    private String Price;
                     private int IsSpecial;
-                    private int returnrate;
+                    private String returnrate;
 
                     public String getItemclassCode() {
                         return itemclassCode;
@@ -251,12 +252,12 @@ public class IndexEntity extends BaseDao{
                         this.ItemGroupName = ItemGroupName;
                     }
 
-                    public String getIetmNo() {
-                        return IetmNo;
+                    public String getItemNo() {
+                        return ItemNo;
                     }
 
-                    public void setIetmNo(String IetmNo) {
-                        this.IetmNo = IetmNo;
+                    public void setItemNo(String ItemNo) {
+                        this.ItemNo = ItemNo;
                     }
 
                     public String getItemName() {
@@ -299,19 +300,19 @@ public class IndexEntity extends BaseDao{
                         this.picture = picture;
                     }
 
-                    public int getProQty() {
+                    public String getProQty() {
                         return proQty;
                     }
 
-                    public void setProQty(int proQty) {
+                    public void setProQty(String proQty) {
                         this.proQty = proQty;
                     }
 
-                    public int getPrice() {
+                    public String getPrice() {
                         return Price;
                     }
 
-                    public void setPrice(int Price) {
+                    public void setPrice(String Price) {
                         this.Price = Price;
                     }
 
@@ -323,11 +324,11 @@ public class IndexEntity extends BaseDao{
                         this.IsSpecial = IsSpecial;
                     }
 
-                    public int getReturnrate() {
+                    public String getReturnrate() {
                         return returnrate;
                     }
 
-                    public void setReturnrate(int returnrate) {
+                    public void setReturnrate(String returnrate) {
                         this.returnrate = returnrate;
                     }
                 }

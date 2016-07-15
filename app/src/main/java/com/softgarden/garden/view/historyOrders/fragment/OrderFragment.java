@@ -19,8 +19,8 @@ import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.historyOrders.adapter.OrderExAdapter;
-import com.softgarden.garden.view.historyOrders.entity.OrderBeanTest;
 import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
 import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
 import com.softgarden.garden.view.historyOrders.widget.OrderDecorator;
@@ -30,6 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Hasee on 2016/6/6.
@@ -38,10 +41,11 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     private ImageView iv_me;
     private MainActivity mActivity;
-    private ArrayList<OrderBeanTest> mData;
+    private List<HistoryOrderEntity.DataBean> mData = new ArrayList<>();
     private MaterialCalendarView widget;
     private ExpandableListView expandableListView;
     private OrderExAdapter myExAdapter;
+    private HashMap<String, List<HistoryOrderEntity.DataBean>> map;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -49,16 +53,13 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         iv_me = getViewById(R.id.iv_me);
         mActivity = (MainActivity)getActivity();
 
-        getData();
         expandableListView = getViewById(R.id.exListView);
-        myExAdapter = new OrderExAdapter(mData, mActivity);
-        expandableListView.setAdapter(myExAdapter);
-        // 默认展示收缩第一组
-        expandableListView.collapseGroup(0);
-
         addFooter();
     }
 
+    /**
+     * 初始化日期view
+     */
     private void addFooter() {
         View calenderLayout = LayoutInflater.from(mActivity).inflate(R.layout.calendarview, expandableListView,
                 false);
@@ -73,50 +74,12 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         calenderLayout.findViewById(R.id.view_choose).setOnClickListener(this);
         widget.setOnDateChangedListener(this);
 
-        Calendar calendar = Calendar.getInstance();
-
         // 设置不能滑动
         widget.setPagingEnabled(false);
         // 设置默认点击效果
         widget.addDecorator(new MySelectorDecorator(mActivity));
 
-        // 当前日期
-        CalendarDay now = CalendarDay.from(calendar);
-        currentMonth = now.getMonth();
-        currentYear = now.getYear();
-        ArrayList<CalendarDay> nowDates = new ArrayList<>();
-        nowDates.add(now);
-        Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
-        widget.addDecorator(new EventDecorator(redDrawable,nowDates));
-
-        // 模拟历史订单日期
-        ArrayList<CalendarDay> oldDates = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-            CalendarDay day = CalendarDay.from(calendar);
-            oldDates.add(day);
-        }
-        Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
-        widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
-
         expandableListView.addFooterView(calenderLayout);
-    }
-
-    private void getData() {
-        mData = new ArrayList<>();
-        for(int i = 0;i<20;i++){
-            OrderBeanTest orderBeanTest = new OrderBeanTest();
-            Calendar instance = Calendar.getInstance();
-            instance.add(Calendar.DAY_OF_MONTH,-(i+1));
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            orderBeanTest.setDate(format.format(instance.getTime()));
-
-            orderBeanTest.setNumber("2020202"+i);
-            orderBeanTest.setAmount(550+i);
-            orderBeanTest.setPrice(550+i);
-            orderBeanTest.setBack("8.8%");
-            mData.add(orderBeanTest);
-        }
     }
 
     @Override
@@ -134,13 +97,43 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        getHistoryOrder();
+    }
+
+    private void getHistoryOrder() {
         HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
         engine.historyOrder(BaseApplication.userInfo.getData().getCustomerNo(), new
                 ObjectCallBack<HistoryOrderEntity>(mActivity) {
 
             @Override
             public void onSuccess(HistoryOrderEntity data) {
+                // 获取历史订单日期
+                map = data.getData();
 
+                for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
+                    // 当前天
+                    if(StringUtils.getCurrDay().equals(entry.getKey())){
+                        ArrayList<CalendarDay> nowDates = new ArrayList<>();
+                        nowDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
+                        Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
+                        widget.addDecorator(new EventDecorator(redDrawable,nowDates));
+
+                        // 取出当天的订单显示
+                        List<HistoryOrderEntity.DataBean> value = entry.getValue();
+                        mData.clear();
+                        mData.addAll(value);
+                        myExAdapter = new OrderExAdapter(mData, mActivity);
+                        expandableListView.setAdapter(myExAdapter);
+                        // 默认展示收缩第一组
+                        expandableListView.collapseGroup(0);
+                    }else{
+                        ArrayList<CalendarDay> oldDates = new ArrayList<>();
+                        oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
+                        Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
+                        widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
+
+                    }
+                }
             }
         });
     }
@@ -197,9 +190,28 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
         Date date = calendarDay.getDate();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String seletedDate = format.format(date);
+        boolean hasOrder = false;
+        for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
+            if (seletedDate.equals(entry.getKey())){
+                hasOrder = true;
+                break;
+            }
+        }
+        if(hasOrder){
+            // 收缩列表,将数据更新在第一项
+            mData.clear();
+            mData.addAll(map.get(seletedDate));
+            myExAdapter.groupingData();
+            myExAdapter.setOpen(false);
+            expandableListView.collapseGroup(0);
+            myExAdapter.notifyDataSetChanged();
+            expandableListView.setSelection(0);
+        }else{
+            // 当天没有订单
+            showToast("当天没有订单!");
+        }
 
-        // 收缩列表,将数据更新在第一项
-        myExAdapter.showDetail(date);
-        expandableListView.setSelection(0);
     }
 }

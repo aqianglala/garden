@@ -1,9 +1,13 @@
 package com.softgarden.garden.utils;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -304,6 +308,22 @@ public class StringUtils {
         Long timestamp = System.currentTimeMillis();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date(timestamp));
         return date;
+    }
+
+    /**
+     * 获取当前时间日期
+     *
+     * @return
+     */
+    public static CalendarDay stringToCalendarDay(String day) {
+        CalendarDay calendarDay = null;
+        try {
+            Date parse = new SimpleDateFormat("yyyy-MM-dd").parse(day);
+            calendarDay = CalendarDay.from(parse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return calendarDay;
     }
 
     /**

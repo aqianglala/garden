@@ -69,21 +69,22 @@ public class ShoppingCart extends Observable {
                                 .getChild().get(j).getGoods().get(k);
                         boolean isInTempData = false;
                         for (TempDataBean item: BaseApplication.tempDataBeans){
-                            if(goodsBean.getIetmNo().equals(item.getIetmNo())){
+                            if(item.getIetmNo().equals(goodsBean.getItemNo())){
                                 int count = item.getShuliang() + item.getTuangou();
                                 totalNum += count;
                                 double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
-                                        (goodsBean.getBzj()): (double) goodsBean.getPrice();
+                                        (goodsBean.getBzj()): Double.parseDouble( goodsBean
+                                        .getPrice());
                                 total += (price * count);
                                 isInTempData = true;
                                 break;
                             }
                         }
                         if(!isInTempData){
-                            int count = goodsBean.getProQty();
+                            int count = Integer.parseInt(goodsBean.getProQty());
                             totalNum += count;
                             double price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
-                                    .getBzj()): goodsBean.getPrice();
+                                    .getBzj()): Double.parseDouble(goodsBean.getPrice());
                             total += (price * count);
                         }
                     }

@@ -81,7 +81,12 @@ public class ForgetPswdActivity extends BaseActivity {
                 showContactDialog();
                 break;
             case R.id.btn_get_code:
-                getCode();
+                String phone = et_phone_number.getText().toString().trim();
+                if(TextUtils.isEmpty(phone)){
+                    showToast("手机号码不能为空！");
+                }else{
+                    getCode();
+                }
                 break;
         }
     }

@@ -9,11 +9,14 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.view.historyOrders.adapter.DetailExAdapter;
 import com.softgarden.garden.view.pay.PayActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ConfirmOrderActivity extends BaseActivity {
 
@@ -21,7 +24,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private TextView tv_address;
     private TextView tv_price;
     private Button btn_commit_order;
-    private ArrayList<String> mData;
+    private List<OrderCommitEntity.ZstailBean> mData;
     private DetailExAdapter adapter;
     private ExpandableListView expandableListView;
     @Override
@@ -32,9 +35,34 @@ public class ConfirmOrderActivity extends BaseActivity {
         tv_price = getViewById(R.id.tv_price);
         btn_commit_order = getViewById(R.id.btn_commit_order);
 
-        virtualData();
-
         expandableListView = getViewById(R.id.exListView);
+
+        addFooter();
+    }
+
+    private void addFooter() {
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_footer_order_list,
+                expandableListView, false);
+        expandableListView.addFooterView(view);
+    }
+
+
+    @Override
+    protected void setListener() {
+        btn_commit_order.setOnClickListener(this);
+    }
+
+    @Override
+    protected void processLogic(Bundle savedInstanceState) {
+        // 设置总价
+        double total = ShoppingCart.getInstance().getTotal();
+        // 设置地址
+        tv_address.setText(BaseApplication.userInfo.getData().getShipadd());
+
+        tv_price.setText(total+"");
+        // 获取数据
+        OrderCommitEntity data = (OrderCommitEntity) getIntent().getSerializableExtra("data");
+        mData = data.getZstail();
         adapter = new DetailExAdapter(mData, this);
         expandableListView.setAdapter(adapter);
         // 默认展示收缩第一组
@@ -47,31 +75,6 @@ public class ConfirmOrderActivity extends BaseActivity {
                 return true;
             }
         });
-
-        addFooter();
-    }
-
-    private void addFooter() {
-        View view = LayoutInflater.from(this).inflate(R.layout.layout_footer_order_list,
-                expandableListView, false);
-        expandableListView.addFooterView(view);
-    }
-
-    private void virtualData() {
-        mData = new ArrayList<>();
-        for(int i=0;i<20;i++){
-            mData.add("面包"+(i+1));
-        }
-    }
-
-    @Override
-    protected void setListener() {
-        btn_commit_order.setOnClickListener(this);
-    }
-
-    @Override
-    protected void processLogic(Bundle savedInstanceState) {
-
     }
 
     @Override

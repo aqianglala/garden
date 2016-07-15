@@ -2,6 +2,7 @@ package com.softgarden.garden.view.shopcar.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -105,7 +106,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                             .getChild().get(j).getGoods().get(k);
                     boolean isInTempData = false;
                     for (TempDataBean item: BaseApplication.tempDataBeans){
-                        if(goodsBean.getIetmNo().equals(item.getIetmNo())){
+                        if(goodsBean.getItemNo().equals(item.getIetmNo())){
                             // tempDataBeans存在，即用户操作过此数据，判断此bean的tuangou和shuliang字段如果有一个不为0，则为购物车数据
                             if(item.getTuangou() != 0 || item.getShuliang() != 0) {
                                 addGroup(goodsBean);
@@ -118,10 +119,11 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                         }
                     }
                     if(!isInTempData){
-                        int count = goodsBean.getProQty();
+                        int count = Integer.parseInt(goodsBean.getProQty());
                         if(count!=0) {
                             addGroup(goodsBean);
-                            OrderCommitEntity.ZstailBean productinfo = generateProductInfo(goodsBean,0,goodsBean.getProQty());
+                            OrderCommitEntity.ZstailBean productinfo = generateProductInfo
+                                    (goodsBean,0,Integer.parseInt(goodsBean.getProQty()));
                             products.add(productinfo);
                         }
                     }
@@ -137,15 +139,16 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                                                 goodsBean, int tuangou, int shuliang) {
         // 计算总价
         float price = goodsBean.getIsSpecial() == 0?Float.parseFloat
-                (goodsBean.getBzj()): (float) goodsBean.getPrice();
+                (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
         int count = tuangou + shuliang;
         OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
                 .ZstailBean(count*price, goodsBean.getIsSpecial(),
-                goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getIetmNo(), goodsBean
-                .getItemgroupcdoe(), goodsBean.getPrice(), shuliang, goodsBean.getUnit(),
+                goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getItemNo(), goodsBean
+                .getItemgroupcdoe(), Integer.parseInt(goodsBean.getPrice()), shuliang, goodsBean
+                .getUnit(),
                 goodsBean.getBzj(), false, goodsBean.getItemclassCode(), goodsBean
-                .getItemclassName(), goodsBean.getPicture(), goodsBean.getProQty(), goodsBean
-                .getReturnrate(), goodsBean.getSpec(), tuangou);
+                .getItemclassName(), goodsBean.getPicture(), Integer.parseInt(goodsBean.getProQty
+                ()), Double.parseDouble(goodsBean.getReturnrate()), goodsBean.getSpec(), tuangou);
         return productinfo;
     }
 
@@ -208,7 +211,9 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
+                Intent intent = new Intent(this, ConfirmOrderActivity.class);
+                intent.putExtra("data",orderCommitEntity);
+                startActivity(intent);
                 // 需要验证时间,由后台判断
 //                Calendar instance = Calendar.getInstance();
 //                instance.set(Calendar.HOUR_OF_DAY,16);

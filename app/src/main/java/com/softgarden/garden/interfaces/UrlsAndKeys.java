@@ -12,7 +12,9 @@ public interface UrlsAndKeys {
     String modifyPswd = "index.php/App/Api/modifyPassword";
     String index = "index.php/App/Api/index";
     String order = "index.php/App/Api/order";
+    String orderEdit = "index.php/App/Api/orderEdit";
     String historyOrder = "index.php/App/Api/historyOrder";
+    String historyDetails = "index.php/App/Api/historyDetails";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

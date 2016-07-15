@@ -38,11 +38,13 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
     protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position,
                             final IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean bean) {
         // 商品数量上限
-        final int maxCount = bean.getProQty() * Integer.parseInt(BaseApplication.userInfo.getData().getKxd
+        final int maxCount = Integer.parseInt(bean.getProQty()) * Integer.parseInt
+                (BaseApplication.userInfo
+                .getData().getKxd
                 ());
         bgaViewHolderHelper
                 .setText(R.id.tv_name,bean.getItemName())
-                .setText(R.id.tv_number, bean.getIetmNo())
+                .setText(R.id.tv_number, bean.getItemNo())
                 .setText(R.id.tv_weight,bean.getSpec())
                 .setText(R.id.tv_back,bean.getReturnrate()+"")
                 .setText(R.id.tv_prediction,bean.getProQty()+"")
@@ -52,7 +54,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         TextView tv_special = bgaViewHolderHelper.getView(R.id.tv_special);
         ImageView iv_tejia = bgaViewHolderHelper.getView(R.id.iv_tejia);
 
-        int price = bean.getPrice();
+        float price = Float.parseFloat(bean.getPrice());
         if(price == 0 || bean.getIsSpecial() == 0){// 没有特价，使用标准价
             tv_special.setText(bean.getBzj());
             tv_price.setVisibility(View.GONE);
@@ -73,7 +75,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         final TextView tv_group = bgaViewHolderHelper.getView(R.id.tv_group);
 
         for (TempDataBean item: BaseApplication.tempDataBeans){
-            if(bean.getIetmNo().equals(item.getIetmNo())){
+            if(bean.getItemNo().equals(item.getIetmNo())){
                 tv_total.setText(item.getShuliang()+"");
                 tv_group.setText(item.getTuangou()+"");
                 break;
@@ -94,7 +96,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                         ShoppingCart shoppingCart = ShoppingCart.getInstance();
                         int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                         shoppingCart.changeItem(new TempDataBean(tuangou,Integer.parseInt(num),
-                                bean.getIetmNo()));
+                                bean.getItemNo()));
                     }
                 });
             }
@@ -112,7 +114,8 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                         tv_group.setText(num);
                         ShoppingCart shoppingCart = ShoppingCart.getInstance();
                         int count = Integer.parseInt(tv_total.getText().toString().trim());
-                        shoppingCart.changeItem(new TempDataBean(Integer.parseInt(num),count,bean.getIetmNo()));
+                        shoppingCart.changeItem(new TempDataBean(Integer.parseInt(num),count,bean
+                                .getItemNo()));
                     }
                 });
             }
@@ -125,7 +128,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 if(count>0){
                     tv_total.setText(--count+"");
-                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
+                    TempDataBean item = new TempDataBean(tuangou, count, bean.getItemNo(),false);
                     ShoppingCart shoppingcart = ShoppingCart.getInstance();
                     shoppingcart.changeItem(item);
                 }else{
@@ -141,7 +144,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 if(maxCount != 0){// 有数量上限
                     if(count<maxCount){
                         tv_total.setText(++count+"");
-                        TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
+                        TempDataBean item = new TempDataBean(tuangou, count, bean.getItemNo(),false);
                         ShoppingCart shoppingcart = ShoppingCart.getInstance();
                         shoppingcart.changeItem(item);
                     }else{
@@ -149,7 +152,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                     }
                 }else{// 无数量上限
                     tv_total.setText(++count+"");
-                    TempDataBean item = new TempDataBean(tuangou, count, bean.getIetmNo(),false);
+                    TempDataBean item = new TempDataBean(tuangou, count, bean.getItemNo(),false);
                     ShoppingCart shoppingcart = ShoppingCart.getInstance();
                     shoppingcart.changeItem(item);
                 }

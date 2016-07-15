@@ -1,11 +1,12 @@
 package com.softgarden.garden.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by qiang-pc on 2016/7/14.
  */
-public class OrderCommitEntity {
+public class OrderCommitEntity implements Serializable{
 
     /**
      * CustomerNo : GZ_0001
@@ -65,7 +66,7 @@ public class OrderCommitEntity {
         this.zstail = zstail;
     }
 
-    public static class ZstailBean {
+    public static class ZstailBean implements Serializable{
         private double Amount;
         private int IsSpecial;
         private String ItemGroupName;
