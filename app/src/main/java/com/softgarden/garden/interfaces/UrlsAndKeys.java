@@ -15,6 +15,7 @@ public interface UrlsAndKeys {
     String orderEdit = "index.php/App/Api/orderEdit";
     String historyOrder = "index.php/App/Api/historyOrder";
     String historyDetails = "index.php/App/Api/historyDetails";
+    String payment = "index.php/App/Api/payment";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

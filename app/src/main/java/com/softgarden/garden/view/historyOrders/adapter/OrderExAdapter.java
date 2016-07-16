@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.view.historyOrders.OrderDetailActivity;
 
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         groups.clear();
         for(int i=0;i<2;i++){
             if(i ==0){
-                groups.add(mData.get(i));
+                if(mData.size()>0){
+                    groups.add(mData.get(i));
+                }else{// 没有数据
+                    groups.add(null);
+                }
             }else{
                 groups.add(null);
             }
@@ -95,26 +100,32 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
     @Override
     public View getGroupView(int groupPosition, final boolean isExpanded, View convertView, final ViewGroup
             parent) {
-        if(groupPosition == 0){
+        if(groupPosition == 0 ){
             exListView =  (ExpandableListView) parent;
-            convertView = inflater.inflate(R.layout.item_list_orders, parent, false);
-            TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
-            TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
-            TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-            HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
-            tv_number.setText(item.getOrderNo());
-            tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
-            tv_price.setText(item.getAmount());
+            if (getGroup(groupPosition)!=null){
+                convertView = inflater.inflate(R.layout.item_list_orders, parent, false);
+                TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
+                TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
+                TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+                final HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
+                tv_number.setText(item.getOrderNo());
+                tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
+                tv_price.setText(item.getAmount());
 
-            TextView tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
-            tv_detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 跳转到详情页,到时还需要传递数据过去
-                    Intent intent = new Intent(context, OrderDetailActivity.class);
-                    context.startActivity(intent);
-                }
-            });
+                TextView tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
+                tv_detail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 跳转到详情页,到时还需要传递数据过去
+                        Intent intent = new Intent(context, OrderDetailActivity.class);
+                        LogUtils.e("put:"+item.getOrderNo());
+                        intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
+                        context.startActivity(intent);
+                    }
+                });
+            }else{
+                convertView = inflater.inflate(R.layout.item_list_orders_no, parent, false);
+            }
         }else{
             convertView = inflater.inflate(R.layout.item_more, parent, false);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
@@ -168,6 +179,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
             public void onClick(View v) {
                 // 跳转到详情页,到时还需要传递数据过去
                 Intent intent = new Intent(context, OrderDetailActivity.class);
+                LogUtils.e("put:"+item.getOrderNo());
                 intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
                 context.startActivity(intent);
             }

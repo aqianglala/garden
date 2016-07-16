@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
@@ -16,14 +17,14 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 /**
  * Created by qiang-pc on 2016/6/22.
  */
-public class CheckProductAdapter extends BGAAdapterViewAdapter<String> {
+public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> {
     public CheckProductAdapter(Context context, int itemLayoutId) {
         super(context, itemLayoutId);
     }
 
     @Override
-    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position, String s) {
-        bgaViewHolderHelper.setText(R.id.tv_name,s);
+    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position, IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean s) {
+        bgaViewHolderHelper.setText(R.id.tv_name,s.getItemName());
         final EditText et_total = bgaViewHolderHelper.getView(R.id.et_total);
         final CheckBox checkbox = bgaViewHolderHelper.getView(R.id.checkbox);
 

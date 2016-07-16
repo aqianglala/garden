@@ -149,7 +149,7 @@ public class IndexEntity extends BaseDao{
                 this.child = child;
             }
 
-            public static class ChildBean {
+            public static class ChildBean implements Serializable{
                 private String itemclassCode;
                 private String ItemGroupName;
                 private String Itemgroupcdoe;

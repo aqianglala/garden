@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softgarden.garden.base.BaseFragment;
+import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.BackPromptDialog;
 import com.softgarden.garden.view.back.adapter.BannerPagerAdapter;
@@ -28,6 +30,7 @@ import com.softgarden.garden.view.start.entity.MessageBean;
 import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,16 +41,16 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
     private boolean isBread;
     private ViewPager vp_banner;
-    private ViewPager vp_content;
     private ListView lv_content;
 
-    private ArrayList<String> mData;
+    private ArrayList<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> mData = new ArrayList<>();
     private CheckProductAdapter adapter;
     private Button btn_confirm;
 
     private List<ImageView> dots = new ArrayList<ImageView>();
     private ArrayList<String> tags;
     private ArrayList<BaseFragment> bannerFragments;
+    private IndexEntity.DataBean.ShopBean data;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -56,11 +59,9 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         boolean isBack = arguments.getBoolean("isBack");
         btn_confirm = getViewById(R.id.btn_confirm);
         btn_confirm.setText(isBack?"确认退货":"确认换货");
-
-        virtualData();
+        data = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
 
         vp_banner = getViewById(R.id.vp_banner);
-        vp_content = getViewById(R.id.vp_content);
         // 模擬获取到的banner数据
         initBannerData();
         // 分组，每组6个
@@ -74,11 +75,14 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         adapter = new CheckProductAdapter(mActivity, R.layout.item_list_check_content);
         adapter.setCheckInterface(this);
         adapter.setModifyCountInterface(this);
-        adapter.setDatas(mData);
+
         lv_content.setAdapter(adapter);
 
         addDots(bannerFragments);
         dots.get(0).setSelected(true);
+        mData.clear();
+        mData.addAll(map.get(tags.get(0)));
+        adapter.setDatas(mData);
     }
 
     private void grouping() {
@@ -104,16 +108,20 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
             Bundle bundle = new Bundle();
             // 传递数据及组的坐标，以此来获得被点击的item在原集合的位置
             bundle.putInt("groupIndex",i);
+            bundle.putString(GlobalParams.itemclassname,data.getItemclassName());
             bundle.putStringArrayList("tags",group);
             bannerFragment.setArguments(bundle);
             bannerFragments.add(bannerFragment);
         }
     }
 
+    private HashMap<String,List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean>> map = new
+            HashMap<>();
     private void initBannerData() {
         tags = new ArrayList<>();
-        for(int i=0;i<20;i++){
-            tags.add("生命包"+i);
+        for(IndexEntity.DataBean.ShopBean.ChildBean erji:data.getChild()){
+            tags.add(erji.getItemGroupName());
+            map.put(erji.getItemGroupName(),erji.getGoods());
         }
     }
 
@@ -193,13 +201,6 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         }
     }
 
-    private void virtualData() {
-        mData = new ArrayList<>();
-        for(int i=0;i<20;i++){
-            mData.add("面包"+(i+1));
-        }
-    }
-
     private void showDialog(Dialog dialog) {
         dialog.show();
         // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
@@ -245,6 +246,12 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
     @Override
     public void onClickPosition(int position,String tag) {
-        EventBus.getDefault().post(new MessageBean(position+""), "clickIndex");
+        List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> goodsBeens = map.get(tags.get
+                (position));
+        mData.clear();
+        mData.addAll(goodsBeens);
+        adapter.notifyDataSetChanged();
+
+        EventBus.getDefault().post(new MessageBean(position+"", data.getItemclassName()), "clickIndex");
     }
 }

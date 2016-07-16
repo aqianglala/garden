@@ -8,6 +8,16 @@ import java.util.List;
 public class OrderEditEntity {
     private String OrderDate;
     private String OrderNo;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     private List<HistoryDetailsEntity.DataBean.ShopBean> zstail;
 
     public String getOrderDate() {

@@ -5,6 +5,7 @@ import android.widget.GridView;
 
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.view.back.adapter.BannerGridAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -23,6 +24,7 @@ public class BannerFragment extends BaseFragment {
     private ArrayList<String> mData;
     private int groupIndex;
     private BannerGridAdapter bannerGridAdapter;
+    private String itemclassName;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class BannerFragment extends BaseFragment {
 
         Bundle arguments = getArguments();
         groupIndex = arguments.getInt("groupIndex");
+        itemclassName = arguments.getString(GlobalParams.itemclassname);
         mData = arguments.getStringArrayList("tags");
         mGridView = getViewById(R.id.gridView);
         bannerGridAdapter = new BannerGridAdapter(groupIndex,mData, getActivity
@@ -69,8 +72,10 @@ public class BannerFragment extends BaseFragment {
 
     @Subscriber(tag = "clickIndex")
     private void clickIndex(MessageBean user) {
-        int clickIndex = Integer.parseInt(user.message);
-        bannerGridAdapter.setClickIndex(clickIndex);
-        bannerGridAdapter.notifyDataSetChanged();
+        if(user.itemclassName.equals(itemclassName)){
+            int clickIndex = Integer.parseInt(user.message);
+            bannerGridAdapter.setClickIndex(clickIndex);
+            bannerGridAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -2,7 +2,9 @@ package com.softgarden.garden.view.back.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,11 +13,14 @@ import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.softgarden.garden.view.start.activity.MainActivity;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
+import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
+import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.back.adapter.ContainerPagerAdapter;
+import com.softgarden.garden.view.start.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -27,46 +32,48 @@ public class BackFragment extends BaseFragment{
     private ImageView iv_me;
     private MainActivity mActivity;
     private TextView tv_bread;
-    private TextView tv_cake;
 
     private RelativeLayout rl_indicator;
     private LinearLayout ll_tab;
+    private LinearLayout ll_tab_container;
 
+    private int tabCount;
     private int tabWidth;
     private ViewPager vp_content;
+    private ArrayList<TextView> tabViews =  new ArrayList<TextView>();;
+
+    private ArrayList<BaseFragment> fragments = new ArrayList<>();
+    private boolean isBack;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_back);
         Bundle arguments = getArguments();
-        boolean isBack = arguments.getBoolean("isBack");
+        isBack = arguments.getBoolean("isBack");
 
         mActivity = (MainActivity)getActivity();
         iv_me = getViewById(R.id.iv_me);
 
-        tv_bread = getViewById(R.id.tv_bread);
-        tv_cake = getViewById(R.id.tv_cake);
-
         rl_indicator = getViewById(R.id.rl_indicator);
         ll_tab = getViewById(R.id.ll_tab);
+        ll_tab_container = getViewById(R.id.ll_tab_container);
 
         vp_content = getViewById(R.id.vp_content);
 
-        ArrayList<BaseFragment> fragments = new ArrayList<>();
-        BreadCakeFragment breadFragment = new BreadCakeFragment();
-        Bundle breadBundle = new Bundle();
-        breadBundle.putBoolean("isBread",true);
-        breadBundle.putBoolean("isBack",isBack);
-        breadFragment.setArguments(breadBundle);
+        // 动态添加tab和fragment,ll_tab的最大宽度为240dp
+        tabCount = BaseApplication.indexEntity.getData().getShop().size();
+        setTabWidth();
 
-        BreadCakeFragment cakeFragment = new BreadCakeFragment();
-        Bundle cakeBundle = new Bundle();
-        cakeBundle.putBoolean("isBread",false);
-        cakeBundle.putBoolean("isBack",isBack);
-        cakeFragment.setArguments(cakeBundle);
+        // 动态生成fragment，并设置其一级id，让对应的fragment请求自己的数据
 
-        fragments.add(breadFragment);
-        fragments.add(cakeFragment);
+        fragments.clear();
+        ll_tab_container.removeAllViews();
+        for(int i=0;i<tabCount;i++){
+            // 动态生成tab
+            addTab(i);
+            // 动态生成fragment
+            addFragment(i);
+        }
         ContainerPagerAdapter contentPagerAdapter = new ContainerPagerAdapter(getChildFragmentManager(),
                 fragments);
         vp_content.setAdapter(contentPagerAdapter);
@@ -75,8 +82,6 @@ public class BackFragment extends BaseFragment{
     @Override
     protected void setListener() {
         iv_me.setOnClickListener(this);
-        tv_bread.setOnClickListener(this);
-        tv_cake.setOnClickListener(this);
         ll_tab.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -99,7 +104,7 @@ public class BackFragment extends BaseFragment{
 
             @Override
             public void onPageSelected(int position) {
-                changeTitleState(position==0?true:false);
+                changeTitleState(position);
             }
 
             @Override
@@ -111,7 +116,7 @@ public class BackFragment extends BaseFragment{
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        changeTitleState(true);
+        changeTitleState(0);
     }
 
     @Override
@@ -126,23 +131,21 @@ public class BackFragment extends BaseFragment{
             case R.id.iv_me:
                 mActivity.toggle();
                 break;
-            case R.id.tv_bread:
-                vp_content.setCurrentItem(0);
-                break;
-            case R.id.tv_cake:
-                vp_content.setCurrentItem(1);
-                break;
         }
     }
 
     /**
      * 改变标题状态
-     * @param isSelectBread true代表选择的是视频
      */
-    private void changeTitleState(boolean isSelectBread) {
+    private void changeTitleState(int position) {
         // 缩放标题
-        scaleTitle(isSelectBread ? 1.2f : 1.0f, tv_bread);
-        scaleTitle(!isSelectBread ? 1.2f : 1.0f, tv_cake);
+        for (int i=0;i<tabViews.size();i++){
+            if(i == position){
+                scaleTitle(true ? 1.2f : 1.0f, tabViews.get(i));
+            }else{
+                scaleTitle(false ? 1.2f : 1.0f, tabViews.get(i));
+            }
+        }
     }
 
     /**
@@ -152,6 +155,50 @@ public class BackFragment extends BaseFragment{
      */
     private void scaleTitle(float sclae, TextView textview) {
         ViewPropertyAnimator.animate(textview).scaleX(sclae).scaleY(sclae);
+    }
+
+    private void addTab(final int i) {
+        TextView tabView = (TextView) LayoutInflater.from(mActivity).inflate(R.layout.layout_item_tab_thh,
+                ll_tab_container, false);
+        tabView.setText(BaseApplication.indexEntity.getData().getShop().get(i).getItemclassName());
+        tabView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vp_content.setCurrentItem(i);
+            }
+        });
+        tabViews.add(tabView);
+        ll_tab_container.addView(tabView);
+    }
+
+    /**
+     * 计算每个tab的宽度
+     */
+    private void setTabWidth() {
+        tabWidth = UIUtils.dip2px(60);
+        ViewGroup.LayoutParams layoutParams_ll_tab = ll_tab.getLayoutParams();
+        layoutParams_ll_tab.width = tabWidth * tabCount;
+        ll_tab.setLayoutParams(layoutParams_ll_tab);
+
+        rl_indicator = getViewById(R.id.rl_indicator);
+        ViewGroup.LayoutParams layoutParams = rl_indicator
+                .getLayoutParams();
+        layoutParams.width = tabWidth;
+        rl_indicator.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 动态添加fragment
+     * @param i
+     */
+    private void addFragment(int i) {
+        BreadCakeFragment fragmentProduct = new BreadCakeFragment();
+        IndexEntity.DataBean.ShopBean shopBean = BaseApplication.indexEntity.getData().getShop().get(i);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isBack",isBack);
+        bundle.putSerializable("data",shopBean );
+        fragmentProduct.setArguments(bundle);
+        fragments.add(fragmentProduct);
     }
 
 }

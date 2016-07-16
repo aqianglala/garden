@@ -168,7 +168,7 @@
                 android:layout_width="210px"
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary"
-                android:text="@string/commit_order"
+                android:text="结算"
                 android:textColor="@android:color/white"/>
         </com.zhy.autolayout.AutoLinearLayout>
         </com.zhy.autolayout.AutoFrameLayout>

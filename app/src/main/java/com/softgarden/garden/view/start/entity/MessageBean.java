@@ -6,7 +6,13 @@ package com.softgarden.garden.view.start.entity;
 public class MessageBean {
 
     public String message ;
+    public String itemclassName ;
     public MessageBean(String message) {
         this.message = message ;
+    }
+
+    public MessageBean(String message,String itemclassName) {
+        this.message = message ;
+        this.itemclassName = itemclassName ;
     }
 }

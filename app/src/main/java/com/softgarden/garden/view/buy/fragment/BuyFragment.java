@@ -156,7 +156,9 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             @Override
             public void onSuccess(IndexEntity indexEntity) {
                 if(shouldClearCart()){//隔天了，清掉了购物车
-                    SPUtils.clear(mActivity);
+                    SPUtils.put(mActivity,GlobalParams.SHOPCART_DATA,"");
+                    SPUtils.put(mActivity,GlobalParams.DATA,"");
+                    SPUtils.put(mActivity,GlobalParams.LAST_UPDATE_TIME,"");
                 }
                 // 更新数据
                 SPUtils.put(mActivity,GlobalParams.DATA,new Gson().toJson(indexEntity));
@@ -176,6 +178,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                         UIUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                tv_count.setText(shoppingCart.getTotalNum()+"");
                                 showToast(shoppingCart.getTotalNum()+"");
                             }
                         });

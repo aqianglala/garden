@@ -22,6 +22,7 @@ public class BannerGridAdapter extends BaseAdapter {
     private ArrayList<String>mData;
     private Context context;
     private int groupIndex;
+    private boolean hasClick;
 
     public BannerGridAdapter(int groupIndex,ArrayList<String> mData, Context context) {
         this.groupIndex = groupIndex;
@@ -54,6 +55,7 @@ public class BannerGridAdapter extends BaseAdapter {
         rb_tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hasClick = true;
                 if(clickIndex != groupIndex*6+position&& rb_tag.isChecked()){
                     Toast.makeText(context,tag,Toast.LENGTH_SHORT).show();
                     if(listener!=null){
@@ -62,11 +64,16 @@ public class BannerGridAdapter extends BaseAdapter {
                 }
             }
         });
-        if(groupIndex*6+position == clickIndex){
+        if (!hasClick && position ==0){
             rb_tag.setChecked(true);
         }else{
-            rb_tag.setChecked(false);
+            if(groupIndex*6+position == clickIndex){
+                rb_tag.setChecked(true);
+            }else{
+                rb_tag.setChecked(false);
+            }
         }
+
         return view;
     }
 

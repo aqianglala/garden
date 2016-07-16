@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
@@ -13,27 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
-import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.TempDataBean;
-import com.softgarden.garden.helper.HttpHelper;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
-import com.softgarden.garden.utils.LogUtils;
-import com.softgarden.garden.utils.ScreenUtils;
-import com.softgarden.garden.view.shopcar.CommitOrderDialog;
-import com.softgarden.garden.view.shopcar.OverTimePromptDialog;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -144,7 +133,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
                 .ZstailBean(count*price, goodsBean.getIsSpecial(),
                 goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getItemNo(), goodsBean
-                .getItemgroupcdoe(), Integer.parseInt(goodsBean.getPrice()), shuliang, goodsBean
+                .getItemgroupcdoe(), goodsBean.getPrice(), shuliang, goodsBean
                 .getUnit(),
                 goodsBean.getBzj(), false, goodsBean.getItemclassCode(), goodsBean
                 .getItemclassName(), goodsBean.getPicture(), Integer.parseInt(goodsBean.getProQty
@@ -199,32 +188,11 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 orderCommitEntity.setOrderDate("2016-7-15");
                 orderCommitEntity.setZstail(productInfos);
 
-                try {
-                    String s = new Gson().toJson(orderCommitEntity);
-                    LogUtils.e(s);
-                    HttpHelper.post(UrlsAndKeys.order, new JSONObject(s), new BaseCallBack(context) {
-                        @Override
-                        public void onSuccess(JSONObject result) {
-                            showToast("提交订单成功！");
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                orderCommitEntity.setZffs(BaseApplication.userInfo.getData().getJsfs());
                 Intent intent = new Intent(this, ConfirmOrderActivity.class);
                 intent.putExtra("data",orderCommitEntity);
                 startActivity(intent);
-                // 需要验证时间,由后台判断
-//                Calendar instance = Calendar.getInstance();
-//                instance.set(Calendar.HOUR_OF_DAY,16);
-//                instance.set(Calendar.MINUTE,0);
-//                instance.set(Calendar.SECOND,0);
-//                Date time = instance.getTime();
-//                if(System.currentTimeMillis()<time.getTime()){// 4点内,弹出对话框提示输入登录密码
-//                    showCommitDialog();
-//                }else{// 4点后不允许提交订单
-//                    showOverTimeDialog();
-//                }
+
                 break;
             case R.id.cb_all:
                 doCheckAll();
@@ -406,25 +374,6 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         if(totalNum == 0) finish();
     }
 
-    private void showOverTimeDialog() {
-        OverTimePromptDialog dialog = new OverTimePromptDialog(this, R.style.CustomDialog);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
-        attributes.height = ScreenUtils.getScreenWidth(this);
-        dialog.getWindow().setAttributes(attributes);
-    }
-
-    private void showCommitDialog() {
-        CommitOrderDialog dialog = new CommitOrderDialog(this, R.style.CustomDialog);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.9);
-        attributes.height =(int) (ScreenUtils.getScreenWidth(this)*0.9);
-        dialog.getWindow().setAttributes(attributes);
-    }
 
     @Override
     public void update(Observable observable, Object data) {

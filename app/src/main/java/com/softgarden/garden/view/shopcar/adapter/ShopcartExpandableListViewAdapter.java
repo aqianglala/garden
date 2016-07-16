@@ -154,8 +154,8 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             cholder.iv_product.setImageUrl(HttpHelper.HOST+product.getPicture(), ImageLoaderHelper
                     .getInstance());
             // 设置价格
-            int price = product.getPrice();
-            if(price == 0 || product.getIsSpecial() == 0){// 没有特价，使用标准价
+            String price = product.getPrice();
+            if(price.equals("0.0000") || product.getIsSpecial() == 0){// 没有特价，使用标准价
                 cholder.tv_special.setText(product.getBzj());
                 cholder.tv_price.setVisibility(View.GONE);
                 cholder.iv_tejia.setVisibility(View.GONE);

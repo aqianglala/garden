@@ -13,21 +13,14 @@ public class HistoryDetailsEntity extends BaseDao {
      * status : 1
      * errorMsg :
      * data : {"shop":[{"OrderDate":"2016-07-15","OrderNo":"95570","CustomerNo":"GZ_0001",
-     * "RouteCode":"1","Operator":"app_GZ_0001","ItemNo":"3001","proQty":"0","Qty":"2",
-     * "returnrate":"0.0000","Price":"0.0000","IsSpecial":"0","Amount":"4.00","tgs":"0",
-     * "ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","picture":"","bzj":"2.0000"}],"remarks":""}
+     * "RouteCode":"1","Operator":"app_GZ_0001","remarks":null,"zffs":null,"is_pay":null,
+     * "ItemNo":"3001","proQty":"0","Qty":"2","returnrate":"0.0000","Price":"0.0000",
+     * "IsSpecial":"0","Amount":"4.00","tgs":"0","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+     * "picture":"","bzj":"2.0000"}]}
      */
 
     private String status;
     private String errorMsg;
-    /**
-     * shop : [{"OrderDate":"2016-07-15","OrderNo":"95570","CustomerNo":"GZ_0001",
-     * "RouteCode":"1","Operator":"app_GZ_0001","ItemNo":"3001","proQty":"0","Qty":"2",
-     * "returnrate":"0.0000","Price":"0.0000","IsSpecial":"0","Amount":"4.00","tgs":"0",
-     * "ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","picture":"","bzj":"2.0000"}]
-     * remarks :
-     */
-
     private DataBean data;
 
     public String getStatus() {
@@ -55,13 +48,15 @@ public class HistoryDetailsEntity extends BaseDao {
     }
 
     public static class DataBean {
-        private String remarks;
         /**
          * OrderDate : 2016-07-15
          * OrderNo : 95570
          * CustomerNo : GZ_0001
          * RouteCode : 1
          * Operator : app_GZ_0001
+         * remarks : null
+         * zffs : null
+         * is_pay : null
          * ItemNo : 3001
          * proQty : 0
          * Qty : 2
@@ -78,14 +73,6 @@ public class HistoryDetailsEntity extends BaseDao {
 
         private List<ShopBean> shop;
 
-        public String getRemarks() {
-            return remarks;
-        }
-
-        public void setRemarks(String remarks) {
-            this.remarks = remarks;
-        }
-
         public List<ShopBean> getShop() {
             return shop;
         }
@@ -100,6 +87,9 @@ public class HistoryDetailsEntity extends BaseDao {
             private String CustomerNo;
             private String RouteCode;
             private String Operator;
+            private Object remarks;
+            private Object zffs;
+            private Object is_pay;
             private String ItemNo;
             private String proQty;
             private String Qty;
@@ -161,6 +151,30 @@ public class HistoryDetailsEntity extends BaseDao {
 
             public void setOperator(String Operator) {
                 this.Operator = Operator;
+            }
+
+            public Object getRemarks() {
+                return remarks;
+            }
+
+            public void setRemarks(Object remarks) {
+                this.remarks = remarks;
+            }
+
+            public Object getZffs() {
+                return zffs;
+            }
+
+            public void setZffs(Object zffs) {
+                this.zffs = zffs;
+            }
+
+            public Object getIs_pay() {
+                return is_pay;
+            }
+
+            public void setIs_pay(Object is_pay) {
+                this.is_pay = is_pay;
             }
 
             public String getItemNo() {

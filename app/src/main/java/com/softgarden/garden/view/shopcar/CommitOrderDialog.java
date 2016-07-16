@@ -2,15 +2,25 @@ package com.softgarden.garden.view.shopcar;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.engine.UserEngine;
+import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.view.shopcar.activity.ConfirmOrderActivity;
+import com.softgarden.garden.utils.GlobalParams;
+import com.softgarden.garden.utils.SPUtils;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 /**
  * Created by qiang-pc on 2016/6/23.
@@ -18,10 +28,12 @@ import com.softgarden.garden.view.shopcar.activity.ConfirmOrderActivity;
 public class CommitOrderDialog extends Dialog implements View.OnClickListener{
     private Context context;
     private EditText et_pswd;
+    private String switchPayment;
 
-    public CommitOrderDialog(Context context, int themeResId) {
+    public CommitOrderDialog(Context context, int themeResId, String switchPayment) {
         super(context, themeResId);
         this.context = context;
+        this.switchPayment = switchPayment;
     }
 
     public CommitOrderDialog(Context context) {
@@ -46,14 +58,36 @@ public class CommitOrderDialog extends Dialog implements View.OnClickListener{
                 if(TextUtils.isEmpty(pswd)){
                     Toast.makeText(context,"请输入密码！",Toast.LENGTH_LONG).show();
                 }else{
-                    Toast.makeText(context,"密码正确！",Toast.LENGTH_LONG).show();
-                    context.startActivity(new Intent(context,ConfirmOrderActivity.class));
-                    dismiss();
+                    sendLogin(BaseApplication.userInfo.getData().getCustomerNo(),pswd);
                 }
                 break;
             case R.id.iv_cancle:
                 dismiss();
                 break;
         }
+    }
+
+    /**
+     * 发送登录请求。登录成功时保存账号密码，并跳转到主页
+     *
+     * @param name
+     * @param password
+     */
+    private void sendLogin(final String name, String password) {
+
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.login(name, password, new ObjectCallBack<UserEntity>((BaseActivity) context) {
+            @Override
+            public void onSuccess(UserEntity data) {
+                BaseApplication.userInfo = data;
+                // 保存用户名和密码
+                SPUtils.put(context, GlobalParams.USERINFO,new Gson().toJson(data));
+                SPUtils.put(context,GlobalParams.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
+                        ?false:true);
+                dismiss();
+                EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");
+            }
+
+        });
     }
 }

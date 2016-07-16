@@ -110,30 +110,31 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                 // 获取历史订单日期
                 map = data.getData();
 
+                ArrayList<CalendarDay> nowDates = new ArrayList<>();
+                ArrayList<CalendarDay> oldDates = new ArrayList<>();
+                boolean hasOrderOnCurrentDay = false;
                 for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
                     // 当前天
                     if(StringUtils.getCurrDay().equals(entry.getKey())){
-                        ArrayList<CalendarDay> nowDates = new ArrayList<>();
+                        hasOrderOnCurrentDay = true;
                         nowDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
-                        Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
-                        widget.addDecorator(new EventDecorator(redDrawable,nowDates));
-
                         // 取出当天的订单显示
                         List<HistoryOrderEntity.DataBean> value = entry.getValue();
                         mData.clear();
                         mData.addAll(value);
-                        myExAdapter = new OrderExAdapter(mData, mActivity);
-                        expandableListView.setAdapter(myExAdapter);
                         // 默认展示收缩第一组
                         expandableListView.collapseGroup(0);
                     }else{
-                        ArrayList<CalendarDay> oldDates = new ArrayList<>();
                         oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
-                        Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
-                        widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
-
                     }
                 }
+                myExAdapter = new OrderExAdapter(mData, mActivity);
+                expandableListView.setAdapter(myExAdapter);
+
+                Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
+                widget.addDecorator(new EventDecorator(redDrawable,nowDates));
+                Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
+                widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
             }
         });
     }

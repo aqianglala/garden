@@ -19,6 +19,26 @@ public class OrderCommitEntity implements Serializable{
 
     private String CustomerNo;
     private String OrderDate;
+    private String remarks;
+
+    public String getZffs() {
+        return zffs;
+    }
+
+    public void setZffs(String zffs) {
+        this.zffs = zffs;
+    }
+
+    private String zffs;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     /**
      * Amount : 4.0
      * IsSpecial : 0
@@ -73,7 +93,7 @@ public class OrderCommitEntity implements Serializable{
         private String ItemName;
         private String ItemNo;
         private String Itemgroupcdoe;
-        private int Price;
+        private String Price;
         private int Qty;
         private String Unit;
         private String bzj;
@@ -87,7 +107,7 @@ public class OrderCommitEntity implements Serializable{
         private int tgs;
 
         public ZstailBean(double amount, int isSpecial, String itemGroupName, String itemName,
-                          String itemNo, String itemgroupcdoe, int price, int qty, String unit,
+                          String itemNo, String itemgroupcdoe, String price, int qty, String unit,
                           String bzj, boolean isChoosed, String itemclassCode, String
                                   itemclassName, String picture, int proQty, double returnrate,
                           String spec, int tgs) {
@@ -159,11 +179,11 @@ public class OrderCommitEntity implements Serializable{
             this.Itemgroupcdoe = Itemgroupcdoe;
         }
 
-        public int getPrice() {
+        public String getPrice() {
             return Price;
         }
 
-        public void setPrice(int Price) {
+        public void setPrice(String Price) {
             this.Price = Price;
         }
 

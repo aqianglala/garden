@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context="com.softgarden.garden.view.start.activity.SplashActivity">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:background="@mipmap/splash"
         android:text="splash"/>
 </RelativeLayout>

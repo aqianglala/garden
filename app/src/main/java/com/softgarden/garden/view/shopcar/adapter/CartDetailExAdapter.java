@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.softgarden.garden.entity.HistoryDetailsEntity;
+import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.jiadun_android.R;
 
@@ -21,31 +21,26 @@ import java.util.List;
 /**
  * Created by qiang-pc on 2016/6/29.
  */
-public class OrderDetailExAdapter extends BaseExpandableListAdapter{
+public class CartDetailExAdapter extends BaseExpandableListAdapter{
     private final LayoutInflater inflater;
-    private List<HistoryDetailsEntity.DataBean.ShopBean> mData;
-    private List<HistoryDetailsEntity.DataBean.ShopBean> groups = new ArrayList<>();
-    private List<HistoryDetailsEntity.DataBean.ShopBean> children = new ArrayList<>();
+    private List<OrderCommitEntity.ZstailBean> mData;
+    private List<OrderCommitEntity.ZstailBean> groups = new ArrayList<>();
+    private List<OrderCommitEntity.ZstailBean> children = new ArrayList<>();
     private Context context;
     private ExpandableListView exListView;
 
-    public OrderDetailExAdapter(List<HistoryDetailsEntity.DataBean.ShopBean> data, Context context) {
+    public CartDetailExAdapter(List<OrderCommitEntity.ZstailBean> data, Context context) {
         this.mData = data;
         this.context = context;
         inflater = LayoutInflater.from(context);
         groupingData();
     }
     private boolean isEditable;
-    public void setEditable(boolean editable) {
-        isEditable = editable;
-    }
     /**
      * 分成4组，第1~2，4组没有child，第三组有child
       */
-    public void groupingData() {
+    private void groupingData() {
         int size = mData.size();
-        groups.clear();
-        children.clear();
         if(size>=3){
             for(int i=0;i<4;i++){
                 if(i <3){
@@ -127,19 +122,17 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
             TextView tv_plus = (TextView) convertView.findViewById(R.id.tv_plus);
 
             RelativeLayout rl_modify_numb = (RelativeLayout) convertView.findViewById(R.id.rl_modify_numb);
-            HistoryDetailsEntity.DataBean.ShopBean item = (HistoryDetailsEntity.DataBean.ShopBean) getGroup(groupPosition);
+            OrderCommitEntity.ZstailBean item = (OrderCommitEntity.ZstailBean) getGroup(groupPosition);
 
+            String numb = item.getQty() + item.getTgs() + "";
             tv_name.setText(item.getItemName());
-            tv_numb.setText("x"+item.getTotal());
+            tv_numb.setText(numb);
             tv_number.setText(item.getItemNo());
             tv_prediction.setText(item.getProQty()+"");
             tv_weight.setText(item.getSpec());
             tv_back.setText(item.getReturnrate()+"");
-            double price = item.getIsSpecial().equals("0")?Double.parseDouble
-                    (item.getBzj()): Double.parseDouble( item
-                    .getPrice());
-            tv_price.setText(price+"");
-            tv_total.setText(item.getTotal()+"");
+            tv_price.setText(item.getAmount()+"");
+            tv_total.setText(numb);
             iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
             rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);
             tv_numb.setVisibility(isEditable?View.GONE:View.VISIBLE);
@@ -216,18 +209,16 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
         }else{
             holderView = (HolderView) convertView.getTag();
         }
-        HistoryDetailsEntity.DataBean.ShopBean item = children.get(childPosition);
+        OrderCommitEntity.ZstailBean item = children.get(childPosition);
+        String numb = item.getQty() + item.getTgs() + "";
         holderView.tv_name.setText(item.getItemName());
-        holderView.tv_numb.setText("x"+item.getTotal());
+        holderView.tv_numb.setText(numb);
         holderView.tv_number.setText(item.getItemNo());
         holderView.tv_prediction.setText(item.getProQty());
         holderView.tv_weight.setText(item.getSpec());
         holderView.tv_back.setText(item.getReturnrate()+"");
-        double price = item.getIsSpecial().equals("0")?Double.parseDouble
-                (item.getBzj()): Double.parseDouble( item
-                .getPrice());
-        holderView.tv_price.setText(price+"");
-        holderView.tv_total.setText(item.getTotal()+"");
+        holderView.tv_price.setText(item.getAmount()+"");
+        holderView.tv_total.setText(numb);
         holderView.iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
         holderView.rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);
         holderView.tv_numb.setVisibility(isEditable?View.GONE:View.VISIBLE);
