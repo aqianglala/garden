@@ -71,7 +71,7 @@ public abstract class BaseCallBack implements RequestManager.RequestListener {
     @Override
     public void onError(String s, String s1, int i) {
         if (dialog != null && !dialog.isCancelable()) dialog.dismiss();
-        LogUtils.e(s);
+        LogUtils.e("error",s);
         ToastDialog.showError(activity, "请求异常", null);
     }
 

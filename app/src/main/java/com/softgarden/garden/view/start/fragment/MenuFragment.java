@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.SPUtils;
@@ -34,6 +36,8 @@ public class MenuFragment extends BaseFragment {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_menu);
+        TextView tv_name = getViewById(R.id.tv_name);
+        tv_name.setText(BaseApplication.userInfo.getData().getCustomerName());
     }
 
     @Override

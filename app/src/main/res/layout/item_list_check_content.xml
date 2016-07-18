@@ -4,182 +4,189 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
-    android:paddingBottom="10px"
-    android:paddingLeft="20px"
-    android:paddingRight="20px"
-    android:paddingTop="20px">
-
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone"
-        style="@style/checkbox"/>
+    android:clickable="true">
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:background="@color/bg_white"
+        android:paddingBottom="10px"
+        android:paddingLeft="20px"
+        android:paddingRight="20px"
+        android:paddingTop="20px">
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.zhy.autolayout.AutoRelativeLayout
-            android:layout_width="110px"
-            android:layout_height="match_parent"
-            app:layout_auto_baseheight="width"
-            android:background="@drawable/shape_image">
-
-            <ImageView
-                android:id="@+id/iv_product"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@mipmap/ic_launcher"/>
-        </com.zhy.autolayout.AutoRelativeLayout>
+        <CheckBox
+            android:id="@+id/checkbox"
+            style="@style/checkbox"
+            android:layout_gravity="center_vertical"/>
 
         <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20px"
+            android:layout_marginLeft="@dimen/margin"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="巧克力包"
-                android:textColor="@color/black_text"
-                android:textSize="32px"/>
-
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
                 android:orientation="horizontal">
 
-                <TextView
-                    style="@style/item_gray_text"
-                    android:text="产品编号："/>
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="110px"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_image"
+                    app:layout_auto_baseheight="width">
 
-                <TextView
-                    android:id="@+id/tv_number"
-                    style="@style/item_gray_text"
-                    android:text="3123"/>
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/iv_product"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@mipmap/ic_launcher"/>
+                </com.zhy.autolayout.AutoRelativeLayout>
 
-                <TextView
-                    style="@style/item_gray_text"
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20px"
-                    android:text="预估数："/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_prediction"
-                    style="@style/item_gray_text"
-                    android:text="3123"/>
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="巧克力包"
+                        android:textColor="@color/black_text"
+                        android:textSize="32px"/>
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/item_gray_text"
+                            android:text="产品编号："/>
+
+                        <TextView
+                            android:id="@+id/tv_number"
+                            style="@style/item_gray_text"
+                            android:text="3123"/>
+
+                        <TextView
+                            style="@style/item_gray_text"
+                            android:layout_marginLeft="20px"
+                            android:text="预估数："/>
+
+                        <TextView
+                            android:id="@+id/tv_prediction"
+                            style="@style/item_gray_text"
+                            android:text="3123"/>
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_weight"
+                            style="@style/item_gray_text"
+                            android:text="80g/袋"/>
+
+                        <TextView
+                            style="@style/item_gray_text"
+                            android:layout_marginLeft="20px"
+                            android:text="退货率："/>
+
+                        <TextView
+                            android:id="@+id/tv_back"
+                            style="@style/item_gray_text"
+                            android:text="9.16%"/>
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                </com.zhy.autolayout.AutoLinearLayout>
             </com.zhy.autolayout.AutoLinearLayout>
 
-            <com.zhy.autolayout.AutoLinearLayout
+            <com.zhy.autolayout.AutoRelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10px"
+                android:layout_height="54px"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_weight"
-                    style="@style/item_gray_text"
-                    android:text="80g/袋"/>
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="￥33"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="28px"/>
 
                 <TextView
+                    android:id="@+id/tv_delete"
                     style="@style/item_gray_text"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
-                    android:text="退货率："/>
+                    android:layout_toRightOf="@id/tv_price"
+                    android:text="￥2.50"
+                    android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/tv_back"
-                    style="@style/item_gray_text"
-                    android:text="9.16%"/>
-            </com.zhy.autolayout.AutoLinearLayout>
+                <com.zhy.autolayout.AutoRelativeLayout
+                    android:layout_width="180px"
+                    android:layout_height="54px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_minus"
+                        android:layout_width="54px"
+                        android:layout_height="54px"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/jian"
+                        android:clickable="true"
+                        app:layout_auto_baseheight="width"/>
+
+                    <com.zhy.autolayout.AutoLinearLayout
+                        android:layout_width="60px"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_total"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxLength="3"
+                            android:text="0"
+                            android:textColor="@color/pink_text"
+                            android:textSize="26px"/>
+
+                        <View
+                            style="@style/line_horizontal"/>
+
+                    </com.zhy.autolayout.AutoLinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_plus"
+                        android:layout_width="54px"
+                        android:layout_height="54px"
+                        android:layout_alignParentRight="true"
+                        android:background="@mipmap/jia"
+                        android:clickable="true"
+                        app:layout_auto_baseheight="width"/>
+                </com.zhy.autolayout.AutoRelativeLayout>
+            </com.zhy.autolayout.AutoRelativeLayout>
 
         </com.zhy.autolayout.AutoLinearLayout>
     </com.zhy.autolayout.AutoLinearLayout>
 
-    <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="54px"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="￥33"
-            android:textColor="@color/colorPrimary"
-            android:textSize="28px"/>
-
-        <TextView
-            android:id="@+id/tv_delete"
-            style="@style/item_gray_text"
-            android:layout_toRightOf="@id/tv_price"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:visibility="gone"
-            android:text="￥2.50"/>
-
-        <com.zhy.autolayout.AutoRelativeLayout
-            android:layout_width="180px"
-            android:layout_height="54px"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_minus"
-                android:layout_width="54px"
-                android:layout_height="54px"
-                app:layout_auto_baseheight="width"
-                android:layout_centerVertical="true"
-                android:background="@mipmap/jian"
-                android:clickable="true"/>
-
-            <com.zhy.autolayout.AutoLinearLayout
-                android:layout_width="60px"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="10dp">
-
-            <EditText
-                android:id="@+id/et_total"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="3"
-                android:text="1"
-                android:textColor="@color/pink_text"
-                android:textSize="26px"/>
-
-                <View
-                    style="@style/line_horizontal"/>
-
-            </com.zhy.autolayout.AutoLinearLayout>
-            <TextView
-                android:id="@+id/tv_plus"
-                android:layout_width="54px"
-                android:layout_height="54px"
-                app:layout_auto_baseheight="width"
-                android:layout_alignParentRight="true"
-                android:background="@mipmap/jia"
-                android:clickable="true"/>
-        </com.zhy.autolayout.AutoRelativeLayout>
-    </com.zhy.autolayout.AutoRelativeLayout>
-
-    </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoLinearLayout>

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.zhy.autolayout.AutoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
 
     <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="30px"
-        android:background="@mipmap/dialog_overtime"
-        android:paddingBottom="30px">
+        android:layout_width="660px"
+        android:layout_height="730px">
 
+        <ImageView
+            android:layout_width="580px"
+            android:layout_height="730px"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/dialog_overtime"/>
 
         <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="580px"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
+            android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:paddingTop="50px"
-            android:paddingLeft="50px"
-            android:paddingRight="50px">
+            android:paddingTop="70px"
+            android:paddingLeft="30px"
+            android:paddingRight="30px">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -34,13 +36,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="@dimen/margin"
                 android:text="@string/overtime"
                 android:textColor="@color/black_text"
-                android:textSize="@dimen/text_middle"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/text_middle"/>
 
         </com.zhy.autolayout.AutoLinearLayout>
+
+
+        <!--<Button-->
+            <!--android:id="@+id/btn_yes"-->
+            <!--android:layout_width="350px"-->
+            <!--android:layout_height="70px"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="30px"-->
+            <!--android:background="@drawable/shape_modify"-->
+            <!--android:text="确认"-->
+            <!--android:textColor="@color/white_text"-->
+            <!--android:textSize="36px"/>-->
 
         <com.zhy.autolayout.AutoLinearLayout
             android:id="@+id/ll_call"
@@ -51,6 +65,7 @@
             android:background="@drawable/shape_modify"
             android:clickable="true"
             android:gravity="center"
+            android:layout_marginBottom="30px"
             android:orientation="horizontal">
 
             <ImageView
@@ -71,14 +86,16 @@
 
         </com.zhy.autolayout.AutoLinearLayout>
 
+        <ImageView
+            android:id="@+id/iv_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="70px"
+            android:src="@mipmap/quxiao_dialog"/>
+
     </com.zhy.autolayout.AutoRelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_cancle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="50px"
-        android:src="@mipmap/quxiao_dialog"/>
+
 
 </com.zhy.autolayout.AutoRelativeLayout>

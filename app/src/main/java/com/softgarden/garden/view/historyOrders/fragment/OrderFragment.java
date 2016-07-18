@@ -122,15 +122,14 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                         List<HistoryOrderEntity.DataBean> value = entry.getValue();
                         mData.clear();
                         mData.addAll(value);
-                        // 默认展示收缩第一组
-                        expandableListView.collapseGroup(0);
                     }else{
                         oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
                     }
                 }
                 myExAdapter = new OrderExAdapter(mData, mActivity);
                 expandableListView.setAdapter(myExAdapter);
-
+                // 默认展示收缩第一组
+                expandableListView.collapseGroup(0);
                 Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
                 widget.addDecorator(new EventDecorator(redDrawable,nowDates));
                 Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);

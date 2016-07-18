@@ -7,12 +7,14 @@ public class MessageBean {
 
     public String message ;
     public String itemclassName ;
+    public boolean isBack ;
     public MessageBean(String message) {
         this.message = message ;
     }
 
-    public MessageBean(String message,String itemclassName) {
+    public MessageBean(String message,String itemclassName, boolean isBack) {
         this.message = message ;
         this.itemclassName = itemclassName ;
+        this.isBack = isBack;
     }
 }

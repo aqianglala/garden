@@ -1,16 +1,22 @@
-package com.softgarden.garden.view.shopcar;
+package com.softgarden.garden.dialog;
+
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -18,38 +24,52 @@ import android.widget.Toast;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 
-/**
- * Created by qiang-pc on 2016/6/23.
- */
-public class OverTimePromptDialog extends Dialog {
-    private Context context;
-    public OverTimePromptDialog(Context context, int themeResId) {
-        super(context, themeResId);
-        this.context = context;
-    }
 
-    public OverTimePromptDialog(Context context) {
-        super(context);
-        this.context = context;
-    }
+/**
+ * Created by Administrator on 2015/6/16.
+ */
+public class OverTimeDialog extends DialogFragment {
+    private static Context context;
+
+    public OverTimeDialog() {}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_overtime);
-        findViewById(R.id.ll_call).setOnClickListener(new View.OnClickListener() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // 去掉对话框标题
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View rootView = inflater.inflate(R.layout.dialog_over, container);
+        rootView.findViewById(R.id.ll_call).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showContactDialog();
                 dismiss();
             }
         });
-        findViewById(R.id.iv_cancle).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.iv_cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
+        return rootView;
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // 去除对话框背景
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
+    }
+
+    public static OverTimeDialog show(FragmentActivity activity) {
+        context = activity;
+        OverTimeDialog dialog = new OverTimeDialog();
+        dialog.setCancelable(false);
+        FragmentManager manager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        dialog.show(transaction, null);
+        return dialog;
     }
 
     private void showContactDialog() {

@@ -26,28 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20px"
-        android:layout_weight="1"
-        android:background="@color/bg_white"/>
+        android:layout_weight="1"/>
 
     <View
         style="@style/line_horizontal"/>
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_white"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/btn_confirm"
-            android:layout_width="200px"
-            android:layout_height="66px"
-            android:layout_gravity="center"
-            android:layout_margin="10px"
-            android:background="@drawable/selector_get_code"
-            android:text="@string/confirm_back"
-            android:textColor="@color/pink_text"
-            android:textSize="34px"/>
-
-    </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoLinearLayout>

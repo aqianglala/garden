@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -15,16 +14,15 @@ import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
+import com.softgarden.garden.dialog.CommitOrderDialog;
+import com.softgarden.garden.dialog.OverTimeDialog;
 import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.utils.LogUtils;
-import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.pay.PayActivity;
-import com.softgarden.garden.view.shopcar.CommitOrderDialog;
-import com.softgarden.garden.view.shopcar.OverTimePromptDialog;
 import com.softgarden.garden.view.shopcar.adapter.CartDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
@@ -58,7 +56,6 @@ public class ConfirmOrderActivity extends BaseActivity {
         btn_commit_order = getViewById(R.id.btn_commit_order);
 
         expandableListView = getViewById(R.id.exListView);
-
         addFooter();
     }
 
@@ -114,13 +111,13 @@ public class ConfirmOrderActivity extends BaseActivity {
                         String data = result.optString("data");
                         if("1".equals(data)){// 开启支付,判断是否为记账还是现金，如果是记账则提交订单，否则进入支付页面
                             if(!inputAgain){
-                                showCommitDialog(data);
+                                CommitOrderDialog.show(context,data);
                             }else{
                                 commit();
                             }
                         }else if("0".equals(data)){// 关闭支付,都提交订单
                             if(!inputAgain){
-                                showCommitDialog(data);
+                                CommitOrderDialog.show(context,data);
                             }else{
                                 commitOrder();
                             }
@@ -157,34 +154,13 @@ public class ConfirmOrderActivity extends BaseActivity {
                     showToast(message1);
                     if("时间超过了".equals(message1)){
                         // 需要验证时间,由后台判断
-                        showOverTimeDialog();
+                        OverTimeDialog.show(context);
                     }
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showCommitDialog(String data) {
-        CommitOrderDialog dialog = new CommitOrderDialog(this, R.style.CustomDialog,
-                data);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.9);
-        attributes.height =(int) (ScreenUtils.getScreenWidth(this)*0.9);
-        dialog.getWindow().setAttributes(attributes);
-    }
-
-    private void showOverTimeDialog() {
-        OverTimePromptDialog dialog = new OverTimePromptDialog(this, R.style.CustomDialog);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
-        attributes.height = ScreenUtils.getScreenWidth(this);
-        dialog.getWindow().setAttributes(attributes);
     }
 
     @Subscriber(tag = "commitOrder")

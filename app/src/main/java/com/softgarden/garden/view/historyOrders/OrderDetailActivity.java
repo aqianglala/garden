@@ -18,6 +18,7 @@ import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.dialog.OverTimeDialog;
 import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.entity.HistoryDetailsEntity;
 import com.softgarden.garden.entity.OrderEditEntity;
@@ -30,7 +31,6 @@ import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.CommitOrderDialog;
-import com.softgarden.garden.view.shopcar.OverTimePromptDialog;
 import com.softgarden.garden.view.shopcar.adapter.OrderDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
@@ -200,7 +200,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
                     @Override
                     public void onError(JSONObject result, String message1, int code) {
-                        showOverTimeDialog();
+                        OverTimeDialog.show(context);
                     }
                 });
             } catch (JSONException e) {
@@ -228,16 +228,6 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
         attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.9);
         attributes.height =(int) (ScreenUtils.getScreenWidth(this)*0.9);
-        dialog.getWindow().setAttributes(attributes);
-    }
-
-    private void showOverTimeDialog() {
-        OverTimePromptDialog dialog = new OverTimePromptDialog(this, R.style.CustomDialog);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
-        attributes.height = ScreenUtils.getScreenWidth(this);
         dialog.getWindow().setAttributes(attributes);
     }
 

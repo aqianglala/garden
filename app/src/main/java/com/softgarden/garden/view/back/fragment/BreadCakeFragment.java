@@ -1,17 +1,11 @@
 package com.softgarden.garden.view.back.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.entity.IndexEntity;
@@ -19,12 +13,9 @@ import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
-import com.softgarden.garden.utils.ScreenUtils;
-import com.softgarden.garden.view.back.BackPromptDialog;
 import com.softgarden.garden.view.back.adapter.BannerPagerAdapter;
 import com.softgarden.garden.view.back.adapter.CheckProductAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
-import com.softgarden.garden.view.change.ChangePromptDialog;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
@@ -39,30 +30,37 @@ import java.util.List;
 public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         ModifyCountInterface,OnItemClickPositionListener{
 
-    private boolean isBread;
     private ViewPager vp_banner;
     private ListView lv_content;
 
     private ArrayList<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> mData = new ArrayList<>();
     private CheckProductAdapter adapter;
-    private Button btn_confirm;
 
     private List<ImageView> dots = new ArrayList<ImageView>();
     private ArrayList<String> tags;
     private ArrayList<BaseFragment> bannerFragments;
     private IndexEntity.DataBean.ShopBean data;
+    private int currentPageIndex = 0;
+    private boolean isBack;
+
+    public HashMap<String, List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean>> getMap() {
+        return map;
+    }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_bread_cake);
-        Bundle arguments = getArguments();
-        boolean isBack = arguments.getBoolean("isBack");
-        btn_confirm = getViewById(R.id.btn_confirm);
-        btn_confirm.setText(isBack?"确认退货":"确认换货");
-        data = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
 
         vp_banner = getViewById(R.id.vp_banner);
-        // 模擬获取到的banner数据
+        lv_content = getViewById(R.id.lv_content);
+    }
+
+    private void setData() {
+        Bundle arguments = getArguments();
+        // 一级分类的全部数据
+        data = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
+        isBack = arguments.getBoolean("isBack");
+        // 获取到的banner数据
         initBannerData();
         // 分组，每组6个
         grouping();
@@ -71,7 +69,6 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
                 bannerFragments);
         vp_banner.setAdapter(bannerPagerAdapter);
 
-        lv_content = getViewById(R.id.lv_content);
         adapter = new CheckProductAdapter(mActivity, R.layout.item_list_check_content);
         adapter.setCheckInterface(this);
         adapter.setModifyCountInterface(this);
@@ -108,6 +105,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
             Bundle bundle = new Bundle();
             // 传递数据及组的坐标，以此来获得被点击的item在原集合的位置
             bundle.putInt("groupIndex",i);
+            bundle.putBoolean("isBack",isBack);
             bundle.putString(GlobalParams.itemclassname,data.getItemclassName());
             bundle.putStringArrayList("tags",group);
             bannerFragment.setArguments(bundle);
@@ -125,20 +123,19 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         }
     }
 
+    /**
+     * 添加banner的指示器
+     * @param fragments
+     */
     private void addDots(ArrayList<BaseFragment> fragments) {
         LinearLayout ll_dots = getViewById(R.id.ll_dots);
         for (int i = 0; i < fragments.size(); i++) {
             ImageView img = new ImageView(getContext());
             img.setBackgroundResource(R.drawable.dot_selector);
             img.setSelected(false);// 灰色
-            // .xml layout_width layout_height
-            // .java LinearLayout.LayoutParams 布局参数
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-                    //
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            // .xml marginRight
-            // .java rightMargin
             if(i<fragments.size()-1){
                 p.rightMargin = 15;
             }
@@ -148,10 +145,8 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         }
     }
 
-    private int currentPageIndex = 0;
     @Override
     protected void setListener() {
-        btn_confirm.setOnClickListener(this);
         vp_banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -174,68 +169,30 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        isBread = getArguments().getBoolean("isBread");
-    }
-
-    @Override
-    protected void onUserVisible() {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        switch (v.getId()){
-            case R.id.btn_confirm:
-                String btn_text = btn_confirm.getText().toString();
-                if(btn_text.equals("确认换货")){
-                    ChangePromptDialog changePromptDialog = new ChangePromptDialog(mActivity, R
-                            .style.CustomDialog);
-                    showDialog(changePromptDialog);
-                }else if(btn_text.equals("确认退货")){
-                    BackPromptDialog backPromptDialog = new BackPromptDialog(mActivity, R
-                            .style.CustomDialog);
-                    showDialog(backPromptDialog);
-                }
-                break;
-        }
-    }
-
-    private void showDialog(Dialog dialog) {
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(mActivity)*0.9);
-        attributes.height =(int) (ScreenUtils.getScreenWidth(mActivity)*0.9);
-        dialog.getWindow().setAttributes(attributes);
+        setData();
     }
 
     @Override
     public void checkChild(int position, boolean isChecked) {
-        showToast(isChecked?"选中了":"未选中");
+        map.get(mData.get(position).getItemGroupName()).get(position).setChoosed(isChecked);
+        mData.get(position).setChoosed(isChecked);
     }
 
     @Override
-    public void doIncrease(TextView et_total, int position, String currentCount) {
-        if(TextUtils.isEmpty(currentCount)){
-            et_total.setText("1");
-        }else{
-            int total = Integer.parseInt(currentCount);
-            et_total.setText((++total)+"");
-        }
+    public void doIncrease(TextView tv_total, int position, String currentCount) {
+        int qty = Integer.parseInt(currentCount);
+        map.get(mData.get(position).getItemGroupName()).get(position).setQty(++qty);
+        mData.get(position).setQty(qty);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void doDecrease(TextView et_total,int position, String currentCount) {
-
-        if(TextUtils.isEmpty(currentCount)){
-            Toast.makeText(mActivity,"宝贝不能再少了哦！",Toast.LENGTH_SHORT).show();
-        }else{
-            int total = Integer.parseInt(currentCount);
-            if(total>1){
-                total--;
-                et_total.setText(total+"");
-            }
+    public void doDecrease(TextView tv_total,int position, String currentCount) {
+        int qty = Integer.parseInt(currentCount);
+        if(qty>0){
+            map.get(mData.get(position).getItemGroupName()).get(position).setQty(--qty);
+            mData.get(position).setQty(qty);
+            adapter.notifyDataSetChanged();
         }
     }
     /**
@@ -252,6 +209,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         mData.addAll(goodsBeens);
         adapter.notifyDataSetChanged();
 
-        EventBus.getDefault().post(new MessageBean(position+"", data.getItemclassName()), "clickIndex");
+        EventBus.getDefault().post(new MessageBean(position+"", data.getItemclassName(),isBack),
+                "clickIndex");
     }
 }

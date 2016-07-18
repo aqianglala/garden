@@ -1,12 +1,13 @@
 package com.softgarden.garden.view.back.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
@@ -23,22 +24,26 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
     }
 
     @Override
-    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position, IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean s) {
-        bgaViewHolderHelper.setText(R.id.tv_name,s.getItemName());
-        final EditText et_total = bgaViewHolderHelper.getView(R.id.et_total);
+    protected void fillData(BGAViewHolderHelper bgaViewHolderHelper, final int position, IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean item) {
+        bgaViewHolderHelper.setText(R.id.tv_name,item.getItemName())
+                .setText(R.id.tv_number,item.getItemNo())
+                .setText(R.id.tv_prediction,item.getProQty())
+                .setText(R.id.tv_weight,item.getSpec())
+                .setText(R.id.tv_back,item.getReturnrate());
+        bgaViewHolderHelper.setText(R.id.tv_total,item.getQty()+"");
+        // 判断单价
+        double price = item.getIsSpecial() == 0?Double.parseDouble(item
+                .getBzj()): Double.parseDouble(item.getPrice());
+        bgaViewHolderHelper.setText(R.id.tv_price,price+"");
+
+        bgaViewHolderHelper.setChecked(R.id.checkbox,item.isChoosed());
+
+        NetworkImageView iv_product = bgaViewHolderHelper.getView(R.id.iv_product);
+        iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
+
+        final TextView tv_total = bgaViewHolderHelper.getView(R.id.tv_total);
         final CheckBox checkbox = bgaViewHolderHelper.getView(R.id.checkbox);
 
-        et_total.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-                    String trim = et_total.getText().toString().trim();
-                    if(TextUtils.isEmpty(trim)){
-                        et_total.setText("1");
-                    }
-                }
-            }
-        });
         checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,13 +60,13 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
         bgaViewHolderHelper.getView(R.id.tv_minus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modifyCountInterface.doDecrease(et_total,position,et_total.getText().toString().trim());
+                modifyCountInterface.doDecrease(tv_total,position,tv_total.getText().toString().trim());
             }
         });
         bgaViewHolderHelper.getView(R.id.tv_plus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                modifyCountInterface.doIncrease(et_total,position,et_total.getText().toString().trim());
+                modifyCountInterface.doIncrease(tv_total,position,tv_total.getText().toString().trim());
             }
         });
     }

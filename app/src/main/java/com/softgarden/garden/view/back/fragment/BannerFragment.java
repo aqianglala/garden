@@ -25,6 +25,7 @@ public class BannerFragment extends BaseFragment {
     private int groupIndex;
     private BannerGridAdapter bannerGridAdapter;
     private String itemclassName;
+    private boolean isBack;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class BannerFragment extends BaseFragment {
 
         Bundle arguments = getArguments();
         groupIndex = arguments.getInt("groupIndex");
+        isBack = arguments.getBoolean("isBack");
         itemclassName = arguments.getString(GlobalParams.itemclassname);
         mData = arguments.getStringArrayList("tags");
         mGridView = getViewById(R.id.gridView);
@@ -72,7 +74,7 @@ public class BannerFragment extends BaseFragment {
 
     @Subscriber(tag = "clickIndex")
     private void clickIndex(MessageBean user) {
-        if(user.itemclassName.equals(itemclassName)){
+        if(user.itemclassName.equals(itemclassName)&& user.isBack == isBack){
             int clickIndex = Integer.parseInt(user.message);
             bannerGridAdapter.setClickIndex(clickIndex);
             bannerGridAdapter.notifyDataSetChanged();

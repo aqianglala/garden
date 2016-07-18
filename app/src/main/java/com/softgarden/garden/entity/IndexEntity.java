@@ -3,6 +3,7 @@ package com.softgarden.garden.entity;
 import com.softgarden.garden.base.BaseDao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class IndexEntity extends BaseDao{
 
     private String status;
     private String errorMsg;
-    private DataBean data;
+    private DataBean data = new DataBean();
 
     public String getStatus() {
         return status;
@@ -88,8 +89,8 @@ public class IndexEntity extends BaseDao{
          * "IsSpecial":0,"returnrate":0}]}]
          */
 
-        private List<ShopBean> shop;
-        private List<String> banner;
+        private List<ShopBean> shop = new ArrayList<>();
+        private List<String> banner = new ArrayList<>();
 
         public List<ShopBean> getShop() {
             return shop;
@@ -123,7 +124,7 @@ public class IndexEntity extends BaseDao{
              * .0000","IsSpecial":0,"returnrate":"0.0000"}]
              */
 
-            private List<ChildBean> child;
+            private List<ChildBean> child = new ArrayList<>();
 
             public String getItemclassName() {
                 return itemclassName;
@@ -170,7 +171,7 @@ public class IndexEntity extends BaseDao{
                  * returnrate : 0.0000
                  */
 
-                private List<GoodsBean> goods;
+                private List<GoodsBean> goods = new ArrayList<>();
 
                 public String getItemclassCode() {
                     return itemclassCode;
@@ -219,6 +220,42 @@ public class IndexEntity extends BaseDao{
                     private String Price;
                     private int IsSpecial;
                     private String returnrate;
+                    private double Amount;
+                    private int tgs;
+                    private int Qty;
+                    private boolean isChoosed;
+
+                    public boolean isChoosed() {
+                        return isChoosed;
+                    }
+
+                    public void setChoosed(boolean choosed) {
+                        isChoosed = choosed;
+                    }
+
+                    public double getAmount() {
+                        return Amount;
+                    }
+
+                    public void setAmount(double amount) {
+                        Amount = amount;
+                    }
+
+                    public int getTgs() {
+                        return tgs;
+                    }
+
+                    public void setTgs(int tgs) {
+                        this.tgs = tgs;
+                    }
+
+                    public int getQty() {
+                        return Qty;
+                    }
+
+                    public void setQty(int qty) {
+                        Qty = qty;
+                    }
 
                     public String getItemclassCode() {
                         return itemclassCode;

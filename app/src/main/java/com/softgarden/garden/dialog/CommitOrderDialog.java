@@ -2,7 +2,6 @@ package com.softgarden.garden.dialog;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,73 +14,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
-import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.engine.UserEngine;
-import com.softgarden.garden.entity.BackCommitEntity;
-import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.UserEntity;
-import com.softgarden.garden.helper.HttpHelper;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ToastUtil;
-import com.softgarden.garden.view.back.activity.BackDetailActivity;
+import com.softgarden.garden.view.start.entity.MessageBean;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.simple.eventbus.EventBus;
 
 
 /**
  * Created by Administrator on 2015/6/16.
  */
-public class BackPromptDialog extends DialogFragment implements View.OnClickListener{
+public class CommitOrderDialog extends DialogFragment implements View.OnClickListener{
     private static Context context;
-    private TextView tv_count;
-    private TextView tv_show_detail;
     private EditText et_pswd;
+    private static String switchPayment;
 
-    private static BackCommitEntity mData;
-    private int total;
-
-    public BackPromptDialog() {}
+    public CommitOrderDialog() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // 去掉对话框标题
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View rootView = inflater.inflate(R.layout.dialog_back, container);
-        tv_count = (TextView) rootView.findViewById(R.id.tv_count);
-        tv_show_detail = (TextView) rootView.findViewById(R.id.tv_show_detail);
-        tv_show_detail.setOnClickListener(this);
+        View rootView = inflater.inflate(R.layout.dialog_commit, container);
         et_pswd = (EditText) rootView.findViewById(R.id.et_pswd);
         rootView.findViewById(R.id.btn_yes).setOnClickListener(this);
         rootView.findViewById(R.id.iv_cancle).setOnClickListener(this);
-        // 设置数量
-        for(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean item: mData.getZstail()){
-            total +=item.getQty();
-        }
-        tv_count.setText(total +"");
-
         return rootView;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tv_show_detail:
-                Intent intent = new Intent(context, BackDetailActivity.class);
-                intent.putExtra("detail",mData.getZstail());
-                intent.putExtra("total",total);
-                context.startActivity(intent);
-                dismiss();
-                break;
             case R.id.btn_yes:
                 String pswd = et_pswd.getText().toString().trim();
                 if(TextUtils.isEmpty(pswd)){
@@ -104,10 +75,10 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
     }
 
-    public static BackPromptDialog show(FragmentActivity activity, BackCommitEntity backCommitEntity) {
+    public static CommitOrderDialog show(FragmentActivity activity,String switchPay) {
+        switchPayment = switchPay;
         context = activity;
-        mData = backCommitEntity;
-        BackPromptDialog dialog = new BackPromptDialog();
+        CommitOrderDialog dialog = new CommitOrderDialog();
         dialog.setCancelable(false);
         FragmentManager manager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -115,27 +86,21 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
         return dialog;
     }
 
+    /**
+     * 发送登录请求。登录成功时保存账号密码，并跳转到主页
+     *
+     * @param name
+     * @param password
+     */
     private void sendLogin(final String name, String password) {
+
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
         engine.login(name, password, new ObjectCallBack<UserEntity>((BaseActivity) context) {
             @Override
             public void onSuccess(UserEntity data) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(new Gson().toJson(mData));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                // 登录成功，则提交退货订单
-                HttpHelper.post(UrlsAndKeys.returnGoods,jsonObject , new BaseCallBack((BaseActivity)
-                        context) {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        ToastUtil.show("退货成功");
-                        dismiss();
-                    }
-                });
+                ToastUtil.show("验证密码成功！");
+                EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");
+                dismiss();
             }
         });
     }

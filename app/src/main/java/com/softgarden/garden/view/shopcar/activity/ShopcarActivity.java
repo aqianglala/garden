@@ -57,29 +57,19 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         tv_right.setVisibility(View.VISIBLE);
         tv_right.setText("编辑");
 
-        // 获取数据
-        getData();
         cb_all = getViewById(R.id.cb_all);
         tv_totalprice = getViewById(R.id.tv_totalprice);
         tv_amount = getViewById(R.id.tv_amount);
         rl_date = getViewById(R.id.rl_date);
         btn_delete = getViewById(R.id.btn_delete);
         ll_commit_order = getViewById(R.id.ll_commit_order);
-
-        exListView = getViewById(R.id.exListView);
-        adapter = new ShopcartExpandableListViewAdapter(groups, children, this);
-        adapter.setCheckInterface(this);
-        exListView.setAdapter(adapter);
-        for (int i = 0; i < adapter.getGroupCount(); i++)
-        {
-            exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
-        }
     }
 
     private ArrayList<GroupInfo>groups = new ArrayList<>();
     private Map<String, List<OrderCommitEntity.ZstailBean>> children = new HashMap<String, List<OrderCommitEntity.ZstailBean>>();//
     // 子元素数据列表
     private void getData() {
+        children.clear();
         // 遍历所有数据，只要团购数和数量两个字段不为0就为购物车的数据
         List<IndexEntity.DataBean.ShopBean> shop = BaseApplication.indexEntity.getData()
                 .getShop();
@@ -167,6 +157,17 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        // 获取数据
+        getData();
+        exListView = getViewById(R.id.exListView);
+        adapter = new ShopcartExpandableListViewAdapter(groups, children, this);
+        adapter.setCheckInterface(this);
+        exListView.setAdapter(adapter);
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+        {
+            exListView.expandGroup(i);// 关键步骤3,初始化时，将ExpandableListView以展开的方式呈现
+        }
+
         int totalNum = ShoppingCart.getInstance().getTotalNum();
         double totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
@@ -178,6 +179,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         super.onClick(v);
         switch (v.getId()){
             case R.id.btn_commit_order:// 提交订单
+                getData();
                 //将购物车数据转换成数组
                 ArrayList<OrderCommitEntity.ZstailBean> productInfos = new ArrayList<>();
                 for (Map.Entry<String,List<OrderCommitEntity.ZstailBean>> entry: children.entrySet()){
@@ -185,7 +187,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 }
                 OrderCommitEntity orderCommitEntity = new OrderCommitEntity();
                 orderCommitEntity.setCustomerNo(BaseApplication.userInfo.getData().getCustomerNo());
-                orderCommitEntity.setOrderDate("2016-7-15");
+                orderCommitEntity.setOrderDate("2016-7-19");
                 orderCommitEntity.setZstail(productInfos);
 
                 orderCommitEntity.setZffs(BaseApplication.userInfo.getData().getJsfs());
