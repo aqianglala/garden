@@ -12,15 +12,28 @@ public class HistoryDetailsEntity extends BaseDao {
     /**
      * status : 1
      * errorMsg :
-     * data : {"shop":[{"OrderDate":"2016-07-15","OrderNo":"95570","CustomerNo":"GZ_0001",
-     * "RouteCode":"1","Operator":"app_GZ_0001","remarks":null,"zffs":null,"is_pay":null,
-     * "ItemNo":"3001","proQty":"0","Qty":"2","returnrate":"0.0000","Price":"0.0000",
-     * "IsSpecial":"0","Amount":"4.00","tgs":"0","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
-     * "picture":"","bzj":"2.0000"}]}
+     * data : {"head":{"zffs":"3","remarks":""},"shop":[{"ItemNo":"3001","proQty":"10",
+     * "Qty":"10","returnrate":"0.0000","Price":"1.0000","IsSpecial":"1","Amount":"10.00",
+     * "tgs":"0","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋","picture":"","bzj":"2.0000"},
+     * {"ItemNo":"3107","proQty":"9","Qty":"9","returnrate":"0.0000","Price":"1.0000",
+     * "IsSpecial":"0","Amount":"9.00","tgs":"0","ItemName":"蜜糖甜生命面包","spec":"450g/袋",
+     * "picture":"","bzj":"2.0000"},{"ItemNo":"3064","proQty":"0","Qty":"2","returnrate":"0
+     * .0000","Price":"0.0000","IsSpecial":"0","Amount":"0.00","tgs":"0","ItemName":"菠萝椰丝忌廉包",
+     * "spec":"80g/袋","picture":"","bzj":"3.0000"}]}
      */
 
     private String status;
     private String errorMsg;
+    /**
+     * head : {"zffs":"3","remarks":""}
+     * shop : [{"ItemNo":"3001","proQty":"10","Qty":"10","returnrate":"0.0000","Price":"1.0000",
+     * "IsSpecial":"1","Amount":"10.00","tgs":"0","ItemName":"嘉顿生命面包(蜡纸)","spec":"450g/袋",
+     * "picture":"","bzj":"2.0000"},{"ItemNo":"3107","proQty":"9","Qty":"9","returnrate":"0
+     * .0000","Price":"1.0000","IsSpecial":"0","Amount":"9.00","tgs":"0","ItemName":"蜜糖甜生命面包",
+     * "spec":"450g/袋","picture":"","bzj":"2.0000"},{"ItemNo":"3064","proQty":"0","Qty":"2",
+     * "returnrate":"0.0000","Price":"0.0000","IsSpecial":"0","Amount":"0.00","tgs":"0","ItemName":"菠萝椰丝忌廉包","spec":"80g/袋","picture":"","bzj":"3.0000"}]
+     */
+
     private DataBean data;
 
     public String getStatus() {
@@ -49,21 +62,19 @@ public class HistoryDetailsEntity extends BaseDao {
 
     public static class DataBean {
         /**
-         * OrderDate : 2016-07-15
-         * OrderNo : 95570
-         * CustomerNo : GZ_0001
-         * RouteCode : 1
-         * Operator : app_GZ_0001
-         * remarks : null
-         * zffs : null
-         * is_pay : null
+         * zffs : 3
+         * remarks :
+         */
+
+        private HeadBean head;
+        /**
          * ItemNo : 3001
-         * proQty : 0
-         * Qty : 2
+         * proQty : 10
+         * Qty : 10
          * returnrate : 0.0000
-         * Price : 0.0000
-         * IsSpecial : 0
-         * Amount : 4.00
+         * Price : 1.0000
+         * IsSpecial : 1
+         * Amount : 10.00
          * tgs : 0
          * ItemName : 嘉顿生命面包(蜡纸)
          * spec : 450g/袋
@@ -73,6 +84,14 @@ public class HistoryDetailsEntity extends BaseDao {
 
         private List<ShopBean> shop;
 
+        public HeadBean getHead() {
+            return head;
+        }
+
+        public void setHead(HeadBean head) {
+            this.head = head;
+        }
+
         public List<ShopBean> getShop() {
             return shop;
         }
@@ -81,15 +100,28 @@ public class HistoryDetailsEntity extends BaseDao {
             this.shop = shop;
         }
 
+        public static class HeadBean {
+            private String zffs;
+            private String remarks;
+
+            public String getZffs() {
+                return zffs;
+            }
+
+            public void setZffs(String zffs) {
+                this.zffs = zffs;
+            }
+
+            public String getRemarks() {
+                return remarks;
+            }
+
+            public void setRemarks(String remarks) {
+                this.remarks = remarks;
+            }
+        }
+
         public static class ShopBean {
-            private String OrderDate;
-            private String OrderNo;
-            private String CustomerNo;
-            private String RouteCode;
-            private String Operator;
-            private Object remarks;
-            private Object zffs;
-            private Object is_pay;
             private String ItemNo;
             private String proQty;
             private String Qty;
@@ -102,7 +134,6 @@ public class HistoryDetailsEntity extends BaseDao {
             private String spec;
             private String picture;
             private String bzj;
-
             private int total;
 
             public int getTotal() {
@@ -111,70 +142,6 @@ public class HistoryDetailsEntity extends BaseDao {
 
             public void setTotal(int total) {
                 this.total = total;
-            }
-
-            public String getOrderDate() {
-                return OrderDate;
-            }
-
-            public void setOrderDate(String OrderDate) {
-                this.OrderDate = OrderDate;
-            }
-
-            public String getOrderNo() {
-                return OrderNo;
-            }
-
-            public void setOrderNo(String OrderNo) {
-                this.OrderNo = OrderNo;
-            }
-
-            public String getCustomerNo() {
-                return CustomerNo;
-            }
-
-            public void setCustomerNo(String CustomerNo) {
-                this.CustomerNo = CustomerNo;
-            }
-
-            public String getRouteCode() {
-                return RouteCode;
-            }
-
-            public void setRouteCode(String RouteCode) {
-                this.RouteCode = RouteCode;
-            }
-
-            public String getOperator() {
-                return Operator;
-            }
-
-            public void setOperator(String Operator) {
-                this.Operator = Operator;
-            }
-
-            public Object getRemarks() {
-                return remarks;
-            }
-
-            public void setRemarks(Object remarks) {
-                this.remarks = remarks;
-            }
-
-            public Object getZffs() {
-                return zffs;
-            }
-
-            public void setZffs(Object zffs) {
-                this.zffs = zffs;
-            }
-
-            public Object getIs_pay() {
-                return is_pay;
-            }
-
-            public void setIs_pay(Object is_pay) {
-                this.is_pay = is_pay;
             }
 
             public String getItemNo() {

@@ -41,7 +41,7 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2015/6/16.
  */
-public class BackPromptDialog extends DialogFragment implements View.OnClickListener{
+public class ChangePromptDialog extends DialogFragment implements View.OnClickListener{
     private static Context context;
     private TextView tv_count;
     private TextView tv_show_detail;
@@ -50,13 +50,13 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
     private static BackCommitEntity mData;
     private int total;
 
-    public BackPromptDialog() {}
+    public ChangePromptDialog() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // 去掉对话框标题
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View rootView = inflater.inflate(R.layout.dialog_back, container);
+        View rootView = inflater.inflate(R.layout.dialog_chang1, container);
         tv_count = (TextView) rootView.findViewById(R.id.tv_count);
         tv_show_detail = (TextView) rootView.findViewById(R.id.tv_show_detail);
         tv_show_detail.setOnClickListener(this);
@@ -79,7 +79,7 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
                 Intent intent = new Intent(context, BackDetailActivity.class);
                 intent.putExtra("detail",mData.getZstail());
                 intent.putExtra("total",total);
-                intent.putExtra("title","退货详情");
+                intent.putExtra("title","换货详情");
                 context.startActivity(intent);
                 dismiss();
                 break;
@@ -105,10 +105,10 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
     }
 
-    public static BackPromptDialog show(FragmentActivity activity, BackCommitEntity backCommitEntity) {
+    public static ChangePromptDialog show(FragmentActivity activity, BackCommitEntity backCommitEntity) {
         context = activity;
         mData = backCommitEntity;
-        BackPromptDialog dialog = new BackPromptDialog();
+        ChangePromptDialog dialog = new ChangePromptDialog();
         dialog.setCancelable(false);
         FragmentManager manager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -129,7 +129,7 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
                     e.printStackTrace();
                 }
                 // 登录成功，则提交退货订单
-                HttpHelper.post(UrlsAndKeys.returnGoods,jsonObject , new BaseCallBack((BaseActivity)
+                HttpHelper.post(UrlsAndKeys.hhGoods,jsonObject , new BaseCallBack((BaseActivity)
                         context) {
                     @Override
                     public void onSuccess(JSONObject result) {

@@ -44,6 +44,7 @@ public class BackDetailActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-
+        String title = getIntent().getStringExtra("title");
+        ((TextView)getViewById(R.id.tv_title)).setText(title);
     }
 }

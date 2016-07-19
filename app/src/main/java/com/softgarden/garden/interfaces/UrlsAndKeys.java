@@ -17,6 +17,10 @@ public interface UrlsAndKeys {
     String historyDetails = "index.php/App/Api/historyDetails";
     String payment = "index.php/App/Api/payment";
     String returnGoods = "index.php/App/Api/returnGoods";
+    String hhGoods = "index.php/App/Api/hhGoods";
+    String complaint = "index.php/App/Api/complaint";
+    String upload_img = "index.php/App/Api/upload_img";
+    String proposal = "index.php/App/Api/proposal";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

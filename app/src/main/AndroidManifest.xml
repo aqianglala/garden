@@ -30,6 +30,7 @@
             android:configChanges="orientation|screenSize"/>
         <activity
             android:name="com.softgarden.garden.view.start.activity.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -94,7 +95,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name="com.softgarden.garden.view.back.activity.BackDetailActivity"
-                  android:label="@string/label_back_detail"
                   android:screenOrientation="portrait"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>

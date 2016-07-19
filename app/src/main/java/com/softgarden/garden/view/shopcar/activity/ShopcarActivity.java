@@ -1,12 +1,15 @@
 package com.softgarden.garden.view.shopcar.activity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,6 +22,7 @@ import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -26,6 +30,7 @@ import com.softgarden.garden.view.start.entity.MessageBean;
 import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +45,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     private TextView tv_totalprice;
     private TextView tv_amount;
     private TextView tv_right;
+    private TextView tv_date;
     private ShopcartExpandableListViewAdapter adapter;
     private RelativeLayout rl_date;
     private Button btn_delete;
@@ -56,6 +62,9 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         tv_right = getViewById(R.id.tv_right);
         tv_right.setVisibility(View.VISIBLE);
         tv_right.setText("编辑");
+
+        tv_date = getViewById(R.id.tv_date);
+        tv_date.setText(StringUtils.getCurrDate());
 
         cb_all = getViewById(R.id.cb_all);
         tv_totalprice = getViewById(R.id.tv_totalprice);
@@ -150,6 +159,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     @Override
     protected void setListener() {
         getViewById(R.id.btn_commit_order).setOnClickListener(this);
+        rl_date.setOnClickListener(this);
         cb_all.setOnClickListener(this);
         tv_right.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
@@ -187,7 +197,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 }
                 OrderCommitEntity orderCommitEntity = new OrderCommitEntity();
                 orderCommitEntity.setCustomerNo(BaseApplication.userInfo.getData().getCustomerNo());
-                orderCommitEntity.setOrderDate("2016-7-19");
+                orderCommitEntity.setOrderDate(tv_date.getText().toString());
                 orderCommitEntity.setZstail(productInfos);
 
                 orderCommitEntity.setZffs(BaseApplication.userInfo.getData().getJsfs());
@@ -198,6 +208,10 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 break;
             case R.id.cb_all:
                 doCheckAll();
+                break;
+
+            case R.id.rl_date:
+                showDialog(0);
                 break;
             case R.id.tv_right:// 切换视图
                 if(tv_right.getText().equals("编辑")){
@@ -383,5 +397,25 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         double totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
         tv_totalprice.setText(totalPrice+"");
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        // TODO Auto-generated method stub
+        Calendar calendar=Calendar.getInstance();
+        Dialog dateDialog=new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        showToast(year + "年" + (monthOfYear+1) + "月" + dayOfMonth + "日");
+                        tv_date.setText(year + "年" + (monthOfYear+1) + "月" + dayOfMonth + "日");
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+        return dateDialog;
     }
 }

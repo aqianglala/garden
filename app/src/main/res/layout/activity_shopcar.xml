@@ -14,6 +14,7 @@
         android:id="@+id/rl_date"
         android:layout_width="match_parent"
         android:layout_height="100px"
+        android:clickable="true"
         android:background="@android:color/white"
         android:padding="@dimen/content_padding">
 

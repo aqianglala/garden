@@ -53,6 +53,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     private TextView tv_totalAmount;
     private TextView tv_price;
     private EditText et_remarks;
+    private String orderNo;
+    private String orderDate;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -81,13 +83,16 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        String orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
+        orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
+        orderDate = getIntent().getStringExtra(GlobalParams.ORDERDATE);
         tv_orderNumb.setText(orderNo);
-        LogUtils.e("orderNo:"+orderNo);
+        LogUtils.e("orderNo:"+ orderNo);
         HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
         engine.historyDetails(orderNo, new ObjectCallBack<HistoryDetailsEntity>(this) {
             @Override
             public void onSuccess(HistoryDetailsEntity data) {
+                // 设置备注
+                et_remarks.setText(data.getData().getHead().getRemarks());
                 // 为每一项计算总数和总价
                 List<HistoryDetailsEntity.DataBean.ShopBean> shop = data.getData().getShop();
                 for(HistoryDetailsEntity.DataBean.ShopBean item:shop){
@@ -179,8 +184,6 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     private void commitOrder() {
         if(mData.size()>0){
-            String orderDate = mData.get(0).getOrderDate();
-            String orderNo = mData.get(0).getOrderNo();
             String remarks = et_remarks.getText().toString().trim();
             OrderEditEntity orderEditEntity = new OrderEditEntity();
             orderEditEntity.setOrderNo(orderNo);

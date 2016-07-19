@@ -109,7 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onTitleChanged(CharSequence title, int color) {
         super.onTitleChanged(title, color);
-        if(tv_title!=null && !TAG.equals("ForgetPswdActivity")){
+        if(tv_title!=null && !TAG.equals("ForgetPswdActivity")&& !TAG.equals("BackDetailActivity")){
             tv_title.setText(title);
         }
     }

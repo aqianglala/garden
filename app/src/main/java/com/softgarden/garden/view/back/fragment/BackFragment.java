@@ -1,13 +1,11 @@
 package com.softgarden.garden.view.back.fragment;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,13 +17,13 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.dialog.BackPromptDialog;
+import com.softgarden.garden.dialog.ChangePromptDialog;
 import com.softgarden.garden.entity.BackCommitEntity;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.back.adapter.ContainerPagerAdapter;
-import com.softgarden.garden.view.change.ChangePromptDialog;
 import com.softgarden.garden.view.start.activity.MainActivity;
 
 import java.util.ArrayList;
@@ -131,15 +129,10 @@ public class BackFragment extends BaseFragment{
 
             case R.id.btn_confirm:
                 String btn_text = btn_confirm.getText().toString();
+                BackCommitEntity backCommitEntity = getBackCommitEntity();
                 if(btn_text.equals("确认换货")){
-                    ChangePromptDialog changePromptDialog = new ChangePromptDialog(mActivity, R
-                            .style.CustomDialog);
-                    showDialog(changePromptDialog);
+                   ChangePromptDialog.show(mActivity,backCommitEntity);
                 }else if(btn_text.equals("确认退货")){
-                    /**
-                     * 判断是否有登录过，登录过则直接提交，否则直接
-                     */
-                    BackCommitEntity backCommitEntity = getBackCommitEntity();
                     BackPromptDialog.show(mActivity,backCommitEntity);
                 }
                 break;
@@ -230,20 +223,16 @@ public class BackFragment extends BaseFragment{
     private void addFragment(int i) {
         BreadCakeFragment fragmentProduct = new BreadCakeFragment();
         IndexEntity.DataBean.ShopBean shopBean = BaseApplication.indexEntity.getData().getShop().get(i);
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("isBack",isBack);
-        bundle.putSerializable("data",shopBean );
-        fragmentProduct.setArguments(bundle);
-        fragments.add(fragmentProduct);
-    }
-
-    private void showDialog(Dialog dialog) {
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(mActivity)*0.9);
-        attributes.height =(int) (ScreenUtils.getScreenWidth(mActivity)*0.9);
-        dialog.getWindow().setAttributes(attributes);
+        try {
+            IndexEntity.DataBean.ShopBean clone = (IndexEntity.DataBean.ShopBean) shopBean.clone();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isBack",isBack);
+            bundle.putSerializable("data",clone );
+            fragmentProduct.setArguments(bundle);
+            fragments.add(fragmentProduct);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

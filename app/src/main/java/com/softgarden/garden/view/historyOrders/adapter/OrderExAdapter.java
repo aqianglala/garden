@@ -109,8 +109,8 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
                 final HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
                 tv_number.setText(item.getOrderNo());
-                tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
-                tv_price.setText(item.getAmount());
+                tv_amount.setText((item.getTgs()+item.getQty())+"");
+                tv_price.setText(item.getAmount()+"");
 
                 TextView tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
                 tv_detail.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +120,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                         Intent intent = new Intent(context, OrderDetailActivity.class);
                         LogUtils.e("put:"+item.getOrderNo());
                         intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
+                        intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
                         context.startActivity(intent);
                     }
                 });
@@ -172,8 +173,8 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         }
         final HistoryOrderEntity.DataBean item = children.get(childPosition);
         holder.tv_number.setText(item.getOrderNo());
-        holder.tv_amount.setText((Integer.parseInt(item.getTgs())+Integer.parseInt(item.getQty()))+"");
-        holder.tv_price.setText(item.getAmount());
+        holder.tv_amount.setText((item.getTgs()+item.getQty())+"");
+        holder.tv_price.setText(item.getAmount()+"");
         holder.tv_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +182,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 Intent intent = new Intent(context, OrderDetailActivity.class);
                 LogUtils.e("put:"+item.getOrderNo());
                 intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
+                intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
                 context.startActivity(intent);
             }
         });

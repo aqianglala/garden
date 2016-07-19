@@ -90,4 +90,8 @@ public class ComplaintFragment extends BaseFragment{
         Log.e("", "### update user with my_tag, name = " + user.message);
         notifyData();
     }
+
+    public String getText(){
+        return et_content.getText().toString().trim();
+    }
 }

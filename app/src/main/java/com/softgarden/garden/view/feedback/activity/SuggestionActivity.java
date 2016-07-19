@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,13 @@ import android.widget.TextView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.softgarden.garden.base.BaseActivity;
+import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.BaseFragment;
+import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.engine.FeedBackEngine;
+import com.softgarden.garden.entity.UploadImgEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
@@ -23,6 +31,9 @@ import com.softgarden.garden.view.feedback.fragment.SuggestionFragment;
 import com.softgarden.garden.view.feedback.utils.Bimp;
 import com.softgarden.garden.view.feedback.utils.FileUtils;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -37,6 +48,8 @@ public class SuggestionActivity extends BaseActivity {
     private ViewPager viewPager;
     private MyPagerAdapter myPagerAdapter;
     private ComplaintFragment f;
+    private ComplaintFragment complaintFragment;
+    private SuggestionFragment suggestionFragment;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -55,8 +68,8 @@ public class SuggestionActivity extends BaseActivity {
         viewPager = getViewById(R.id.viewpager);
 
         ArrayList<BaseFragment> fragments = new ArrayList<>();
-        ComplaintFragment complaintFragment = new ComplaintFragment();
-        SuggestionFragment suggestionFragment = new SuggestionFragment();
+        complaintFragment = new ComplaintFragment();
+        suggestionFragment = new SuggestionFragment();
         fragments.add(complaintFragment);
         fragments.add(suggestionFragment);
 
@@ -93,6 +106,7 @@ public class SuggestionActivity extends BaseActivity {
     protected void setListener() {
         tv_complaint.setOnClickListener(this);
         tv_suggestion.setOnClickListener(this);
+        getViewById(R.id.btn_commit).setOnClickListener(this);
     }
 
     @Override
@@ -110,11 +124,72 @@ public class SuggestionActivity extends BaseActivity {
             case R.id.tv_suggestion:
                 viewPager.setCurrentItem(1);
                 break;
+            case R.id.btn_commit:
+                final String complaintText = complaintFragment.getText();
+                if (TextUtils.isEmpty(complaintText)){
+                    showToast("评论不能为空！");
+                    return;
+                }
+                int currentItem = viewPager.getCurrentItem();
+                if(currentItem == 0){// 投诉,拼接图片地址
+                    StringBuilder builder = new StringBuilder();
+                    for(Bitmap bmp:Bimp.bmp){
+                        builder.append(Bitmap2StrByBase64(bmp));
+                        builder.append(",");
+                    }
+                    builder.deleteCharAt(builder.length()-1);
+                    FeedBackEngine engine = (FeedBackEngine) EngineFactory.getEngine(FeedBackEngine.class);
+                    engine.upload_img(builder.toString(), new ObjectCallBack<UploadImgEntity>(this) {
+                        @Override
+                        public void onSuccess(UploadImgEntity data) {
+                            // 获取到图片的地址
+                            StringBuilder stringBuilder = new StringBuilder();
+                            for (String imgUrl: data.getData().getPic_path()){
+                                stringBuilder.append(imgUrl+",");
+                            }
+                            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+                            FeedBackEngine engine = (FeedBackEngine) EngineFactory.getEngine(FeedBackEngine.class);
+                            engine.complaint(BaseApplication.userInfo.getData().getCustomerNo
+                                    (), complaintText, stringBuilder.toString(), new
+                                    BaseCallBack(context) {
+                                        @Override
+                                        public void onSuccess(JSONObject result) {
+                                            showToast("提交投诉成功！");
+                                        }
+                                    });
+                        }
+                    });
+                }else if(currentItem == 1){// 建议
+                    String suggestionFragmentText = suggestionFragment.getText();
+                    if (TextUtils.isEmpty(suggestionFragmentText)){
+                        showToast("评论不能为空！");
+                        return;
+                    }
+                    FeedBackEngine engine = (FeedBackEngine) EngineFactory.getEngine(FeedBackEngine.class);
+                    engine.proposal(BaseApplication.userInfo.getData().getCustomerNo
+                            (),suggestionFragmentText, new BaseCallBack(context) {
+                        @Override
+                        public void onSuccess(JSONObject result) {
+                            showToast("提交建议成功！");
+                        }
+                    });
+                }
+                break;
+
         }
     }
-
+    /**
+     * 通过Base32将Bitmap转换成Base64字符串
+     * @param bit
+     * @return
+     */
+    public String Bitmap2StrByBase64(Bitmap bit){
+        ByteArrayOutputStream bos=new ByteArrayOutputStream();
+        bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
+        byte[] bytes=bos.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
     public static final int REQUEST_IMAGE = 2;
-    private ArrayList<Bitmap>bitmaps = new ArrayList<>();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -57,19 +57,22 @@ public class HistoryOrderEntity extends BaseDao {
      */
 
     public static class DataBean {
-        private String Amount;
+
+        /**
+         * OrderDate : 2016-07-15
+         * OrderNo : 66354
+         * CustomerNo : GZ_0001
+         * Amount : 33
+         * Qty : 17
+         * tgs : 17
+         */
+
         private String OrderDate;
         private String OrderNo;
-        private String Qty;
-        private String tgs;
-
-        public String getAmount() {
-            return Amount;
-        }
-
-        public void setAmount(String Amount) {
-            this.Amount = Amount;
-        }
+        private String CustomerNo;
+        private int Amount;
+        private int Qty;
+        private int tgs;
 
         public String getOrderDate() {
             return OrderDate;
@@ -87,19 +90,35 @@ public class HistoryOrderEntity extends BaseDao {
             this.OrderNo = OrderNo;
         }
 
-        public String getQty() {
+        public String getCustomerNo() {
+            return CustomerNo;
+        }
+
+        public void setCustomerNo(String CustomerNo) {
+            this.CustomerNo = CustomerNo;
+        }
+
+        public int getAmount() {
+            return Amount;
+        }
+
+        public void setAmount(int Amount) {
+            this.Amount = Amount;
+        }
+
+        public int getQty() {
             return Qty;
         }
 
-        public void setQty(String Qty) {
+        public void setQty(int Qty) {
             this.Qty = Qty;
         }
 
-        public String getTgs() {
+        public int getTgs() {
             return tgs;
         }
 
-        public void setTgs(String tgs) {
+        public void setTgs(int tgs) {
             this.tgs = tgs;
         }
     }

@@ -23,6 +23,9 @@ import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 import com.softgarden.garden.view.start.activity.MainActivity;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 public class LoginActivity extends BaseActivity {
 
@@ -94,6 +97,8 @@ public class LoginActivity extends BaseActivity {
                 SPUtils.put(LoginActivity.this,GlobalParams.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
                         ?false:true);
                 goActivity(MainActivity.class);
+                // 首页关闭强制改密的对话框
+                EventBus.getDefault().post(new MessageBean("mr.simple"), "close_dialog");
                 finish();
             }
 

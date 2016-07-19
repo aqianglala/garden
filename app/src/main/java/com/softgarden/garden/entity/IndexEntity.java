@@ -108,7 +108,16 @@ public class IndexEntity extends BaseDao{
             this.banner = banner;
         }
 
-        public static class ShopBean implements Serializable{
+        public static class ShopBean implements Serializable,Cloneable{
+            @Override
+            public Object clone() throws CloneNotSupportedException {
+                ShopBean clone = (ShopBean) super.clone();
+                List<ChildBean> cloneList = new ArrayList<ChildBean>(child.size());
+                for(ChildBean item: child) cloneList.add((ChildBean) item.clone());
+                clone.setChild(cloneList);
+                return clone;
+            }
+
             private String itemclassName;
             private String itemclassCode;
             /**
@@ -150,7 +159,16 @@ public class IndexEntity extends BaseDao{
                 this.child = child;
             }
 
-            public static class ChildBean implements Serializable{
+            public static class ChildBean implements Serializable,Cloneable{
+                @Override
+                protected Object clone() throws CloneNotSupportedException {
+                    ChildBean clone = (ChildBean) super.clone();
+                    List<GoodsBean> cloneList = new ArrayList<GoodsBean>(goods.size());
+                    for(GoodsBean item: goods) cloneList.add((GoodsBean) item.clone());
+                    clone.setGoods(cloneList);
+                    return clone;
+                }
+
                 private String itemclassCode;
                 private String ItemGroupName;
                 private String Itemgroupcdoe;
@@ -205,7 +223,13 @@ public class IndexEntity extends BaseDao{
                     this.goods = goods;
                 }
 
-                public static class GoodsBean implements Serializable{
+                public static class GoodsBean implements Serializable,Cloneable{
+
+                    @Override
+                    protected Object clone() throws CloneNotSupportedException {
+                        return super.clone();
+                    }
+
                     private String itemclassCode;
                     private String itemclassName;
                     private String Itemgroupcdoe;

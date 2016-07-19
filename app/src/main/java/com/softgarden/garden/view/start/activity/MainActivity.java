@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
+import com.softgarden.garden.dialog.ModifyDialog;
 import com.softgarden.garden.entity.TempData;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
@@ -27,7 +28,6 @@ import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.view.back.fragment.BackFragment;
 import com.softgarden.garden.view.buy.fragment.BuyFragment;
 import com.softgarden.garden.view.historyOrders.fragment.OrderFragment;
-import com.softgarden.garden.view.start.ModifyPswdDialog;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity {
     private RadioButton rb_orders;
     private int lastCheckId;
     private int returnType;
+    private ModifyDialog dialog;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -61,7 +62,9 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         returnType = Integer.parseInt(BaseApplication.userInfo.getData()
                 .getReturnType());
+        // 是否已经改过密码
         hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
+
         menu = getViewById(R.id.slidingmenulayout);
         rb_back = getViewById(R.id.rb_back);
         rb_change = getViewById(R.id.rb_change);
@@ -167,30 +170,20 @@ public class MainActivity extends BaseActivity {
     protected void processLogic(Bundle savedInstanceState) {
         radioGroup.check(R.id.rb_buy);
         if(!hasModify){
-            showDialog();
+            dialog = ModifyDialog.show(this);
         }
     }
 
-    private void showDialog() {
-        ModifyPswdDialog dialog = new ModifyPswdDialog(this, R.style.CustomDialog);
-        dialog.setCancelable(false);
-        dialog.show();
-        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
-        attributes.height = (int) (ScreenUtils.getScreenWidth(this)*0.9);
-        dialog.getWindow().setAttributes(attributes);
-    }
-
-    /**
-     * 是否显示退换货页面
-     */
-    private int thh_tui ;
-    private int thh_huan ;
-    public void isShowThh(String thh_tui, String thh_huan){
-        this.thh_tui = Integer.parseInt(thh_tui);
-        this.thh_huan = Integer.parseInt(thh_huan);
-    }
+//    private void showDialog() {
+//        ModifyPswdDialog dialog = new ModifyPswdDialog(this, R.style.CustomDialog);
+//        dialog.setCancelable(false);
+//        dialog.show();
+//        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
+//        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
+//        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
+//        attributes.height = (int) (ScreenUtils.getScreenWidth(this)*0.9);
+//        dialog.getWindow().setAttributes(attributes);
+//    }
 
     /**
      * 将所有的Fragment都置为隐藏状态。
@@ -278,6 +271,14 @@ public class MainActivity extends BaseActivity {
     private void closeMenu(MessageBean user) {
         Log.e("", "### update user with my_tag, name = " + user.message);
         menu.showContent();
+    }
+
+    @Subscriber(tag = "close_dialog")
+    private void closeDialog(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        if(dialog.isVisible()){
+            dialog.dismiss();
+        }
     }
 
     public void toggle(){

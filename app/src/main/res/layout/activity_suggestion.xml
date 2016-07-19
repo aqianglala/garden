@@ -54,6 +54,7 @@
 
 
     <Button
+        android:id="@+id/btn_commit"
         style="@style/btn_bg_style"
         android:layout_marginTop="60px"
         android:text="@string/commit"
