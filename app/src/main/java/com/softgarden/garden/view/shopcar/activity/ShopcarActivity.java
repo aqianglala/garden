@@ -1,15 +1,13 @@
 package com.softgarden.garden.view.shopcar.activity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +24,7 @@ import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
 import com.softgarden.garden.view.start.entity.MessageBean;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.simple.eventbus.EventBus;
 
@@ -38,7 +37,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ShopcarActivity extends BaseActivity implements ShopcartExpandableListViewAdapter
-        .CheckInterface,Observer{
+        .CheckInterface,Observer,DatePickerDialog.OnDateSetListener{
 
     private CheckBox cb_all;
     private ExpandableListView exListView;
@@ -64,7 +63,6 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         tv_right.setText("编辑");
 
         tv_date = getViewById(R.id.tv_date);
-        tv_date.setText(StringUtils.getCurrDate());
 
         cb_all = getViewById(R.id.cb_all);
         tv_totalprice = getViewById(R.id.tv_totalprice);
@@ -123,6 +121,13 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
     }
 
+    /**
+     * 转换bean，因为一开始这里跟首页的字段不一样，导致我要重新弄个bean
+     * @param goodsBean
+     * @param tuangou
+     * @param shuliang
+     * @return
+     */
     private OrderCommitEntity.ZstailBean generateProductInfo(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean
                                                 goodsBean, int tuangou, int shuliang) {
         // 计算总价
@@ -167,6 +172,8 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        // 设置时间
+        initTimePicker();
         // 获取数据
         getData();
         exListView = getViewById(R.id.exListView);
@@ -211,7 +218,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 break;
 
             case R.id.rl_date:
-                showDialog(0);
+                dpd.show(getFragmentManager(), "Datepickerdialog");
                 break;
             case R.id.tv_right:// 切换视图
                 if(tv_right.getText().equals("编辑")){
@@ -261,6 +268,24 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 alert.show();
                 break;
         }
+    }
+    private DatePickerDialog dpd;
+    private void initTimePicker() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_MONTH,1);
+        tv_date.setText(StringUtils.formatDate(now.getTime()));
+        dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setThemeDark(false);
+        dpd.vibrate(false);//设置是否震动
+        dpd.dismissOnPause(true);//activity暂停的时候是否销毁对话框
+        dpd.showYearPickerFirst(false);//先展示年份选择
+        dpd.setAccentColor(Color.parseColor("#E6003E"));
+        dpd.setMinDate(now);
     }
 
     private boolean hasProduct() {
@@ -400,22 +425,11 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     }
 
     @Override
-    protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
-        Calendar calendar=Calendar.getInstance();
-        Dialog dateDialog=new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        showToast(year + "年" + (monthOfYear+1) + "月" + dayOfMonth + "日");
-                        tv_date.setText(year + "年" + (monthOfYear+1) + "月" + dayOfMonth + "日");
-                    }
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
-        return dateDialog;
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(year,monthOfYear,dayOfMonth);
+        String formatDate = StringUtils.formatDate(instance.getTime());
+        tv_date.setText(formatDate);
     }
+
 }

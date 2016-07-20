@@ -311,6 +311,17 @@ public class StringUtils {
     }
 
     /**
+     * Date to yyyy-MM-dd
+     *
+     * @return
+     */
+    public static String formatDate(Date date) {
+        Long timestamp = System.currentTimeMillis();
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        return dateStr;
+    }
+
+    /**
      * 获取当前时间日期
      *
      * @return

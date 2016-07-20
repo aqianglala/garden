@@ -43,5 +43,6 @@ dependencies {
     compile 'com.github.lovetuzitong:MultiImageSelector:1.1'
     compile 'com.prolificinteractive:material-calendarview:1.4.0'
     compile 'com.google.code.gson:gson:2.7'
+    compile 'com.wdullaer:materialdatetimepicker:2.4.0'
     compile files('libs/android_volley_manager_1.05.jar')
 }

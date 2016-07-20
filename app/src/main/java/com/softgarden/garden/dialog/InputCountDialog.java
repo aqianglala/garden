@@ -32,9 +32,15 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_input, container);
         et_count = (EditText) rootView.findViewById(R.id.et_count);
-
+        if(isTuangou){
+            et_count.setText(tuangou+"");
+        }else{
+            et_count.setText(shuliang+"");
+        }
         rootView.findViewById(R.id.btn_cancel).setOnClickListener(this);
         rootView.findViewById(R.id.btn_add_car).setOnClickListener(this);
+        rootView.findViewById(R.id.iv_minus).setOnClickListener(this);
+        rootView.findViewById(R.id.iv_plus).setOnClickListener(this);
         return rootView;
     }
 
@@ -69,6 +75,26 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.iv_minus:
+                String count1 = et_count.getText().toString().trim();
+                if(TextUtils.isEmpty(count1)){
+                    ToastUtil.show("请输入数量！");
+                }else{
+                    int i = Integer.parseInt(count1);
+                    if(i>0){
+                        et_count.setText((--i)+"");
+                    }
+                }
+                break;
+            case R.id.iv_plus:
+                String count2 = et_count.getText().toString().trim();
+                if(TextUtils.isEmpty(count2)){
+                    ToastUtil.show("请输入数量！");
+                }else{
+                    int i = Integer.parseInt(count2);
+                    et_count.setText((++i)+"");
+                }
+                break;
             case R.id.btn_cancel:
                 dismiss();
                 break;
@@ -80,26 +106,21 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
                 }
                 int count = Integer.parseInt(trim);
                 if(max!=0){
-                    if(isTuangou){// 如果是点击团购框
-                        if(count+shuliang<max){
+                    if(!isTuangou){
+                        if(count<max){
                             listener.inputNum(count+"");
                             dismiss();
                         }else{
                             ToastUtil.show("您输入的数量达到商品上限,请重新输入!");
                         }
                     }else{
-                        if(count+tuangou<max){
-                            listener.inputNum(count+"");
-                            dismiss();
-                        }else{
-                            ToastUtil.show("您输入的数量达到商品上限,请重新输入!");
-                        }
+                        listener.inputNum(count+"");
+                        dismiss();
                     }
                 }else{
                     listener.inputNum(count+"");
                     dismiss();
                 }
-
                 break;
         }
     }

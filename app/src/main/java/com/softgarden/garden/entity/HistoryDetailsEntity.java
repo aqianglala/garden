@@ -103,6 +103,15 @@ public class HistoryDetailsEntity extends BaseDao {
         public static class HeadBean {
             private String zffs;
             private String remarks;
+            private String type;
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
 
             public String getZffs() {
                 return zffs;

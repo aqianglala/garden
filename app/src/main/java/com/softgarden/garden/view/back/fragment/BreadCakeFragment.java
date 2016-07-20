@@ -2,6 +2,9 @@ package com.softgarden.garden.view.back.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -13,6 +16,7 @@ import com.softgarden.garden.interfaces.CheckInterface;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
+import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.back.adapter.BannerPagerAdapter;
 import com.softgarden.garden.view.back.adapter.CheckProductAdapter;
 import com.softgarden.garden.view.back.interfaces.OnItemClickPositionListener;
@@ -42,6 +46,8 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     private IndexEntity.DataBean.ShopBean data;
     private int currentPageIndex = 0;
     private boolean isBack;
+    private int groups;
+    private LinearLayout ll_dots;
 
     public HashMap<String, List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean>> getMap() {
         return map;
@@ -53,6 +59,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
         vp_banner = getViewById(R.id.vp_banner);
         lv_content = getViewById(R.id.lv_content);
+        ll_dots = getViewById(R.id.ll_dots);
     }
 
     private void setData() {
@@ -75,8 +82,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
         lv_content.setAdapter(adapter);
 
-        addDots(bannerFragments);
-        dots.get(0).setSelected(true);
+        if(tags.size()>6){
+            ll_dots.setVisibility(View.VISIBLE);
+            addDots(bannerFragments);
+            dots.get(0).setSelected(true);
+        }else{
+            ll_dots.setVisibility(View.GONE);
+        }
         mData.clear();
         mData.addAll(map.get(tags.get(0)));
         adapter.setDatas(mData);
@@ -85,12 +97,12 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     private void grouping() {
         bannerFragments = new ArrayList<>();
         int size = tags.size();
-        int groups = (int)Math.ceil(size/6.0);
+        groups = (int)Math.ceil(size/6.0);
         // 设置viewpager的缓存页数
         vp_banner.setOffscreenPageLimit(groups);
-        for (int i = 0;i<groups;i++){
+        for (int i = 0; i< groups; i++){
             ArrayList<String> group = new ArrayList<>();
-            if(i == groups-1){// 如果是最后一组
+            if(i == groups -1){// 如果是最后一组
                 int lastSize = size % 6;
                 for(int k = i*6;k<(i*6+lastSize);k++){
                     group.add(tags.get(k));
@@ -128,7 +140,6 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
      * @param fragments
      */
     private void addDots(ArrayList<BaseFragment> fragments) {
-        LinearLayout ll_dots = getViewById(R.id.ll_dots);
         for (int i = 0; i < fragments.size(); i++) {
             ImageView img = new ImageView(getContext());
             img.setBackgroundResource(R.drawable.dot_selector);
@@ -137,7 +148,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             if(i<fragments.size()-1){
-                p.rightMargin = 15;
+                p.rightMargin = UIUtils.dip2px(7);
             }
             img.setLayoutParams(p);
             ll_dots.addView(img);
@@ -147,6 +158,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
 
     @Override
     protected void setListener() {
+        vp_banner.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                setVpBannerHeight();
+                vp_banner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
         vp_banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -172,6 +190,18 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         setData();
     }
 
+    private void setVpBannerHeight() {
+        // 设置viewpager的高度
+        int measuredHeight = vp_banner.getMeasuredHeight();
+        ViewGroup.LayoutParams layoutParams = vp_banner.getLayoutParams();
+        if(tags.size()<=3){
+            layoutParams.height = UIUtils.dip2px(53);
+        }else{
+            layoutParams.height = UIUtils.dip2px(107);
+        }
+        vp_banner.setLayoutParams(layoutParams);
+    }
+
     @Override
     public void checkChild(int position, boolean isChecked) {
         map.get(mData.get(position).getItemGroupName()).get(position).setChoosed(isChecked);
@@ -181,7 +211,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     @Override
     public void doIncrease(TextView tv_total, int position, String currentCount) {
         int qty = Integer.parseInt(currentCount);
-        map.get(mData.get(position).getItemGroupName()).get(position).setQty(++qty);
+        IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = map.get(mData.get(position)
+                .getItemGroupName()).get(position);
+        goodsBean.setQty(++qty);
+        double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
+                (goodsBean.getBzj()): Double.parseDouble( goodsBean
+                .getPrice());
+        goodsBean.setAmount(price*qty);
         mData.get(position).setQty(qty);
         adapter.notifyDataSetChanged();
     }
@@ -190,7 +226,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     public void doDecrease(TextView tv_total,int position, String currentCount) {
         int qty = Integer.parseInt(currentCount);
         if(qty>0){
-            map.get(mData.get(position).getItemGroupName()).get(position).setQty(--qty);
+            IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = map.get(mData.get(position)
+                    .getItemGroupName()).get(position);
+            goodsBean.setQty(--qty);
+            double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
+                    (goodsBean.getBzj()): Double.parseDouble( goodsBean
+                    .getPrice());
+            goodsBean.setAmount(price*qty);
             mData.get(position).setQty(qty);
             adapter.notifyDataSetChanged();
         }
@@ -212,4 +254,5 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         EventBus.getDefault().post(new MessageBean(position+"", data.getItemclassName(),isBack),
                 "clickIndex");
     }
+
 }

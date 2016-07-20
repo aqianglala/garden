@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
@@ -20,6 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
+ * 否则，判断用户是否是现金用户还是记账用户
+ * 如果是记账用户，则不显示付款状态
+ * 如果是现金用户，则需根据是否已经付款显示付款状态
+ * 进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
  * Created by qiang-pc on 2016/6/29.
  */
 public class OrderExAdapter extends BaseExpandableListAdapter{
@@ -107,10 +114,41 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
                 TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
                 TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+                TextView tv_state = (TextView) convertView.findViewById(R.id.tv_state);
+                ImageView iv_order_type = (ImageView) convertView.findViewById(R.id.iv_order_type);
+                LinearLayout ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
                 final HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
                 tv_number.setText(item.getOrderNo());
                 tv_amount.setText((item.getTgs()+item.getQty())+"");
                 tv_price.setText(item.getAmount()+"");
+
+                String type = item.getType();
+                if ("1".equals(type)){ // 正常订单
+                    iv_order_type.setImageResource(R.mipmap.dingdan);
+                }else if ("2".equals(type)){// 退货
+                    iv_order_type.setImageResource(R.mipmap.tui);
+                }else if ("3".equals(type)){// 换货
+                    iv_order_type.setImageResource(R.mipmap.huan);
+                }
+//                先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
+//                否则，判断用户是否是现金用户还是记账用户
+//                如果是记账用户，则不显示付款状态
+//                如果是现金用户，则需根据是否已经付款显示付款状态
+//                进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
+                if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
+                        BaseApplication.userInfo.getData().getJsfs())){
+                    ll_state.setVisibility(View.VISIBLE);
+                    int is_pay = item.getIs_pay();
+                    if (is_pay == 0){// 未付款
+                        tv_state.setText("未付款");
+                    }else if(is_pay == 1){// 已付款
+                        tv_state.setText("已付款");
+                    }else{// 2,到付
+                        tv_state.setText("到付");
+                    }
+                }else{
+                    ll_state.setVisibility(View.GONE);
+                }
 
                 TextView tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
                 tv_detail.setOnClickListener(new View.OnClickListener() {
@@ -167,6 +205,9 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
             holder.tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
             holder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
             holder.tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
+            holder.tv_state = (TextView) convertView.findViewById(R.id.tv_state);
+            holder.iv_order_type = (ImageView) convertView.findViewById(R.id.iv_order_type);
+            holder.ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
@@ -175,6 +216,34 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         holder.tv_number.setText(item.getOrderNo());
         holder.tv_amount.setText((item.getTgs()+item.getQty())+"");
         holder.tv_price.setText(item.getAmount()+"");
+
+        String type = item.getType();
+        if ("1".equals(type)){ // 正常订单
+            holder.iv_order_type.setImageResource(R.mipmap.dingdan);
+        }else if ("2".equals(type)){// 退货
+            holder.iv_order_type.setImageResource(R.mipmap.tui);
+        }else if ("3".equals(type)){// 换货
+            holder.iv_order_type.setImageResource(R.mipmap.huan);
+        }
+//                先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
+//                否则，判断用户是否是现金用户还是记账用户
+//                如果是记账用户，则不显示付款状态
+//                如果是现金用户，则需根据是否已经付款显示付款状态
+//                进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
+        if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
+                BaseApplication.userInfo.getData().getJsfs())){
+            holder.ll_state.setVisibility(View.VISIBLE);
+            int is_pay = item.getIs_pay();
+            if (is_pay == 0){// 未付款
+                holder.tv_state.setText("未付款");
+            }else if(is_pay == 1){// 已付款
+                holder.tv_state.setText("已付款");
+            }else{// 2,到付
+                holder.tv_state.setText("到付");
+            }
+        }else{
+            holder.ll_state.setVisibility(View.GONE);
+        }
         holder.tv_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,6 +268,9 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         TextView tv_amount;
         TextView tv_price;
         TextView tv_detail;
+        TextView tv_state;
+        ImageView iv_order_type;
+        LinearLayout ll_state;
     }
 
     public void setOpen(boolean open) {

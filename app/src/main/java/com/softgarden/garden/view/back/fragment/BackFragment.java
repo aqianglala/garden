@@ -1,5 +1,6 @@
 package com.softgarden.garden.view.back.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -22,11 +23,14 @@ import com.softgarden.garden.entity.BackCommitEntity;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
+import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.back.adapter.ContainerPagerAdapter;
 import com.softgarden.garden.view.start.activity.MainActivity;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +38,7 @@ import java.util.Map;
 /**
  * Created by Hasee on 2016/6/6.
  */
-public class BackFragment extends BaseFragment{
+public class BackFragment extends BaseFragment implements DatePickerDialog.OnDateSetListener{
 
     private ImageView iv_me;
     private MainActivity mActivity;
@@ -51,6 +55,8 @@ public class BackFragment extends BaseFragment{
     private ArrayList<BaseFragment> fragments = new ArrayList<>();
     private boolean isBack;
     private Button btn_confirm;
+    private RelativeLayout rl_date;
+    private TextView tv_date;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -65,11 +71,15 @@ public class BackFragment extends BaseFragment{
         ll_tab = getViewById(R.id.ll_tab);
         ll_tab_container = getViewById(R.id.ll_tab_container);
 
+        rl_date = getViewById(R.id.rl_date);
+        tv_date = getViewById(R.id.tv_date);
+
         vp_content = getViewById(R.id.vp_content);
     }
 
     @Override
     protected void setListener() {
+        rl_date.setOnClickListener(this);
         btn_confirm.setOnClickListener(this);
         iv_me.setOnClickListener(this);
         vp_content.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -94,6 +104,7 @@ public class BackFragment extends BaseFragment{
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        initTimePicker();
         // 由于退货和换货用的是同个fragment的，所以创建的时候要传入个参数用来识别是退货还是换货
         Bundle arguments = getArguments();
         isBack = arguments.getBoolean("isBack");
@@ -119,10 +130,32 @@ public class BackFragment extends BaseFragment{
         }
     }
 
+    private DatePickerDialog dpd;
+    private void initTimePicker() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_MONTH,1);
+        tv_date.setText(StringUtils.formatDate(now.getTime()));
+        dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setThemeDark(false);
+        dpd.vibrate(false);//设置是否震动
+        dpd.dismissOnPause(true);//activity暂停的时候是否销毁对话框
+        dpd.showYearPickerFirst(false);//先展示年份选择
+        dpd.setAccentColor(Color.parseColor("#E6003E"));
+        dpd.setMinDate(now);
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
+            case R.id.rl_date:
+                dpd.show(mActivity.getFragmentManager(), "Datepickerdialog");
+                break;
             case R.id.iv_me:
                 mActivity.toggle();
                 break;
@@ -159,7 +192,7 @@ public class BackFragment extends BaseFragment{
         }
         return new BackCommitEntity(goodsBeens,
                 BaseApplication.userInfo.getData()
-                        .getCustomerNo());
+                        .getCustomerNo(),tv_date.getText().toString());
     }
 
     /**
@@ -233,6 +266,14 @@ public class BackFragment extends BaseFragment{
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(year,monthOfYear,dayOfMonth);
+        String formatDate = StringUtils.formatDate(instance.getTime());
+        tv_date.setText(formatDate);
     }
 
 }

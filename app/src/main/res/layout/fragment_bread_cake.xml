@@ -9,15 +9,16 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_banner"
         android:layout_width="match_parent"
-        android:layout_height="215px"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:background="@color/bg_white"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/ll_dots"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="17dp"
         android:background="@color/bg_white"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
     </com.zhy.autolayout.AutoLinearLayout>
 

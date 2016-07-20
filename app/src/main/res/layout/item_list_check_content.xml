@@ -37,14 +37,16 @@
                     android:layout_width="110px"
                     android:layout_height="match_parent"
                     android:background="@drawable/shape_image"
+                    android:padding="2dp"
                     app:layout_auto_baseheight="width">
 
                     <com.android.volley.toolbox.NetworkImageView
                         android:id="@+id/iv_product"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@mipmap/ic_launcher"/>
+                        android:background="@mipmap/df_img"/>
                 </com.zhy.autolayout.AutoRelativeLayout>
+
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:layout_width="match_parent"
@@ -78,11 +80,13 @@
                         <TextView
                             style="@style/item_gray_text"
                             android:layout_marginLeft="20px"
+                            android:visibility="gone"
                             android:text="预估数："/>
 
                         <TextView
                             android:id="@+id/tv_prediction"
                             style="@style/item_gray_text"
+                            android:visibility="gone"
                             android:text="3123"/>
                     </com.zhy.autolayout.AutoLinearLayout>
 

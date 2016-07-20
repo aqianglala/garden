@@ -135,7 +135,11 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                             loadDialog.dismiss();
                             showToast(shoppingCart.getTotalNum()+"");
                             int totalNum = ShoppingCart.getInstance().getTotalNum();
-                            tv_count.setText(totalNum+"");
+                            if(totalNum>99){
+                                tv_count.setText("99+");
+                            }else{
+                                tv_count.setText(totalNum+"");
+                            }
                         }
                     });
                 }
@@ -144,7 +148,11 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             loadData();
         }
         int totalNum = ShoppingCart.getInstance().getTotalNum();
-        tv_count.setText(totalNum+"");
+        if(totalNum>99){
+            tv_count.setText("99+");
+        }else{
+            tv_count.setText(totalNum+"");
+        }
     }
 
     /**
@@ -178,7 +186,12 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                         UIUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tv_count.setText(shoppingCart.getTotalNum()+"");
+                                int totalNum = shoppingCart.getTotalNum();
+                                if(totalNum>99){
+                                    tv_count.setText("99+");
+                                }else{
+                                    tv_count.setText(totalNum+"");
+                                }
                                 showToast(shoppingCart.getTotalNum()+"");
                             }
                         });
@@ -302,8 +315,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                 mActivity.toggle();
                 break;
             case R.id.iv_shopCar:
-                int count = Integer.parseInt(tv_count.getText().toString().trim());
-                if(count == 0){
+                if(tv_count.getText().toString().trim().equals("0")){
                     showToast("购物车空空如也~~");
                 }else{
                     startActivity(new Intent(mActivity, ShopcarActivity.class));
@@ -363,6 +375,10 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     @Override
     public void update(Observable observable, Object data) {
         int totalNum = ShoppingCart.getInstance().getTotalNum();
-        tv_count.setText(totalNum+"");
+        if(totalNum>99){
+            tv_count.setText("99+");
+        }else{
+            tv_count.setText(totalNum+"");
+        }
     }
 }

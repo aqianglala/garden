@@ -25,6 +25,7 @@
         android:paddingRight="20px">
 
         <ImageView
+            android:id="@+id/iv_order_type"
             android:layout_width="40px"
             android:layout_height="50px"
             android:src="@mipmap/jiadunlogo"/>
@@ -47,60 +48,103 @@
     
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="140px"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="20px"
         android:paddingRight="20px"
         android:paddingBottom="20px">
 
+        <com.zhy.autolayout.AutoRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.zhy.autolayout.AutoLinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/ll_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin"
+                    android:orientation="horizontal">
 
-            <com.zhy.autolayout.AutoLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                    <TextView
+                        style="@style/order_gray_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="商品总数："/>
 
-                <TextView
-                    style="@style/order_gray_text"
-                    android:text="商品总数："/>
-                <TextView
-                    style="@style/order_gray_text"
-                    android:text="订单金额："/>
+                    <TextView
+                        android:id="@+id/tv_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/order_gray_text"
+                        android:text="88件"/>
 
-            </com.zhy.autolayout.AutoLinearLayout>
+                </com.zhy.autolayout.AutoLinearLayout>
 
-            <com.zhy.autolayout.AutoLinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:id="@+id/ll_amount"
+                    android:layout_below="@id/ll_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_amount"
-                    style="@style/order_gray_text"
-                    android:text="88件"/>
-                <TextView
-                    android:id="@+id/tv_price"
-                    style="@style/order_gray_text"
-                    android:text="￥550"/>
-            </com.zhy.autolayout.AutoLinearLayout>
-        </com.zhy.autolayout.AutoLinearLayout>
-        
-        <TextView
-            android:id="@+id/tv_detail"
-            android:layout_width="160px"
-            android:layout_height="60px"
-            android:clickable="true"
-            android:textSize="@dimen/text_middle"
-            android:textColor="@color/white_text"
-            android:text="订单详情"
-            android:gravity="center"
-            android:background="@drawable/shape_bg_yellow"
-            android:layout_gravity="bottom"/>
+                    <TextView
+                        style="@style/order_gray_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单金额："/>
+
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        style="@style/order_gray_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="￥550"/>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+                <com.zhy.autolayout.AutoLinearLayout
+                    android:layout_below="@id/ll_amount"
+                    android:id="@+id/ll_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/order_gray_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="支付状态："/>
+
+
+                    <TextView
+                        android:id="@+id/tv_state"
+                        style="@style/order_gray_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </com.zhy.autolayout.AutoLinearLayout>
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:layout_width="160px"
+                android:layout_height="60px"
+                android:clickable="true"
+                android:textSize="@dimen/text_middle"
+                android:textColor="@color/white_text"
+                android:text="订单详情"
+                android:gravity="center"
+                android:layout_alignTop="@id/ll_amount"
+                android:background="@drawable/shape_bg_yellow"
+                android:layout_alignParentRight="true"
+                />
+        </com.zhy.autolayout.AutoRelativeLayout>
+
+
+
+
     </com.zhy.autolayout.AutoLinearLayout>
     </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoLinearLayout>

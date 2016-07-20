@@ -39,12 +39,14 @@
                 android:layout_width="110px"
                 android:layout_height="match_parent"
                 android:background="@drawable/shape_image"
+                android:padding="2dp"
                 app:layout_auto_baseheight="width">
 
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/iv_product"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:background="@mipmap/df_img"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 
             <com.zhy.autolayout.AutoLinearLayout

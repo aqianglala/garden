@@ -1,6 +1,7 @@
 package com.softgarden.garden.view.historyOrders;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,19 +30,22 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ScreenUtils;
+import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.CommitOrderDialog;
 import com.softgarden.garden.view.shopcar.adapter.OrderDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import java.util.Calendar;
 import java.util.List;
 
-public class OrderDetailActivity extends BaseActivity implements ModifyCountInterface{
+public class OrderDetailActivity extends BaseActivity implements ModifyCountInterface,DatePickerDialog.OnDateSetListener{
 
 
     private List<HistoryDetailsEntity.DataBean.ShopBean> mData;
@@ -55,6 +59,9 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     private EditText et_remarks;
     private String orderNo;
     private String orderDate;
+
+    private RelativeLayout rl_date;
+    private TextView tv_date;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -70,12 +77,16 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         tv_totalAmount = getViewById(R.id.tv_totalAmount);
         tv_price = getViewById(R.id.tv_price);
 
+        rl_date = getViewById(R.id.rl_date);
+        tv_date = getViewById(R.id.tv_date);
+
         expandableListView = getViewById(R.id.exListView);
         addFooter();
     }
 
     @Override
     protected void setListener() {
+        rl_date.setOnClickListener(this);
         btn_modify.setOnClickListener(this);
         getViewById(R.id.btn_cancel).setOnClickListener(this);
         getViewById(R.id.btn_confirm).setOnClickListener(this);
@@ -83,6 +94,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        initTimePicker();
         orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
         orderDate = getIntent().getStringExtra(GlobalParams.ORDERDATE);
         tv_orderNumb.setText(orderNo);
@@ -120,6 +132,25 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         });
     }
 
+    private DatePickerDialog dpd;
+    private void initTimePicker() {
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_MONTH,1);
+        tv_date.setText(StringUtils.formatDate(now.getTime()));
+        dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.setThemeDark(false);
+        dpd.vibrate(false);//设置是否震动
+        dpd.dismissOnPause(true);//activity暂停的时候是否销毁对话框
+        dpd.showYearPickerFirst(false);//先展示年份选择
+        dpd.setAccentColor(Color.parseColor("#E6003E"));
+        dpd.setMinDate(now);
+    }
+
     private int getTotalNum() {
         int totalNum = 0;
         for(HistoryDetailsEntity.DataBean.ShopBean item:mData){
@@ -144,6 +175,9 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
+            case R.id.rl_date:
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+                break;
             case R.id.btn_modify:
                 rl_confirm.setVisibility(View.VISIBLE);
                 btn_modify.setVisibility(View.GONE);
@@ -281,5 +315,13 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         // Don’t forget to unregister !!
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(year,monthOfYear,dayOfMonth);
+        String formatDate = StringUtils.formatDate(instance.getTime());
+        tv_date.setText(formatDate);
     }
 }

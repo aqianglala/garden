@@ -146,6 +146,8 @@ public class ConfirmOrderActivity extends BaseActivity {
             HttpHelper.post(UrlsAndKeys.order, new JSONObject(s), new BaseCallBack(context) {
                 @Override
                 public void onSuccess(JSONObject result) {
+                    // 更新历史列表
+                    EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     showToast("提交订单成功！");
                 }
 

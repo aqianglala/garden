@@ -91,6 +91,15 @@ public class IndexEntity extends BaseDao{
 
         private List<ShopBean> shop = new ArrayList<>();
         private List<String> banner = new ArrayList<>();
+        private String zhifu;
+
+        public String getZhifu() {
+            return zhifu;
+        }
+
+        public void setZhifu(String zhifu) {
+            this.zhifu = zhifu;
+        }
 
         public List<ShopBean> getShop() {
             return shop;

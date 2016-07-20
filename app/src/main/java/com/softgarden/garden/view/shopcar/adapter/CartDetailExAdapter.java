@@ -131,7 +131,9 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
             tv_prediction.setText(item.getProQty()+"");
             tv_weight.setText(item.getSpec());
             tv_back.setText(item.getReturnrate()+"");
-            tv_price.setText(item.getAmount()+"");
+            double price = item.getIsSpecial() == 0?Double.parseDouble(item
+                    .getBzj()): Double.parseDouble(item.getPrice());
+            tv_price.setText(price+"");
             tv_total.setText(numb);
             iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
             rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);
@@ -214,10 +216,12 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
         holderView.tv_name.setText(item.getItemName());
         holderView.tv_numb.setText(numb);
         holderView.tv_number.setText(item.getItemNo());
-        holderView.tv_prediction.setText(item.getProQty());
+        holderView.tv_prediction.setText(item.getProQty()+"");
         holderView.tv_weight.setText(item.getSpec());
         holderView.tv_back.setText(item.getReturnrate()+"");
-        holderView.tv_price.setText(item.getAmount()+"");
+        double price = item.getIsSpecial() == 0?Double.parseDouble(item
+                .getBzj()): Double.parseDouble(item.getPrice());
+        holderView.tv_price.setText(price+"");
         holderView.tv_total.setText(numb);
         holderView.iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
         holderView.rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);

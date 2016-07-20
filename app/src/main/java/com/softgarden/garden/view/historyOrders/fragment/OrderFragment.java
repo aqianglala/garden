@@ -3,6 +3,7 @@ package com.softgarden.garden.view.historyOrders.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -25,6 +26,10 @@ import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
 import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
 import com.softgarden.garden.view.historyOrders.widget.OrderDecorator;
 import com.softgarden.garden.view.start.activity.MainActivity;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +40,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
+ * 否则，判断用户是否是现金用户还是记账用户
+ * 如果是记账用户，则不显示付款状态
+ * 如果是现金用户，则需根据是否已经付款显示付款状态
+ * 进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
  * Created by Hasee on 2016/6/6.
  */
 public class OrderFragment extends BaseFragment implements OnDateSelectedListener{
@@ -50,6 +60,9 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_orders);
+        // register the receiver object
+        EventBus.getDefault().register(this);
+
         iv_me = getViewById(R.id.iv_me);
         mActivity = (MainActivity)getActivity();
 
@@ -213,5 +226,17 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             showToast("当天没有订单!");
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscriber(tag = "updateOrder")
+    private void updateOrder(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        getHistoryOrder();
     }
 }

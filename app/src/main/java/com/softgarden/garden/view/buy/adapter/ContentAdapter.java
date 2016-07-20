@@ -40,8 +40,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         // 商品数量上限
         final int maxCount = Integer.parseInt(bean.getProQty()) * Integer.parseInt
                 (BaseApplication.userInfo
-                .getData().getKxd
-                ());
+                .getData().getKxd());
         bgaViewHolderHelper
                 .setText(R.id.tv_name,bean.getItemName())
                 .setText(R.id.tv_number, bean.getItemNo())
@@ -74,12 +73,17 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         tv_total.setText(bean.getProQty()+"");
         final TextView tv_group = bgaViewHolderHelper.getView(R.id.tv_group);
 
+        boolean hasEdit = false;
         for (TempDataBean item: BaseApplication.tempDataBeans){
             if(bean.getItemNo().equals(item.getIetmNo())){
+                hasEdit = true;
                 tv_total.setText(item.getShuliang()+"");
                 tv_group.setText(item.getTuangou()+"");
                 break;
             }
+        }
+        if(!hasEdit){
+            tv_group.setText("0");
         }
 
         tv_total.setOnClickListener(new View.OnClickListener() {

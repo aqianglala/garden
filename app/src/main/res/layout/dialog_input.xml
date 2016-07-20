@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bg_white"
-    android:paddingBottom="30px"
-    android:paddingLeft="50px"
-    android:paddingRight="50px"
-    android:paddingTop="30px">
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="15dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,42 +19,96 @@
         android:textColor="@color/black_text"
         android:textSize="@dimen/text_middle"/>
 
-    <EditText
-        android:id="@+id/et_count"
-        android:layout_width="match_parent"
-        android:layout_height="80px"
-        android:textColor="@color/black_text"
-        android:textColorHint="#dbdbdb"
-        android:inputType="number"
-        android:paddingLeft="20px"
-        android:background="@drawable/shape_et_group_bg">
-        <requestFocus />
-    </EditText>
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="300px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/shape_et_group_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-    <com.zhy.autolayout.AutoRelativeLayout
+        <ImageView
+            android:id="@+id/iv_minus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="13dp"
+            android:layout_weight="1"
+            android:src="@mipmap/minus"/>
+
+        <View
+            android:layout_width="@dimen/line_height"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"/>
+
+        <EditText
+            android:id="@+id/et_count"
+            android:layout_width="0dp"
+            android:layout_height="80px"
+            android:layout_weight="1"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingLeft="20px"
+            android:textColor="@color/black_text"
+            android:textColorHint="#dbdbdb">
+
+            <requestFocus/>
+        </EditText>
+
+        <View
+            android:layout_width="@dimen/line_height"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"/>
+
+
+        <ImageView
+            android:id="@+id/iv_plus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="13dp"
+            android:src="@mipmap/plus"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:layout_marginBottom="24px"
+        android:layout_marginTop="24px"
+        android:background="@android:color/darker_gray"/>
+
+    <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24px"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="194px"
+            android:layout_width="0dp"
             android:layout_height="76px"
+            android:layout_weight="1"
             android:background="@drawable/shape_et_group_bg"
-            android:textSize="@dimen/text_middle"
+            android:text="取消"
             android:textColor="@color/black_text"
-            android:text="取消"/>
+            android:textSize="@dimen/text_middle"/>
+
+        <View
+            android:layout_width="60px"
+            android:layout_height="0dp"/>
 
         <Button
             android:id="@+id/btn_add_car"
-            android:layout_width="194px"
+            android:layout_width="0dp"
             android:layout_height="76px"
             android:layout_alignParentRight="true"
+            android:layout_weight="1"
             android:background="@drawable/shape_get_code_normal"
-            android:textSize="@dimen/text_middle"
+            android:text="加入购物车"
             android:textColor="@color/pink_text"
-            android:text="加入购物车"/>
-    </com.zhy.autolayout.AutoRelativeLayout>
+            android:textSize="@dimen/text_middle"/>
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
 
 </com.zhy.autolayout.AutoLinearLayout>

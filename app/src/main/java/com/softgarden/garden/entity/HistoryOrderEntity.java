@@ -62,14 +62,18 @@ public class HistoryOrderEntity extends BaseDao {
          * OrderDate : 2016-07-15
          * OrderNo : 66354
          * CustomerNo : GZ_0001
+         * type : 1
+         * is_pay : 3
          * Amount : 33
          * Qty : 17
-         * tgs : 17
+         * tgs : 0
          */
 
         private String OrderDate;
         private String OrderNo;
         private String CustomerNo;
+        private String type;
+        private int is_pay;
         private int Amount;
         private int Qty;
         private int tgs;
@@ -96,6 +100,22 @@ public class HistoryOrderEntity extends BaseDao {
 
         public void setCustomerNo(String CustomerNo) {
             this.CustomerNo = CustomerNo;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public int getIs_pay() {
+            return is_pay;
+        }
+
+        public void setIs_pay(int is_pay) {
+            this.is_pay = is_pay;
         }
 
         public int getAmount() {

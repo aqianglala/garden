@@ -50,11 +50,43 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/rl_date"
+        android:layout_width="match_parent"
+        android:layout_height="100px"
+        android:clickable="true"
+        android:background="@android:color/white"
+        android:padding="@dimen/content_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_date"
+            android:textColor="@color/black_text"
+            android:textSize="@dimen/text_middle"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="10px"
+            android:drawableRight="@mipmap/jiantou"
+            android:text="2016-04-09"
+            android:textColor="@color/gray_darker"
+            android:textSize="@dimen/text_small"/>
+
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+    <View
+        style="@style/line_horizontal"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="@dimen/margin"
         android:background="@color/bg_gray"/>
 
     <com.zhy.autolayout.AutoLinearLayout

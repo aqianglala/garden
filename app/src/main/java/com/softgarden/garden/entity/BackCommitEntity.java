@@ -9,11 +9,21 @@ import java.util.ArrayList;
 public class BackCommitEntity implements Serializable{
     private ArrayList<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> zstail;
     private String CustomerNo;
+    private String orderDate;
 
     public BackCommitEntity(ArrayList<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> zstail,
-                            String customerNo) {
+                            String customerNo, String orderDate) {
         this.zstail = zstail;
         CustomerNo = customerNo;
+        this.orderDate = orderDate;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
 
     public ArrayList<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> getZstail() {
