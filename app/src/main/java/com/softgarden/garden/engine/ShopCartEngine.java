@@ -1,7 +1,11 @@
 package com.softgarden.garden.engine;
 
+import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.BaseEngine;
+import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.entity.OrderCommitEntity;
+import com.softgarden.garden.entity.PayEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 
@@ -13,17 +17,33 @@ import org.json.JSONObject;
  */
 public class ShopCartEngine extends BaseEngine{
 
-    public void commitOrder(String OrderDate,String CustomerNo,String zstail,
-                        BaseCallBack callBack){
-
-        JSONObject object=new JSONObject();
+    public void onOrder(OrderCommitEntity data, ObjectCallBack<PayEntity>
+            callBack){
+        String s = new Gson().toJson(data);
+        JSONObject object = null;
         try {
-            object.put("OrderDate",OrderDate);
-            object.put("CustomerNo",CustomerNo);
-            object.put("zstail",zstail);
+            object = new JSONObject(s);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post(UrlsAndKeys.order,object,callBack);
+        HttpHelper.post(UrlsAndKeys.onOrder,object,callBack);
     }
+
+    /**
+     * 提交到付订单
+     * @param data
+     * @param callBack
+     */
+    public void dfOrder(OrderCommitEntity data, BaseCallBack callBack){
+        String s = new Gson().toJson(data);
+        JSONObject object = null;
+        try {
+            object = new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HttpHelper.post(UrlsAndKeys.dfOrder,object,callBack);
+    }
+
+
 }

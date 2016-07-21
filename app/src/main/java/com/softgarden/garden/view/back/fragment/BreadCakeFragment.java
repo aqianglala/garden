@@ -32,7 +32,7 @@ import java.util.List;
  * Created by qiang on 2016/6/14.
  */
 public class BreadCakeFragment extends BaseFragment implements CheckInterface,
-        ModifyCountInterface,OnItemClickPositionListener{
+        ModifyCountInterface,OnItemClickPositionListener,CheckProductAdapter.InputNumListener{
 
     private ViewPager vp_banner;
     private ListView lv_content;
@@ -79,6 +79,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         adapter = new CheckProductAdapter(mActivity, R.layout.item_list_check_content);
         adapter.setCheckInterface(this);
         adapter.setModifyCountInterface(this);
+        adapter.setInputNumListener(this);
 
         lv_content.setAdapter(adapter);
 
@@ -89,9 +90,11 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         }else{
             ll_dots.setVisibility(View.GONE);
         }
-        mData.clear();
-        mData.addAll(map.get(tags.get(0)));
-        adapter.setDatas(mData);
+        if (tags.size()>0){
+            mData.clear();
+            mData.addAll(map.get(tags.get(0)));
+            adapter.setDatas(mData);
+        }
     }
 
     private void grouping() {
@@ -214,9 +217,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = map.get(mData.get(position)
                 .getItemGroupName()).get(position);
         goodsBean.setQty(++qty);
-        double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
-                (goodsBean.getBzj()): Double.parseDouble( goodsBean
-                .getPrice());
+        float price;
+        if (goodsBean.getBzj()!=null){
+            price = goodsBean.getIsSpecial() == 0?Float.parseFloat
+                    (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+        }else{
+            price = Float.parseFloat( goodsBean.getPrice());
+        }
         goodsBean.setAmount(price*qty);
         mData.get(position).setQty(qty);
         adapter.notifyDataSetChanged();
@@ -229,9 +236,13 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
             IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = map.get(mData.get(position)
                     .getItemGroupName()).get(position);
             goodsBean.setQty(--qty);
-            double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
-                    (goodsBean.getBzj()): Double.parseDouble( goodsBean
-                    .getPrice());
+            float price;
+            if (goodsBean.getBzj()!=null){
+                price = goodsBean.getIsSpecial() == 0?Float.parseFloat
+                        (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+            }else{
+                price = Float.parseFloat( goodsBean.getPrice());
+            }
             goodsBean.setAmount(price*qty);
             mData.get(position).setQty(qty);
             adapter.notifyDataSetChanged();
@@ -255,4 +266,21 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
                 "clickIndex");
     }
 
+    @Override
+    public void inputNum(int position,String num) {
+        int qty = Integer.parseInt(num);
+        IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean goodsBean = map.get(mData.get(position)
+                .getItemGroupName()).get(position);
+        goodsBean.setQty(qty);
+        float price;
+        if (goodsBean.getBzj()!=null){
+            price = goodsBean.getIsSpecial() == 0?Float.parseFloat
+                    (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+        }else{
+            price = Float.parseFloat( goodsBean.getPrice());
+        }
+        goodsBean.setAmount(price*qty);
+        mData.get(position).setQty(qty);
+        adapter.notifyDataSetChanged();
+    }
 }

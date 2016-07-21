@@ -162,15 +162,14 @@
                 android:textSize="@dimen/text_middle"
                 android:textColor="@color/gray_darker"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
-                />
+                android:layout_marginLeft="50px"/>
 
             <Button
                 android:id="@+id/btn_confirm"
                 android:layout_width="220px"
                 android:layout_height="74px"
                 android:background="@drawable/shape_modify_order_pressed"
-                android:text="修改订单"
+                android:text="确认订单"
                 android:textSize="@dimen/text_middle"
                 android:textColor="@color/pink_text"
                 android:layout_centerInParent="true"
@@ -179,33 +178,17 @@
                 android:layout_centerVertical="true"/>
         </com.zhy.autolayout.AutoRelativeLayout>
 
-
         <Button
-            android:id="@+id/btn_modify"
+            android:id="@+id/btn_pay"
             android:layout_width="220px"
             android:layout_height="74px"
-            android:background="@drawable/shape_modify_order_normal"
-            android:text="修改订单"
+            android:background="@drawable/shape_pay"
+            android:text="支付"
             android:textSize="@dimen/text_middle"
-            android:textColor="@color/gray_darker"
-            android:layout_centerInParent="true"/>
-
-        <!--<com.zhy.autolayout.AutoLinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<Button-->
-                <!--android:id="@+id/btn_modify"-->
-                <!--android:layout_width="220px"-->
-                <!--android:layout_height="74px"-->
-                <!--android:background="@drawable/shape_modify_order_normal"-->
-                <!--android:text="修改订单"-->
-                <!--android:textSize="@dimen/text_middle"-->
-                <!--android:textColor="@color/gray_darker"-->
-                <!--android:layout_centerInParent="true"/>-->
-        <!--</com.zhy.autolayout.AutoLinearLayout>-->
+            android:textColor="@color/white_text"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="50px"
+            android:layout_centerVertical="true"/>
 
     </com.zhy.autolayout.AutoRelativeLayout>
 </com.zhy.autolayout.AutoLinearLayout>

@@ -28,6 +28,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.simple.eventbus.EventBus;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -130,12 +131,21 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
      */
     private OrderCommitEntity.ZstailBean generateProductInfo(IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean
                                                 goodsBean, int tuangou, int shuliang) {
+        float price;
+        if (goodsBean.getBzj()!=null){
+            price = goodsBean.getIsSpecial() == 0?Float.parseFloat
+                    (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+        }else{
+            price = Float.parseFloat( goodsBean.getPrice());
+        }
         // 计算总价
-        float price = goodsBean.getIsSpecial() == 0?Float.parseFloat
-                (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
         int count = tuangou + shuliang;
+        float amount = price * count;
+        BigDecimal b = new BigDecimal(amount);
+        float f1 =  b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+
         OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
-                .ZstailBean(count*price, goodsBean.getIsSpecial(),
+                .ZstailBean(f1, goodsBean.getIsSpecial(),
                 goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getItemNo(), goodsBean
                 .getItemgroupcdoe(), goodsBean.getPrice(), shuliang, goodsBean
                 .getUnit(),
@@ -207,7 +217,12 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 orderCommitEntity.setOrderDate(tv_date.getText().toString());
                 orderCommitEntity.setZstail(productInfos);
 
-                orderCommitEntity.setZffs(BaseApplication.userInfo.getData().getJsfs());
+                String jsfs = BaseApplication.userInfo.getData().getJsfs();
+                if ("现金".equals(jsfs)){
+                    orderCommitEntity.setZffs(2);
+                }else{
+                    orderCommitEntity.setZffs(1);
+                }
                 Intent intent = new Intent(this, ConfirmOrderActivity.class);
                 intent.putExtra("data",orderCommitEntity);
                 startActivity(intent);

@@ -129,10 +129,12 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void commit() {
-        if(!BaseApplication.userInfo.getData().getJsfs().equals("记账")){
+        if(BaseApplication.userInfo.getData().getJsfs().equals("记账")){
             commitOrder();
         }else if(BaseApplication.userInfo.getData().getJsfs().equals("现金")){
-            startActivity(new Intent(this, PayActivity.class));
+            Intent intent = new Intent(this, PayActivity.class);
+            intent.putExtra("order",data);
+            startActivity(intent);
         }
     }
 

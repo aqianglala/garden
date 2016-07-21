@@ -24,5 +24,6 @@ public class GlobalParams {
 	public static final String HASMODIFYPSWD = "hasmodifypswd";
 	public static final String ORDERNO = "orderno";
 	public static final String ORDERDATE = "orderdate";
+	public static final String ORDERSTATE = "orderstate";
 	public static final String itemclassname = "itemclassName";
 }

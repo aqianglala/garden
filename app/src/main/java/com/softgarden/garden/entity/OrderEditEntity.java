@@ -9,6 +9,15 @@ public class OrderEditEntity {
     private String OrderDate;
     private String OrderNo;
     private String remarks;
+    private int zffs;
+
+    public int getZffs() {
+        return zffs;
+    }
+
+    public void setZffs(int zffs) {
+        this.zffs = zffs;
+    }
 
     public String getRemarks() {
         return remarks;

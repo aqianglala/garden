@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
-import com.softgarden.garden.dialog.InputCountDialog;
+import com.softgarden.garden.dialog.InputDialog;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.helper.HttpHelper;
@@ -91,7 +91,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
             public void onClick(View v) {
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
-                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,tuangou,
+                InputDialog dialog = InputDialog.show((BaseActivity) context,tuangou,
                         shuliang,maxCount,false);
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
@@ -110,7 +110,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
             public void onClick(View v) {
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
-                InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,tuangou,
+                InputDialog dialog = InputDialog.show((BaseActivity) context,tuangou,
                         shuliang,maxCount,true);
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override

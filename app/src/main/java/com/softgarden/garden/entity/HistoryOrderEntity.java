@@ -74,7 +74,7 @@ public class HistoryOrderEntity extends BaseDao {
         private String CustomerNo;
         private String type;
         private int is_pay;
-        private int Amount;
+        private float Amount;
         private int Qty;
         private int tgs;
 
@@ -118,11 +118,11 @@ public class HistoryOrderEntity extends BaseDao {
             this.is_pay = is_pay;
         }
 
-        public int getAmount() {
+        public float getAmount() {
             return Amount;
         }
 
-        public void setAmount(int Amount) {
+        public void setAmount(float Amount) {
             this.Amount = Amount;
         }
 

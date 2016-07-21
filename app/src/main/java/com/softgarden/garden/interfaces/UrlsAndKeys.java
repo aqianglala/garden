@@ -21,6 +21,8 @@ public interface UrlsAndKeys {
     String complaint = "index.php/App/Api/complaint";
     String upload_img = "index.php/App/Api/upload_img";
     String proposal = "index.php/App/Api/proposal";
+    String onOrder = "index.php/App/Api/onOrder";
+    String dfOrder = "index.php/App/Api/dfOrder";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

@@ -46,7 +46,7 @@
                     android:id="@+id/iv_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@mipmap/df_img"/>
+                    android:src="@mipmap/df_img"/>
             </com.zhy.autolayout.AutoRelativeLayout>
 
             <com.zhy.autolayout.AutoLinearLayout

@@ -1,6 +1,5 @@
 package com.softgarden.garden.view.historyOrders;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
@@ -23,26 +21,24 @@ import com.softgarden.garden.dialog.OverTimeDialog;
 import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.entity.HistoryDetailsEntity;
 import com.softgarden.garden.entity.OrderEditEntity;
-import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
-import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.utils.StringUtils;
-import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.CommitOrderDialog;
 import com.softgarden.garden.view.shopcar.adapter.OrderDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class OrderDetailActivity extends BaseActivity implements ModifyCountInterface,DatePickerDialog.OnDateSetListener{
@@ -50,7 +46,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     private List<HistoryDetailsEntity.DataBean.ShopBean> mData;
     private OrderDetailExAdapter adapter;
-    private Button btn_modify;
+    private Button btn_pay;
+
     private RelativeLayout rl_confirm;
     private ExpandableListView expandableListView;
     private TextView tv_orderNumb;
@@ -62,6 +59,9 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     private RelativeLayout rl_date;
     private TextView tv_date;
+    private TextView tv_right;
+    private int state;
+    private String zffs;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -70,7 +70,10 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         // register the receiver object
         EventBus.getDefault().register(this);
 
-        btn_modify = getViewById(R.id.btn_modify);
+        tv_right = getViewById(R.id.tv_right);
+        tv_right.setVisibility(View.VISIBLE);
+
+        btn_pay = getViewById(R.id.btn_pay);
         rl_confirm = getViewById(R.id.rl_confirm);
 
         tv_orderNumb = getViewById(R.id.tv_orderNumb);
@@ -86,17 +89,21 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     @Override
     protected void setListener() {
+        tv_right.setOnClickListener(this);
         rl_date.setOnClickListener(this);
-        btn_modify.setOnClickListener(this);
+        btn_pay.setOnClickListener(this);
         getViewById(R.id.btn_cancel).setOnClickListener(this);
         getViewById(R.id.btn_confirm).setOnClickListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        initTimePicker();
+        state = getIntent().getIntExtra(GlobalParams.ORDERSTATE, -1);
         orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
         orderDate = getIntent().getStringExtra(GlobalParams.ORDERDATE);
+        // 设置底部界面
+        initBottomUI();
+        initTimePicker();
         tv_orderNumb.setText(orderNo);
         LogUtils.e("orderNo:"+ orderNo);
         HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
@@ -105,6 +112,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
             public void onSuccess(HistoryDetailsEntity data) {
                 // 设置备注
                 et_remarks.setText(data.getData().getHead().getRemarks());
+                zffs = data.getData().getHead().getZffs();
                 // 为每一项计算总数和总价
                 List<HistoryDetailsEntity.DataBean.ShopBean> shop = data.getData().getShop();
                 for(HistoryDetailsEntity.DataBean.ShopBean item:shop){
@@ -132,10 +140,27 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         });
     }
 
+    private void initBottomUI() {
+        if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
+                BaseApplication.userInfo.getData().getJsfs())){
+            if (state == 0){// 未付款
+                btn_pay.setVisibility(View.VISIBLE);
+                rl_confirm.setVisibility(View.GONE);
+            }else{
+                btn_pay.setVisibility(View.GONE);
+                rl_confirm.setVisibility(View.VISIBLE);
+            }
+        }else{
+            btn_pay.setVisibility(View.GONE);
+            rl_confirm.setVisibility(View.VISIBLE);
+        }
+    }
+
     private DatePickerDialog dpd;
     private void initTimePicker() {
         Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_MONTH,1);
+        Date dateFromStr = StringUtils.getDateFromStr(orderDate);
+        now.setTime(dateFromStr);
         tv_date.setText(StringUtils.formatDate(now.getTime()));
         dpd = DatePickerDialog.newInstance(
                 this,
@@ -159,15 +184,17 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         return totalNum;
     }
 
-    private double getTotalPrice() {
-        double totalPrice = 0;
+    private float getTotalPrice() {
+        float totalPrice = 0;
         for(HistoryDetailsEntity.DataBean.ShopBean item:mData){
-            double price = item.getIsSpecial().equals("0")?Double.parseDouble
-                    (item.getBzj()): Double.parseDouble( item
+            float price = item.getIsSpecial().equals("0")?Float.parseFloat
+                    (item.getBzj()): Float.parseFloat( item
                     .getPrice());
             totalPrice+=item.getTotal()*price;
         }
-        return totalPrice;
+        BigDecimal b = new BigDecimal(totalPrice);
+        float f1 =  b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+        return f1;
     }
 
     boolean inputAgain;
@@ -175,43 +202,32 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.rl_date:
-                dpd.show(getFragmentManager(), "Datepickerdialog");
-                break;
-            case R.id.btn_modify:
+            case R.id.tv_right:
                 rl_confirm.setVisibility(View.VISIBLE);
-                btn_modify.setVisibility(View.GONE);
+                btn_pay.setVisibility(View.GONE);
                 adapter.setEditable(true);
                 adapter.notifyDataSetChanged();
                 break;
+            case R.id.rl_date:
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+                break;
             case R.id.btn_cancel:
                 rl_confirm.setVisibility(View.GONE);
-                btn_modify.setVisibility(View.VISIBLE);
+                btn_pay.setVisibility(View.VISIBLE);
                 adapter.setEditable(false);
                 adapter.notifyDataSetChanged();
+                break;
+            case R.id.btn_pay:  // 支付
+
                 break;
             case R.id.btn_confirm:
                 // 重新提交订单
                 // 获取订单日期和订单编号
-                HttpHelper.post(UrlsAndKeys.payment, new JSONObject(), new BaseCallBack(this) {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        String data = result.optString("data");
-                        if("1".equals(data)){// 开启支付,判断是否为记账还是现金，如果是记账则提交订单，否则进入支付页面
-                            if(!inputAgain){
-                                showCommitDialog(data);
-                            }else{
-                                commit();
-                            }
-                        }else if("0".equals(data)){// 关闭支付,都提交订单
-                            if(!inputAgain){
-                                showCommitDialog(data);
-                            }else{
-                                commitOrder();
-                            }
-                        }
-                    }
-                });
+                if(!inputAgain){
+                    showCommitDialog("0");
+                }else{
+                    commitOrder();
+                }
                 break;
         }
     }
@@ -221,36 +237,29 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
             String remarks = et_remarks.getText().toString().trim();
             OrderEditEntity orderEditEntity = new OrderEditEntity();
             orderEditEntity.setOrderNo(orderNo);
-            orderEditEntity.setOrderDate(orderDate);
+            orderEditEntity.setOrderDate(tv_date.getText().toString());
             orderEditEntity.setRemarks(remarks);
+            orderEditEntity.setZffs(Integer.parseInt(zffs));
             orderEditEntity.setZstail(mData);
 
-            try {
-                String s = new Gson().toJson(orderEditEntity);
-                LogUtils.e(s);
-                HttpHelper.post(UrlsAndKeys.orderEdit, new JSONObject(s), new BaseCallBack
-                        (context) {
-                    @Override
-                    public void onSuccess(JSONObject result) {
-                        showToast("提交订单成功！");
-                    }
+            HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
+            engine.orderEdit(orderEditEntity,new BaseCallBack(context) {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    // 更新历史列表
+                    showToast("提交订单成功！");
+                    EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                }
 
-                    @Override
-                    public void onError(JSONObject result, String message1, int code) {
+                @Override
+                public void onError(JSONObject result, String message1, int code) {
+                    showToast(message1);
+                    if("时间超过了".equals(message1)){
+                        // 需要验证时间,由后台判断
                         OverTimeDialog.show(context);
                     }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void commit() {
-        if(!BaseApplication.userInfo.getData().getJsfs().equals("记账")){
-            commitOrder();
-        }else if(BaseApplication.userInfo.getData().getJsfs().equals("现金")){
-            startActivity(new Intent(this, PayActivity.class));
+                }
+            });
         }
     }
 
@@ -304,8 +313,6 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         Log.e("", "### update user with my_tag, name = " + user.message);
         if(user.message.equals("0")){// 关闭支付，直接提交
             commitOrder();
-        }else if(user.message.equals("1")){
-            commit();
         }
         setInputAgain(true);
     }

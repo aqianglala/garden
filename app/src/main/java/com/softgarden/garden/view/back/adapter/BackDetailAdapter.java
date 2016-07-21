@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.softgarden.garden.entity.IndexEntity;
+import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.jiadun_android.R;
 
@@ -27,11 +28,16 @@ public class BackDetailAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBea
                 .setText(R.id.tv_back,item.getReturnrate());
         bgaViewHolderHelper.setText(R.id.tv_numb,"x"+item.getQty());
         // 判断单价
-        double price = item.getIsSpecial() == 0?Double.parseDouble(item
-                .getBzj()): Double.parseDouble(item.getPrice());
+        float price;
+        if (item.getBzj()!=null){
+            price = item.getIsSpecial() == 0?Float.parseFloat
+                    (item.getBzj()): Float.parseFloat( item.getPrice());
+        }else{
+            price = Float.parseFloat( item.getPrice());
+        }
         bgaViewHolderHelper.setText(R.id.tv_price,price+"");
 
         NetworkImageView iv_product = bgaViewHolderHelper.getView(R.id.iv_product);
-        iv_product.setImageUrl(item.getPicture(), ImageLoaderHelper.getInstance());
+        iv_product.setImageUrl(HttpHelper.HOST+item.getPicture(), ImageLoaderHelper.getInstance());
     }
 }

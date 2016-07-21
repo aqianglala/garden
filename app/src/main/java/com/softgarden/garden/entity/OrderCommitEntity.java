@@ -21,15 +21,24 @@ public class OrderCommitEntity implements Serializable{
     private String OrderDate;
     private String remarks;
 
-    public String getZffs() {
+    private int zffs;
+    private int leibie;
+
+    public int getZffs() {
         return zffs;
     }
 
-    public void setZffs(String zffs) {
+    public void setZffs(int zffs) {
         this.zffs = zffs;
     }
 
-    private String zffs;
+    public int getLeibie() {
+        return leibie;
+    }
+
+    public void setLeibie(int leibie) {
+        this.leibie = leibie;
+    }
 
     public String getRemarks() {
         return remarks;
@@ -87,7 +96,7 @@ public class OrderCommitEntity implements Serializable{
     }
 
     public static class ZstailBean implements Serializable{
-        private double Amount;
+        private float Amount;
         private int IsSpecial;
         private String ItemGroupName;
         private String ItemName;
@@ -106,7 +115,7 @@ public class OrderCommitEntity implements Serializable{
         private String spec;
         private int tgs;
 
-        public ZstailBean(double amount, int isSpecial, String itemGroupName, String itemName,
+        public ZstailBean(float amount, int isSpecial, String itemGroupName, String itemName,
                           String itemNo, String itemgroupcdoe, String price, int qty, String unit,
                           String bzj, boolean isChoosed, String itemclassCode, String
                                   itemclassName, String picture, int proQty, double returnrate,
@@ -135,7 +144,7 @@ public class OrderCommitEntity implements Serializable{
             return Amount;
         }
 
-        public void setAmount(double Amount) {
+        public void setAmount(float Amount) {
             this.Amount = Amount;
         }
 

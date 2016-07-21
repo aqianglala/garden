@@ -1,9 +1,12 @@
 package com.softgarden.garden.engine;
 
+import com.google.gson.Gson;
+import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.BaseEngine;
 import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.entity.HistoryDetailsEntity;
 import com.softgarden.garden.entity.HistoryOrderEntity;
+import com.softgarden.garden.entity.OrderEditEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 
@@ -42,6 +45,22 @@ public class HistoryOrderEngine extends BaseEngine{
             e.printStackTrace();
         }
         HttpHelper.post(UrlsAndKeys.historyDetails,object,callBack);
+    }
+
+    /**
+     * 修改订单
+     * @param data
+     * @param callBack
+     */
+    public void orderEdit(OrderEditEntity data, BaseCallBack callBack){
+        String s = new Gson().toJson(data);
+        JSONObject object = null;
+        try {
+            object = new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HttpHelper.post(UrlsAndKeys.orderEdit,object,callBack);
     }
 
 }

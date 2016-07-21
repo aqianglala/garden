@@ -82,9 +82,11 @@ public class FragmentProduct extends BaseFragment{
         lv_titles.setAdapter(titleAdapter);
 
         contentAdapter = new ContentAdapter(mActivity,R.layout.item_list_content);
-        goods.addAll(mData.getChild().get(0).getGoods());
-        contentAdapter.setDatas(goods);
-        lv_content.setAdapter(contentAdapter);
+        if (mData.getChild().size()>0){
+            goods.addAll(mData.getChild().get(0).getGoods());
+            contentAdapter.setDatas(goods);
+            lv_content.setAdapter(contentAdapter);
+        }
     }
 
     @Subscriber(tag = "notifyDataSetChange")

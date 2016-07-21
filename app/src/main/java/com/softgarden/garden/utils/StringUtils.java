@@ -293,6 +293,21 @@ public class StringUtils {
      *
      * @return
      */
+    public static Date getDateFromStr(String time) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    /**
+     * 获取当前时间日期
+     *
+     * @return
+     */
     public static String getCurrDate() {
         Long timestamp = System.currentTimeMillis();
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(timestamp));

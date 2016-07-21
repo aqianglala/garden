@@ -99,6 +99,7 @@ public class CommitOrderDialog extends DialogFragment implements View.OnClickLis
             @Override
             public void onSuccess(UserEntity data) {
                 ToastUtil.show("验证密码成功！");
+                BaseApplication.userInfo = data;
                 EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");
                 dismiss();
             }

@@ -72,9 +72,13 @@ public class ShoppingCart extends Observable {
                             if(item.getIetmNo().equals(goodsBean.getItemNo())){
                                 int count = item.getShuliang() + item.getTuangou();
                                 totalNum += count;
-                                double price = goodsBean.getIsSpecial() == 0?Double.parseDouble
-                                        (goodsBean.getBzj()): Double.parseDouble( goodsBean
-                                        .getPrice());
+                                double price;
+                                if (goodsBean.getBzj()!=null){
+                                    price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
+                                            .getBzj()): Double.parseDouble(goodsBean.getPrice());
+                                }else{
+                                    price = Double.parseDouble(goodsBean.getPrice());
+                                }
                                 total += (price * count);
                                 isInTempData = true;
                                 break;
@@ -83,8 +87,13 @@ public class ShoppingCart extends Observable {
                         if(!isInTempData){
                             int count = Integer.parseInt(goodsBean.getProQty());
                             totalNum += count;
-                            double price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
-                                    .getBzj()): Double.parseDouble(goodsBean.getPrice());
+                            double price;
+                            if (goodsBean.getBzj()!=null){
+                                price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
+                                        .getBzj()): Double.parseDouble(goodsBean.getPrice());
+                            }else{
+                                price = Double.parseDouble(goodsBean.getPrice());
+                            }
                             total += (price * count);
                         }
                     }

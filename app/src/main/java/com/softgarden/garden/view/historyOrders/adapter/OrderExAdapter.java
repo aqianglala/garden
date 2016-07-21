@@ -114,7 +114,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
                 TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
                 TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-                TextView tv_state = (TextView) convertView.findViewById(R.id.tv_state);
+                final TextView tv_state = (TextView) convertView.findViewById(R.id.tv_state);
                 ImageView iv_order_type = (ImageView) convertView.findViewById(R.id.iv_order_type);
                 LinearLayout ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
                 final HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
@@ -159,6 +159,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                         LogUtils.e("put:"+item.getOrderNo());
                         intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
                         intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
+                        intent.putExtra(GlobalParams.ORDERSTATE,item.getIs_pay());
                         context.startActivity(intent);
                     }
                 });
