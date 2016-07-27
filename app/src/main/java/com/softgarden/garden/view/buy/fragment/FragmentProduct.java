@@ -69,6 +69,9 @@ public class FragmentProduct extends BaseFragment{
         Bundle arguments = getArguments();
         mData = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
         setData();
+        // 设置右边列表标题
+        if (mData.getChild()!=null && mData.getChild().size()>0)
+        tv_title.setText(mData.getChild().get(0).getItemGroupName());
     }
 
 
@@ -92,6 +95,7 @@ public class FragmentProduct extends BaseFragment{
     @Subscriber(tag = "notifyDataSetChange")
     private void notifyDataSetChange(MessageBean user) {
         Log.e("", "### update user with my_tag, name = " + user.message);
+        contentAdapter.setHasClear(true);
         contentAdapter.notifyDataSetChanged();
     }
 

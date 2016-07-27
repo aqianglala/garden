@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#E6003E</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="bg_click">#EBEBEB</color>
+
     <color name="bg_gray">#F5F5F5</color>
     <color name="bg_white">#ffffff</color>
     <color name="btn_bg_color">#E6003E</color>

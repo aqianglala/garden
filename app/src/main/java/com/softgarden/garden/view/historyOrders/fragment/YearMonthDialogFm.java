@@ -28,7 +28,12 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
     private LinearLayout ll_tv;
     private TextView tv_year;
     private TextView tv_month;
+    private TextView tv_cancel;
+    private TextView tv_yes;
     private ListView listView;
+
+    private int year = 0;
+    private int month = 0;
 
     @Nullable
     @Override
@@ -46,9 +51,13 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
 
         tv_year = (TextView) rootView.findViewById(R.id.tv_year);
         tv_month = (TextView) rootView.findViewById(R.id.tv_month);
+        tv_cancel = (TextView) rootView.findViewById(R.id.tv_cancel);
+        tv_yes = (TextView) rootView.findViewById(R.id.tv_yes);
 
         tv_year.setOnClickListener(this);
         tv_month.setOnClickListener(this);
+        tv_cancel.setOnClickListener(this);
+        tv_yes.setOnClickListener(this);
 
         listView = (ListView) rootView.findViewById(R.id.listview);
         // 隐藏分割线
@@ -58,10 +67,16 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(listener!=null){
-                    int time = (int) parent.getAdapter().getItem(position);
-                    listener.onItemSelected(time,adapter.isMonth());
+                int time = (int) parent.getAdapter().getItem(position);
+                if (adapter.isMonth()){
+                    month = time;
+                    tv_month.setText(month +"月");
+                }else{
+                    year = time;
+                    tv_year.setText(year +"年");
                 }
+                adapter.setTime(year,month);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -69,7 +84,7 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
         if(year==0 && month==0){
             Calendar instance = Calendar.getInstance();
             this.year = instance.get(Calendar.YEAR);
-            this.month = instance.get(Calendar.MONTH);
+            this.month = instance.get(Calendar.MONTH)+1;
         }
         // year，month是为了设置选中项的背景
         adapter.setTime(year,month);
@@ -101,6 +116,14 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
                 adapter.notifyDataSetChanged();
                 listView.setSelection(month-2);
                 break;
+            case R.id.tv_cancel:
+                dismiss();
+                break;
+            case R.id.tv_yes:
+                if (listener!=null){
+                    listener.onItemSelected(year,month, 1);
+                }
+                break;
         }
     }
 
@@ -131,8 +154,6 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
         }
     }
 
-    private int year = 0;
-    private int month = 0;
     public void setTime(int year, int month){
         this.year = year;
         this.month = month;
@@ -144,6 +165,6 @@ public class YearMonthDialogFm extends DialogFragment implements View.OnClickLis
     }
 
     public interface onTimePickListener {
-        void onItemSelected(int time, boolean isMonth);
+        void onItemSelected(int year,int month,int day);
     }
 }

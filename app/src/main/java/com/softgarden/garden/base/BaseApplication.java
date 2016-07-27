@@ -13,7 +13,11 @@ import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.helper.ImageLoaderHelper;
+import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.utils.GlobalParams;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +94,12 @@ public class BaseApplication extends Application{
             }
         }
         activities.clear();
+    }
+
+    public static void clearShopcart(){
+        tempDataBeans.clear();
+        ShoppingCart.getInstance().clearCart();
+        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
     }
 
 }

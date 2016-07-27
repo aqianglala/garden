@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="@color/bg_click">//这里是扩散水波纹的色值
+    <item android:drawable="@android:color/white" />
+    <!--<item android:drawable="@android:color/transparent" />-->
+    <!--<item android:id="@android:id/mask" android:drawable="@android:color/white" />里面的色值可以任选一个-->
+</ripple>

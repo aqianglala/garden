@@ -20,6 +20,7 @@ import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.Utils;
 import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.shopcar.adapter.ShopcartExpandableListViewAdapter;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
@@ -28,7 +29,6 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.simple.eventbus.EventBus;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -141,8 +141,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         // 计算总价
         int count = tuangou + shuliang;
         float amount = price * count;
-        BigDecimal b = new BigDecimal(amount);
-        float f1 =  b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+        float f1 = Utils.formatFloat(amount);
 
         OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
                 .ZstailBean(f1, goodsBean.getIsSpecial(),
@@ -196,9 +195,9 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         }
 
         int totalNum = ShoppingCart.getInstance().getTotalNum();
-        double totalPrice = ShoppingCart.getInstance().getTotal();
+        float totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
-        tv_totalprice.setText(totalPrice+"");
+        tv_totalprice.setText(Utils.formatFloat(totalPrice)+"");
     }
 
     @Override
@@ -226,7 +225,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 Intent intent = new Intent(this, ConfirmOrderActivity.class);
                 intent.putExtra("data",orderCommitEntity);
                 startActivity(intent);
-
+                finish();
                 break;
             case R.id.cb_all:
                 doCheckAll();
@@ -434,9 +433,9 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     @Override
     public void update(Observable observable, Object data) {
         int totalNum = ShoppingCart.getInstance().getTotalNum();
-        double totalPrice = ShoppingCart.getInstance().getTotal();
+        float totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
-        tv_totalprice.setText(totalPrice+"");
+        tv_totalprice.setText(Utils.formatFloat(totalPrice)+"");
     }
 
     @Override

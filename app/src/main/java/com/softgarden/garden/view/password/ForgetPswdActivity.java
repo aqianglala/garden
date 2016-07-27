@@ -81,7 +81,7 @@ public class ForgetPswdActivity extends BaseActivity {
                 showContactDialog();
                 break;
             case R.id.btn_get_code:
-                String phone = et_phone_number.getText().toString().trim();
+                phone = et_phone_number.getText().toString().trim();
                 if(TextUtils.isEmpty(phone)){
                     showToast("手机号码不能为空！");
                 }else{
@@ -101,7 +101,9 @@ public class ForgetPswdActivity extends BaseActivity {
             @Override
             public void onSuccess(JSONObject result) {
                 // 跳转到下一页
-                goActivity(ForgetNextActivity.class);
+                Intent intent = new Intent(context,ForgetNextActivity.class);
+                intent.putExtra("phone",phone);
+                startActivity(intent);
                 finish();
             }
         });
@@ -118,6 +120,7 @@ public class ForgetPswdActivity extends BaseActivity {
         engine.getCode(phone, new BaseCallBack(this) {
             @Override
             public void onSuccess(JSONObject result) {
+                mc.onFinish();
                 ToastUtil.show("获取验证码成功！");
                 String data = String.valueOf(result.optInt("data"));
                 et_verification_code.setText(data);
@@ -129,7 +132,10 @@ public class ForgetPswdActivity extends BaseActivity {
      * 显示拨打电话的弹窗
      */
     private void showContactDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_call, null);
+        final String mobile = BaseApplication.indexEntity.getData().getKfdh();
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_call, null);
+        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        tv_phone.setText(mobile);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).setView(view)
                 .setCancelable(true).create();
         view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
@@ -141,7 +147,7 @@ public class ForgetPswdActivity extends BaseActivity {
         view.findViewById(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mobile = getResources().getString(R.string.phone);
+                String mobile = BaseApplication.indexEntity.getData().getKfdh();
                 // 使用系统的电话拨号服务，必须去声明权限，在AndroidManifest.xml中进行声明
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                         + mobile));

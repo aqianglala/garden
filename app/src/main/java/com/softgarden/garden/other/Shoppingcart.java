@@ -5,6 +5,7 @@ import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempDataBean;
 import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.Utils;
 
 import java.util.List;
 import java.util.Observable;
@@ -16,14 +17,14 @@ import java.util.Observable;
 public class ShoppingCart extends Observable {
 
     private static ShoppingCart instance;
-    private double total = 0;
+    private float total = 0;
     private int totalNum=0;
 
     /**
      * 购物车的总价格
      * @return
      */
-    public double getTotal() {
+    public float getTotal() {
         return total;
     }
 
@@ -45,7 +46,10 @@ public class ShoppingCart extends Observable {
     }
 
     public void clearCart(){
-        this.instance = null;
+        total = 0;
+        totalNum = 0;
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -72,14 +76,14 @@ public class ShoppingCart extends Observable {
                             if(item.getIetmNo().equals(goodsBean.getItemNo())){
                                 int count = item.getShuliang() + item.getTuangou();
                                 totalNum += count;
-                                double price;
+                                float price;
                                 if (goodsBean.getBzj()!=null){
-                                    price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
-                                            .getBzj()): Double.parseDouble(goodsBean.getPrice());
+                                    price = goodsBean.getIsSpecial() == 0?Float.parseFloat(goodsBean
+                                            .getBzj()): Float.parseFloat(goodsBean.getPrice());
                                 }else{
-                                    price = Double.parseDouble(goodsBean.getPrice());
+                                    price = Float.parseFloat(goodsBean.getPrice());
                                 }
-                                total += (price * count);
+                                total += Utils.formatFloat(price * count);
                                 isInTempData = true;
                                 break;
                             }
@@ -87,14 +91,14 @@ public class ShoppingCart extends Observable {
                         if(!isInTempData){
                             int count = Integer.parseInt(goodsBean.getProQty());
                             totalNum += count;
-                            double price;
+                            float price;
                             if (goodsBean.getBzj()!=null){
-                                price = goodsBean.getIsSpecial() == 0?Double.parseDouble(goodsBean
-                                        .getBzj()): Double.parseDouble(goodsBean.getPrice());
+                                price = goodsBean.getIsSpecial() == 0?Float.parseFloat(goodsBean
+                                        .getBzj()): Float.parseFloat(goodsBean.getPrice());
                             }else{
-                                price = Double.parseDouble(goodsBean.getPrice());
+                                price = Float.parseFloat(goodsBean.getPrice());
                             }
-                            total += (price * count);
+                            total += Utils.formatFloat(price * count);
                         }
                     }
                 }

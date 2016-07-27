@@ -47,6 +47,15 @@ public class PayEntity extends BaseDao{
 
     public static class DataBean {
         private String param;
+        private String OrderNo;
+
+        public String getOrderNo() {
+            return OrderNo;
+        }
+
+        public void setOrderNo(String orderNo) {
+            OrderNo = orderNo;
+        }
 
         public String getParam() {
             return param;

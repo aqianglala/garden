@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                 }
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         });
     }

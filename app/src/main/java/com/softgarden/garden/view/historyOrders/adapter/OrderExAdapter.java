@@ -47,15 +47,19 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
     public void groupingData() {
         // 分成两组，第一组的组布局为列表项布局，第二组为显示收缩的布局
         groups.clear();
-        for(int i=0;i<2;i++){
-            if(i ==0){
-                if(mData.size()>0){
+        if (mData.size()>1){
+            for(int i=0;i<2;i++){
+                if(i ==0){
                     groups.add(mData.get(i));
-                }else{// 没有数据
+                }else{
                     groups.add(null);
                 }
-            }else{
+            }
+        }else{
+            if (mData.size() == 0){
                 groups.add(null);
+            }else{
+                groups.add(mData.get(0));
             }
         }
         children.clear();
@@ -138,10 +142,10 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
                         BaseApplication.userInfo.getData().getJsfs())){
                     ll_state.setVisibility(View.VISIBLE);
-                    int is_pay = item.getIs_pay();
-                    if (is_pay == 0){// 未付款
+                    String is_pay = item.getIs_pay();
+                    if ("0".equals(is_pay)){// 未付款
                         tv_state.setText("未付款");
-                    }else if(is_pay == 1){// 已付款
+                    }else if("1".equals(is_pay)){// 已付款
                         tv_state.setText("已付款");
                     }else{// 2,到付
                         tv_state.setText("到付");
@@ -158,8 +162,9 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                         Intent intent = new Intent(context, OrderDetailActivity.class);
                         LogUtils.e("put:"+item.getOrderNo());
                         intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
-                        intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
+                        intent.putExtra(GlobalParams.ORDERTYPE,item.getType());
                         intent.putExtra(GlobalParams.ORDERSTATE,item.getIs_pay());
+                        intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
                         context.startActivity(intent);
                     }
                 });
@@ -234,10 +239,10 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
                 BaseApplication.userInfo.getData().getJsfs())){
             holder.ll_state.setVisibility(View.VISIBLE);
-            int is_pay = item.getIs_pay();
-            if (is_pay == 0){// 未付款
+            String is_pay = item.getIs_pay();
+            if ("0".equals(is_pay)){// 未付款
                 holder.tv_state.setText("未付款");
-            }else if(is_pay == 1){// 已付款
+            }else if("1".equals(is_pay)){// 已付款
                 holder.tv_state.setText("已付款");
             }else{// 2,到付
                 holder.tv_state.setText("到付");
@@ -252,7 +257,9 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 Intent intent = new Intent(context, OrderDetailActivity.class);
                 LogUtils.e("put:"+item.getOrderNo());
                 intent.putExtra(GlobalParams.ORDERNO,item.getOrderNo());
+                intent.putExtra(GlobalParams.ORDERTYPE,item.getType());
                 intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
+                intent.putExtra(GlobalParams.ORDERSTATE,item.getIs_pay());
                 context.startActivity(intent);
             }
         });

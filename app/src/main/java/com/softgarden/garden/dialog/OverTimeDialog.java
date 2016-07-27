@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 
@@ -73,7 +75,10 @@ public class OverTimeDialog extends DialogFragment {
     }
 
     private void showContactDialog() {
+        final String mobile = BaseApplication.indexEntity.getData().getKfdh();
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_call, null);
+        TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
+        tv_phone.setText(mobile);
         final AlertDialog alertDialog = new AlertDialog.Builder(context).setView(view)
                 .setCancelable(true).create();
         view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
@@ -85,7 +90,6 @@ public class OverTimeDialog extends DialogFragment {
         view.findViewById(R.id.tv_yes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mobile = context.getResources().getString(R.string.phone);
                 // 使用系统的电话拨号服务，必须去声明权限，在AndroidManifest.xml中进行声明
                 Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
                         + mobile));

@@ -29,6 +29,12 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> {
 
     private Context context;
+    private boolean hasClear;
+
+    public void setHasClear(boolean hasClear) {
+        this.hasClear = hasClear;
+    }
+
     public ContentAdapter(Context context, int itemLayoutId) {
         super(context, itemLayoutId);
         this.context = context;
@@ -70,7 +76,11 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         iv_product.setImageUrl(HttpHelper.HOST+bean.getPicture(), ImageLoaderHelper.getInstance());
 
         final TextView tv_total = bgaViewHolderHelper.getView(R.id.tv_total);
-        tv_total.setText(bean.getProQty()+"");
+        if (hasClear){
+            tv_total.setText("0");
+        }else{
+            tv_total.setText(bean.getProQty()+"");
+        }
         final TextView tv_group = bgaViewHolderHelper.getView(R.id.tv_group);
 
         boolean hasEdit = false;
@@ -96,6 +106,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {
+                        hasClear = false;
                         tv_total.setText(num);
                         ShoppingCart shoppingCart = ShoppingCart.getInstance();
                         int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
@@ -115,6 +126,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {
+                        hasClear = false;
                         tv_group.setText(num);
                         ShoppingCart shoppingCart = ShoppingCart.getInstance();
                         int count = Integer.parseInt(tv_total.getText().toString().trim());
@@ -128,6 +140,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         bgaViewHolderHelper.getView(R.id.tv_minus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hasClear = false;
                 int count = Integer.parseInt(tv_total.getText().toString().trim());
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 if(count>0){
@@ -143,6 +156,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
         bgaViewHolderHelper.getView(R.id.tv_plus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hasClear = false;
                 int count = Integer.parseInt(tv_total.getText().toString().trim());
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 if(maxCount != 0){// 有数量上限

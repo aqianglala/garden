@@ -1,9 +1,9 @@
 package com.softgarden.garden.engine;
 
 import com.google.gson.Gson;
-import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.BaseEngine;
 import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.PayEntity;
 import com.softgarden.garden.helper.HttpHelper;
@@ -34,7 +34,7 @@ public class ShopCartEngine extends BaseEngine{
      * @param data
      * @param callBack
      */
-    public void dfOrder(OrderCommitEntity data, BaseCallBack callBack){
+    public void dfOrder(OrderCommitEntity data, ObjectCallBack<CommitOrderResultEntity> callBack){
         String s = new Gson().toJson(data);
         JSONObject object = null;
         try {

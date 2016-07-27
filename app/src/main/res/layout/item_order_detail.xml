@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/selector_linearlayout"
     android:orientation="vertical"
     android:paddingBottom="10px"
     android:paddingLeft="20px"
@@ -41,6 +41,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/ellipsize"
                 android:text="巧克力包"
                 android:textColor="@color/black_text"
                 android:textSize="32px"/>

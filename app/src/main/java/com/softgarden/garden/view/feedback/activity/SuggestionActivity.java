@@ -125,13 +125,16 @@ public class SuggestionActivity extends BaseActivity {
                 viewPager.setCurrentItem(1);
                 break;
             case R.id.btn_commit:
-                final String complaintText = complaintFragment.getText();
-                if (TextUtils.isEmpty(complaintText)){
-                    showToast("评论不能为空！");
-                    return;
-                }
                 int currentItem = viewPager.getCurrentItem();
                 if(currentItem == 0){// 投诉,拼接图片地址
+                    final String complaintText = complaintFragment.getText();
+                    if (TextUtils.isEmpty(complaintText)){
+                        showToast("评论不能为空！");
+                        return;
+                    }else if (complaintText.length()<20){
+                        showToast("投诉文字不能少于20字！");
+                        return;
+                    }
                     StringBuilder builder = new StringBuilder();
                     for(Bitmap bmp:Bimp.bmp){
                         builder.append(Bitmap2StrByBase64(bmp));
@@ -163,6 +166,9 @@ public class SuggestionActivity extends BaseActivity {
                     String suggestionFragmentText = suggestionFragment.getText();
                     if (TextUtils.isEmpty(suggestionFragmentText)){
                         showToast("评论不能为空！");
+                        return;
+                    }else if (suggestionFragmentText.length()<20){
+                        showToast("投诉文字不能少于20字！");
                         return;
                     }
                     FeedBackEngine engine = (FeedBackEngine) EngineFactory.getEngine(FeedBackEngine.class);

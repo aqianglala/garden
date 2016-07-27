@@ -14,14 +14,19 @@ import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
+import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.dialog.CommitOrderDialog;
 import com.softgarden.garden.dialog.OverTimeDialog;
+import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.Utils;
+import com.softgarden.garden.view.historyOrders.OrderDetailActivity;
 import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.adapter.CartDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -43,7 +48,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     private CartDetailExAdapter adapter;
     private ExpandableListView expandableListView;
     private EditText et_remarks;
-    private OrderCommitEntity data;
+    private OrderCommitEntity orderCommitEntity;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -75,14 +80,13 @@ public class ConfirmOrderActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         // 设置总价
-        double total = ShoppingCart.getInstance().getTotal();
+        float total = ShoppingCart.getInstance().getTotal();
         // 设置地址
         tv_address.setText(BaseApplication.userInfo.getData().getShipadd());
-
-        tv_price.setText(total+"");
+        tv_price.setText(Utils.formatFloat(total)+"");
         // 获取数据
-        data = (OrderCommitEntity) getIntent().getSerializableExtra("data");
-        mData = data.getZstail();
+        orderCommitEntity = (OrderCommitEntity) getIntent().getSerializableExtra("data");
+        mData = orderCommitEntity.getZstail();
         adapter = new CartDetailExAdapter(mData, this);
         expandableListView.setAdapter(adapter);
         // 默认展示收缩第一组
@@ -115,7 +119,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                             }else{
                                 commit();
                             }
-                        }else if("0".equals(data)){// 关闭支付,都提交订单
+                        }else if("0".equals(data)){// 关闭支付,都提交订单,跳转到订单详情页
                             if(!inputAgain){
                                 CommitOrderDialog.show(context,data);
                             }else{
@@ -133,24 +137,33 @@ public class ConfirmOrderActivity extends BaseActivity {
             commitOrder();
         }else if(BaseApplication.userInfo.getData().getJsfs().equals("现金")){
             Intent intent = new Intent(this, PayActivity.class);
-            intent.putExtra("order",data);
+            intent.putExtra("order",orderCommitEntity);
             startActivity(intent);
+            finish();
         }
     }
 
     private void commitOrder() {
         String remark = et_remarks.getText().toString().trim();
-        data.setRemarks(remark);
-        // 跳转到支付页面
+        orderCommitEntity.setRemarks(remark);
         try {
-            String s = new Gson().toJson(data);
+            String s = new Gson().toJson(orderCommitEntity);
             LogUtils.e(s);
-            HttpHelper.post(UrlsAndKeys.order, new JSONObject(s), new BaseCallBack(context) {
+            HttpHelper.post(UrlsAndKeys.order, new JSONObject(s), new ObjectCallBack<CommitOrderResultEntity>
+                    (context) {
                 @Override
-                public void onSuccess(JSONObject result) {
+                public void onSuccess(CommitOrderResultEntity data) {
                     // 更新历史列表
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     showToast("提交订单成功！");
+                    // 跳转到详情页,到时还需要传递数据过去
+                    Intent intent = new Intent(context, OrderDetailActivity.class);
+                    intent.putExtra(GlobalParams.ORDERNO,data.getData().getOrderNo());
+                    intent.putExtra(GlobalParams.ORDERDATE,orderCommitEntity.getOrderDate());
+                    intent.putExtra(GlobalParams.ORDERTYPE,"1");
+                    intent.putExtra(GlobalParams.ORDERSTATE,"1");
+                    context.startActivity(intent);
+                    finish();
                 }
 
                 @Override

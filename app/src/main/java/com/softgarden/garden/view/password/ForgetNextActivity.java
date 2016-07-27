@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.softgarden.garden.base.BaseActivity;
-import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.engine.UserEngine;
@@ -29,7 +28,7 @@ public class ForgetNextActivity extends BaseActivity {
         setContentView(R.layout.activity_forget_next);
         et_new_pswd = getViewById(R.id.et_new_pswd);
         et_confirm_pswd = getViewById(R.id.et_confirm_pswd);
-        phone = BaseApplication.userInfo.getData().getPhone();
+        phone = getIntent().getStringExtra("phone");
     }
 
     @Override
@@ -80,6 +79,7 @@ public class ForgetNextActivity extends BaseActivity {
                 // 跳转到登录页面
                 SPUtils.clear(context);
                 goActivity(LoginActivity.class);
+                finish();
             }
         });
     }

@@ -4,27 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/selector_linearlayout"
     android:clickable="true">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_white">
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_gravity="center_vertical"
+        style="@style/checkbox"
         android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin"
-        android:visibility="gone"
-        style="@style/checkbox"/>
+        android:visibility="gone"/>
 
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/checkbox"
         android:layout_marginLeft="@dimen/margin"
+        android:layout_toRightOf="@id/checkbox"
         android:orientation="vertical"
         android:paddingBottom="10px"
         android:paddingRight="20px"
@@ -59,6 +54,7 @@
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    style="@style/ellipsize"
                     android:text="巧克力包"
                     android:textColor="@color/black_text"
                     android:textSize="32px"/>
@@ -138,7 +134,8 @@
 
             <com.zhy.autolayout.AutoLinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingRight="10dp"
                 android:layout_centerInParent="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -149,14 +146,12 @@
 
                 <TextView
                     android:id="@+id/tv_group"
-                    android:layout_width="62px"
-                    android:layout_height="32px"
+                    android:layout_width="80px"
+                    android:layout_height="45px"
                     android:layout_marginLeft="20px"
                     android:background="@drawable/shape_et_group_bg"
                     android:gravity="center"
                     android:inputType="number"
-                    android:maxLength="3"
-                    android:text="0"
                     android:textColor="@color/pink_text"
                     android:textSize="12sp"/>
             </com.zhy.autolayout.AutoLinearLayout>
@@ -221,5 +216,4 @@
         android:layout_alignParentRight="true"
         android:src="@mipmap/tejia"/>
 
-    </RelativeLayout>
 </com.zhy.autolayout.AutoRelativeLayout>

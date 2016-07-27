@@ -13,50 +13,50 @@
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="?attr/selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:orientation="vertical">
 
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="90px"
-        android:orientation="horizontal"
-        android:paddingLeft="20px"
-        android:paddingRight="20px">
-
-        <ImageView
-            android:id="@+id/iv_order_type"
-            android:layout_width="40px"
-            android:layout_height="50px"
-            android:src="@mipmap/jiadunlogo"/>
-
-        <TextView
-            android:id="@+id/tv_number"
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="@dimen/text_middle"
-            android:textColor="@color/black_text"
-            android:text="2016070556254"
+            android:layout_height="90px"
+            android:orientation="horizontal"
             android:paddingLeft="20px"
-            android:paddingRight="20px"
-            android:gravity="center_vertical"/>
+            android:paddingRight="20px">
 
-    </com.zhy.autolayout.AutoLinearLayout>
+            <ImageView
+                android:id="@+id/iv_order_type"
+                android:layout_width="40px"
+                android:layout_height="50px"
+                android:src="@mipmap/jiadunlogo"/>
 
-    <View
-        style="@style/line_horizontal"/>
-    
-    <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20px"
-        android:paddingRight="20px"
-        android:paddingBottom="20px">
+            <TextView
+                android:id="@+id/tv_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="20px"
+                android:paddingRight="20px"
+                android:text="2016070556254"
+                android:textColor="@color/black_text"
+                android:textSize="@dimen/text_middle"/>
 
-        <com.zhy.autolayout.AutoRelativeLayout
+        </com.zhy.autolayout.AutoLinearLayout>
+
+        <View
+            style="@style/line_horizontal"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="20px"
+            android:paddingLeft="20px"
+            android:paddingRight="20px">
+
+            <com.zhy.autolayout.AutoRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:id="@+id/ll_total"
@@ -73,18 +73,18 @@
 
                     <TextView
                         android:id="@+id/tv_amount"
+                        style="@style/order_gray_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/order_gray_text"
                         android:text="88件"/>
 
                 </com.zhy.autolayout.AutoLinearLayout>
 
                 <com.zhy.autolayout.AutoLinearLayout
                     android:id="@+id/ll_amount"
-                    android:layout_below="@id/ll_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_total"
                     android:layout_marginTop="@dimen/margin"
                     android:orientation="horizontal">
 
@@ -105,10 +105,10 @@
                 </com.zhy.autolayout.AutoLinearLayout>
 
                 <com.zhy.autolayout.AutoLinearLayout
-                    android:layout_below="@id/ll_amount"
                     android:id="@+id/ll_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_amount"
                     android:layout_marginTop="@dimen/margin"
                     android:orientation="horizontal">
 
@@ -127,24 +127,22 @@
 
                 </com.zhy.autolayout.AutoLinearLayout>
 
-            <TextView
-                android:id="@+id/tv_detail"
-                android:layout_width="160px"
-                android:layout_height="60px"
-                android:clickable="true"
-                android:textSize="@dimen/text_middle"
-                android:textColor="@color/white_text"
-                android:text="订单详情"
-                android:gravity="center"
-                android:layout_alignTop="@id/ll_amount"
-                android:background="@drawable/shape_bg_yellow"
-                android:layout_alignParentRight="true"
-                />
-        </com.zhy.autolayout.AutoRelativeLayout>
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="160px"
+                    android:layout_height="60px"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@id/ll_amount"
+                    android:background="@drawable/shape_bg_yellow"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="订单详情"
+                    android:textColor="@color/white_text"
+                    android:textSize="@dimen/text_middle"
+                    />
+            </com.zhy.autolayout.AutoRelativeLayout>
 
 
-
-
-    </com.zhy.autolayout.AutoLinearLayout>
+        </com.zhy.autolayout.AutoLinearLayout>
     </com.zhy.autolayout.AutoLinearLayout>
 </com.zhy.autolayout.AutoLinearLayout>

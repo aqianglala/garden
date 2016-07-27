@@ -23,6 +23,8 @@ public interface UrlsAndKeys {
     String proposal = "index.php/App/Api/proposal";
     String onOrder = "index.php/App/Api/onOrder";
     String dfOrder = "index.php/App/Api/dfOrder";
+    String pay = "index.php/App/Api/pay";
+    String qidongye = "index.php/App/Api/qidongye";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

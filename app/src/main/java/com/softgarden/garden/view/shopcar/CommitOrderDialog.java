@@ -87,7 +87,6 @@ public class CommitOrderDialog extends Dialog implements View.OnClickListener{
                 dismiss();
                 EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");
             }
-
         });
     }
 }

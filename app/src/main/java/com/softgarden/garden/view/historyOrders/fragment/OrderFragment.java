@@ -8,14 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
-import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.entity.HistoryOrderEntity;
@@ -56,6 +55,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     private ExpandableListView expandableListView;
     private OrderExAdapter myExAdapter;
     private HashMap<String, List<HistoryOrderEntity.DataBean>> map;
+    private MyObjectCallBack myObjectCallBack;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -110,24 +110,37 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        myObjectCallBack = new MyObjectCallBack(mActivity);
         getHistoryOrder();
     }
 
     private void getHistoryOrder() {
-        HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
-        engine.historyOrder(BaseApplication.userInfo.getData().getCustomerNo(), new
-                ObjectCallBack<HistoryOrderEntity>(mActivity) {
+        HistoryOrderEngine engine = new HistoryOrderEngine();
+        String customerNo = BaseApplication.userInfo.getData().getCustomerNo();
+        engine.historyOrder(customerNo, myObjectCallBack);
+    }
 
-            @Override
-            public void onSuccess(HistoryOrderEntity data) {
-                // 获取历史订单日期
-                map = data.getData();
+    @Override
+    protected void onUserVisible() {
 
+    }
+    class MyObjectCallBack extends ObjectCallBack<HistoryOrderEntity>{
+
+        public MyObjectCallBack(BaseActivity activity) {
+            super(activity);
+        }
+
+        @Override
+        public void onSuccess(HistoryOrderEntity data) {
+            // 获取历史订单日期
+            map = data.getData();
+
+            if(myExAdapter ==null){// 第一次进来
                 ArrayList<CalendarDay> nowDates = new ArrayList<>();
                 ArrayList<CalendarDay> oldDates = new ArrayList<>();
                 boolean hasOrderOnCurrentDay = false;
                 for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
-                    // 当前天
+                    // 当前天有订单
                     if(StringUtils.getCurrDay().equals(entry.getKey())){
                         hasOrderOnCurrentDay = true;
                         nowDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
@@ -139,21 +152,37 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                         oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
                     }
                 }
+
                 myExAdapter = new OrderExAdapter(mData, mActivity);
                 expandableListView.setAdapter(myExAdapter);
                 // 默认展示收缩第一组
                 expandableListView.collapseGroup(0);
+                // 清除颜色标记
+                widget.removeDecorators();
                 Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
                 widget.addDecorator(new EventDecorator(redDrawable,nowDates));
                 Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
                 widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
+            }else{// 刷新数据
+                CalendarDay calendarDay = widget.getSelectedDate();
+                if (calendarDay == null) return;
+                Date date = calendarDay.getDate();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String seletedDate = format.format(date);
+                // 收缩列表,将数据更新在第一项
+                mData.clear();
+                List<HistoryOrderEntity.DataBean> list = map.get(seletedDate);
+                if (list!=null && list.size()>0) {
+                    mData.addAll(list);
+                }
+                mData.addAll(list);
+                myExAdapter.groupingData();
+                myExAdapter.setOpen(false);
+                expandableListView.collapseGroup(0);
+                myExAdapter.notifyDataSetChanged();
+                expandableListView.setSelection(0);
             }
-        });
-    }
-
-    @Override
-    protected void onUserVisible() {
-
+        }
     }
 
     @Override
@@ -179,23 +208,20 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         dialogFm.setTime(currentYear,currentMonth);
         dialogFm.setTitleBackgroundColor(getResources().getColor(R.color.colorPrimary));
         dialogFm.setOnItemSelectedListener(new YearMonthDialogFm.onTimePickListener() {
+
             @Override
-            public void onItemSelected(int time, boolean isMonth) {
+            public void onItemSelected(int year, int month, int day) {
+                currentYear = year;
+                currentMonth = month;
                 Calendar instance = Calendar.getInstance();
-                if(isMonth){
-                    currentMonth = time;
-                }else{
-                    currentYear = time;
-                }
-                instance.set(currentYear,currentMonth-2,1);
-                CalendarDay day = CalendarDay.from(instance);
-                widget.setCurrentDate(day,true);
+                instance.set(year,month-2,day);
+                CalendarDay currentDate = CalendarDay.from(instance);
+                widget.setCurrentDate(currentDate,true);
                 // 上面那个方法有时候不会更新显示的年月，因此，我把设置的时间往前一个月，然后手动往前一个月，这样就会更新标题了
                 widget.goToNext();
-                Toast.makeText(mActivity,(isMonth?"月份：":"年份：")+time,Toast.LENGTH_SHORT)
-                        .show();
                 dialogFm.dismiss();
             }
+
         });
         dialogFm.show(getFragmentManager(),"dialogFm");
     }
@@ -225,7 +251,6 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             // 当天没有订单
             showToast("当天没有订单!");
         }
-
     }
 
     @Override

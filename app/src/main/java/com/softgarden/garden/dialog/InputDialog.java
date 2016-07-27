@@ -40,6 +40,7 @@ public class InputDialog extends DialogFragment implements View.OnClickListener{
         }else{
             et_count.setText(shuliang+"");
         }
+        et_count.setSelection(et_count.getText().length());
         rootView.findViewById(R.id.btn_cancel).setOnClickListener(this);
         rootView.findViewById(R.id.btn_add_car).setOnClickListener(this);
         rootView.findViewById(R.id.iv_minus).setOnClickListener(this);

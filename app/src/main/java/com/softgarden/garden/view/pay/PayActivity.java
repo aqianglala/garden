@@ -1,11 +1,13 @@
 package com.softgarden.garden.view.pay;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -14,16 +16,22 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.softgarden.garden.base.BaseActivity;
-import com.softgarden.garden.base.BaseCallBack;
+import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.dialog.OverTimeDialog;
+import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.engine.PayResult;
 import com.softgarden.garden.engine.ShopCartEngine;
+import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.PayEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.GlobalParams;
+import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.Utils;
+import com.softgarden.garden.view.historyOrders.OrderDetailActivity;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.json.JSONObject;
@@ -44,6 +52,8 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
     private static final int SDK_PAY_FLAG = 1;
     private TextView tv_price;
     private TextView tv_total;
+    private Button btn_commit;
+    private String orderNo;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -59,6 +69,8 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
         tv_price = getViewById(R.id.tv_price);
         tv_total = getViewById(R.id.tv_total);
 
+        btn_commit = getViewById(R.id.btn_commit);
+
         changeBackground(R.id.ll_alipay);
     }
 
@@ -71,15 +83,22 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
         cb_alipay.setOnCheckedChangeListener(this);
         cb_weixin.setOnCheckedChangeListener(this);
         cb_daofu.setOnCheckedChangeListener(this);
-        getViewById(R.id.btn_commit).setOnClickListener(this);
+        btn_commit.setOnClickListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         data = (OrderCommitEntity) getIntent().getSerializableExtra("order");
-        double total = ShoppingCart.getInstance().getTotal();
-        tv_price.setText("¥"+total);
-        tv_total.setText("合计：¥"+total);
+        orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
+        float total;
+        if (TextUtils.isEmpty(orderNo)){// 从购物车中点进来
+            total = ShoppingCart.getInstance().getTotal();
+        }else{// 从订单详情页点进来
+            total = Float.parseFloat(getIntent().getStringExtra(GlobalParams.TOTALPRICE));
+        }
+        float f = Utils.formatFloat(total);
+        tv_price.setText("¥"+f);
+        tv_total.setText("合计：¥"+f);
     }
     private int leibie = 1;
     @Override
@@ -89,38 +108,70 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
             case R.id.ll_alipay:
                 leibie = 1;
                 changeBackground(R.id.ll_alipay);
+                // 修改btn文字
+                btn_commit.setText("确认订单");
                 break;
             case R.id.ll_weixin:
                 leibie = 2;
                 changeBackground(R.id.ll_weixin);
+                btn_commit.setText("确认订单");
                 break;
             case R.id.ll_daofu:
                 leibie = 3;
                 changeBackground(R.id.ll_daofu);
+                btn_commit.setText("确认");
                 break;
             case R.id.btn_commit:
                 if (leibie == 1){
-                    data.setLeibie(1);
-                    ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
-                    engine.onOrder(data, new ObjectCallBack<PayEntity>(this) {
-                        @Override
-                        public void onSuccess(final PayEntity data) {
-                            pay(data);
-                        }
-                    });
+                    if (TextUtils.isEmpty(orderNo)){// 从购物车进去
+                        data.setLeibie(1);
+                        ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
+                        engine.onOrder(data, new ObjectCallBack<PayEntity>(this) {
+                            @Override
+                            public void onSuccess(final PayEntity data) {
+                                // 取出订单号
+                                orderNo = data.getData().getOrderNo();
+                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                                pay(data);
+                            }
+                        });
+                    }else{// 从订单详情来支付
+                        HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
+                        engine.pay(orderNo, leibie, new ObjectCallBack<PayEntity>(context) {
+                            @Override
+                            public void onSuccess(PayEntity data) {
+                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                                pay(data);
+                            }
+                        });
+                    }
                 }else if (leibie == 3){
                     data.setLeibie(3);
                     ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
-                    engine.dfOrder(data, new BaseCallBack(context) {
+                    engine.dfOrder(data, new ObjectCallBack<CommitOrderResultEntity>(context) {
                         @Override
-                        public void onSuccess(JSONObject result) {
+                        public void onSuccess(CommitOrderResultEntity entity) {
+                            // 清空购物车
+                            BaseApplication.clearShopcart();
                             // 更新历史列表
                             showToast("提交订单成功！");
                             EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                            // 跳转到详情页,到时还需要传递数据过去
+                            Intent intent = new Intent(context, OrderDetailActivity.class);
+                            LogUtils.e("put:"+entity.getData().getOrderNo());
+                            intent.putExtra(GlobalParams.ORDERNO,entity.getData().getOrderNo());
+                            intent.putExtra(GlobalParams.ORDERDATE,data.getOrderDate());
+                            intent.putExtra(GlobalParams.ORDERTYPE,"1");
+                            intent.putExtra(GlobalParams.ORDERSTATE,"2");
+                            context.startActivity(intent);
+                            finish();
                         }
+
                         @Override
                         public void onError(JSONObject result, String message1, int code) {
                             showToast(message1);
+                            // 清空购物车
+                            BaseApplication.clearShopcart();
                             if("时间超过了".equals(message1)){
                                 // 需要验证时间,由后台判断
                                 OverTimeDialog.show(context);
@@ -140,7 +191,7 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                 PayTask alipay = new PayTask(context);
                 String param = data.getData().getParam();
                 String result = alipay.pay(param,true);
-
+                LogUtils.e(result);
                 Message msg = new Message();
                 msg.what = SDK_PAY_FLAG;
                 msg.obj = result;
@@ -205,6 +256,15 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
+                        // 跳转到详情页,到时还需要传递数据过去
+                        Intent intent = new Intent(context, OrderDetailActivity.class);
+                        intent.putExtra(GlobalParams.ORDERNO,orderNo);
+                        intent.putExtra(GlobalParams.ORDERDATE,data.getOrderDate());
+                        intent.putExtra(GlobalParams.ORDERTYPE,"1");
+                        intent.putExtra(GlobalParams.ORDERSTATE,"1");
+                        context.startActivity(intent);
+                        EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrderDetail");
+                        finish();
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
@@ -214,9 +274,10 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
-
                         }
                     }
+                    // 清空购物车
+                    BaseApplication.clearShopcart();
                     break;
                 }
                 default:

@@ -42,7 +42,7 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
       */
     private void groupingData() {
         int size = mData.size();
-        if(size>=3){
+        if(size>3){
             for(int i=0;i<4;i++){
                 if(i <3){
                     groups.add(mData.get(i));
@@ -54,12 +54,8 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
                 children.add(mData.get(i));
             }
         }else{
-            for(int i = 0;i<mData.size()+1;i++){
-                if(i<mData.size()){
-                    groups.add(mData.get(i));
-                }else{
-                    groups.add(null);
-                }
+            for(int i = 0;i<mData.size();i++){
+                groups.add(mData.get(i));
             }
         }
     }
@@ -107,7 +103,7 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
     @Override
     public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup
             parent) {
-        if(groupPosition < groups.size()-1){
+        if(getGroup(groupPosition)!=null){
             exListView =  (ExpandableListView) parent;
             convertView = inflater.inflate(R.layout.item_order_detail, parent, false);
             TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);

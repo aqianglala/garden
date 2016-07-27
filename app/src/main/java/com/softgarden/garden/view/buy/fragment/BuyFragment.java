@@ -133,7 +133,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                         @Override
                         public void run() {
                             loadDialog.dismiss();
-                            showToast(shoppingCart.getTotalNum()+"");
+//                            showToast(shoppingCart.getTotalNum()+"");
                             int totalNum = ShoppingCart.getInstance().getTotalNum();
                             if(totalNum>99){
                                 tv_count.setText("99+");
@@ -160,7 +160,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
      */
     private void loadData() {
         BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
-        engine.getProducts("GZ_0001", new ObjectCallBack<IndexEntity>(mActivity) {
+        engine.getProducts(BaseApplication.userInfo.getData().getCustomerNo(), new ObjectCallBack<IndexEntity>
+                (mActivity) {
             @Override
             public void onSuccess(IndexEntity indexEntity) {
                 if(shouldClearCart()){//隔天了，清掉了购物车
@@ -192,7 +193,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                                 }else{
                                     tv_count.setText(totalNum+"");
                                 }
-                                showToast(shoppingCart.getTotalNum()+"");
+//                                showToast(shoppingCart.getTotalNum()+"");
                             }
                         });
                     }
@@ -224,14 +225,14 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             // 动态生成fragment
             addFragment(indexEntity, fragments, i);
         }
-        // 设置能否滚动
+        // 由于fragment的数量是不固定的，因此需要更新pagerAdapter和每个framgent里的数据
         if (myPagerAdapter == null){
             myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), fragments);
-            viewPager.setAdapter(myPagerAdapter);
-        }else{
-            // 暂时无效
-            myPagerAdapter.notifyDataSetChanged();
         }
+        viewPager.removeAllViews();
+        viewPager.removeAllViewsInLayout();
+        viewPager.setAdapter(myPagerAdapter);
+        myPagerAdapter.notifyDataSetChanged();
         mRefreshLayout.endRefreshing();
     }
 

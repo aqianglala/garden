@@ -48,24 +48,16 @@ public class HistoryOrderEntity extends BaseDao {
         this.data = data;
     }
 
-    /**
-     * Amount : 10.00
-     * OrderDate : 2016-07-13
-     * OrderNo : 1
-     * Qty : 10
-     * tgs : 0
-     */
-
     public static class DataBean {
 
         /**
-         * OrderDate : 2016-07-15
-         * OrderNo : 66354
+         * OrderDate : 2016-07-30
+         * OrderNo : 201607211755475687
          * CustomerNo : GZ_0001
          * type : 1
-         * is_pay : 3
-         * Amount : 33
-         * Qty : 17
+         * is_pay : 0
+         * Amount : 0.28
+         * Qty : 19
          * tgs : 0
          */
 
@@ -73,8 +65,8 @@ public class HistoryOrderEntity extends BaseDao {
         private String OrderNo;
         private String CustomerNo;
         private String type;
-        private int is_pay;
-        private float Amount;
+        private String is_pay;
+        private double Amount;
         private int Qty;
         private int tgs;
 
@@ -110,19 +102,19 @@ public class HistoryOrderEntity extends BaseDao {
             this.type = type;
         }
 
-        public int getIs_pay() {
+        public String getIs_pay() {
             return is_pay;
         }
 
-        public void setIs_pay(int is_pay) {
+        public void setIs_pay(String is_pay) {
             this.is_pay = is_pay;
         }
 
-        public float getAmount() {
+        public double getAmount() {
             return Amount;
         }
 
-        public void setAmount(float Amount) {
+        public void setAmount(double Amount) {
             this.Amount = Amount;
         }
 

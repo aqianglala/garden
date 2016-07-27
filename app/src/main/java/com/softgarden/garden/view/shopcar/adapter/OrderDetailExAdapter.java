@@ -47,7 +47,7 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
         int size = mData.size();
         groups.clear();
         children.clear();
-        if(size>=3){
+        if(size>3){
             for(int i=0;i<4;i++){
                 if(i <3){
                     groups.add(mData.get(i));
@@ -59,11 +59,9 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
                 children.add(mData.get(i));
             }
         }else{
-            for(int i = 0;i<mData.size()+1;i++){
+            for(int i = 0;i<mData.size();i++){
                 if(i<mData.size()){
                     groups.add(mData.get(i));
-                }else{
-                    groups.add(null);
                 }
             }
         }
@@ -112,7 +110,7 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
     @Override
     public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup
             parent) {
-        if(groupPosition < groups.size()-1){
+        if(getGroup(groupPosition)!=null){
             exListView =  (ExpandableListView) parent;
             convertView = inflater.inflate(R.layout.item_order_detail, parent, false);
             TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
@@ -183,16 +181,12 @@ public class OrderDetailExAdapter extends BaseExpandableListAdapter{
                     if(isOpen){
                         // 收缩
                         isOpen = !isOpen;
-                        if (groups.size() == 4){
-                            exListView.collapseGroup(2);
-                            // 向上移
-                            exListView.setSelection(0);
-                        }
+                        exListView.collapseGroup(2);
+                        // 向上移
+                        exListView.setSelection(0);
                     }else{
                         isOpen = !isOpen;
-                        if (groups.size() == 4){
-                            exListView.expandGroup(2);
-                        }
+                        exListView.expandGroup(2);
                     }
                 }
             });

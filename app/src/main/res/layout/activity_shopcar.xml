@@ -169,7 +169,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary"
                 android:textSize="@dimen/text_large"
-                android:text="去结算"
+                android:text="提交订单"
                 android:textColor="@android:color/white"/>
         </com.zhy.autolayout.AutoLinearLayout>
         </com.zhy.autolayout.AutoFrameLayout>

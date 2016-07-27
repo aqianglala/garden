@@ -148,8 +148,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
             img.setBackgroundResource(R.drawable.dot_selector);
             img.setSelected(false);// 灰色
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    UIUtils.dip2px(7), UIUtils.dip2px(7));
             if(i<fragments.size()-1){
                 p.rightMargin = UIUtils.dip2px(7);
             }

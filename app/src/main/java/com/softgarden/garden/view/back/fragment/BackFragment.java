@@ -57,6 +57,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
     private Button btn_confirm;
     private RelativeLayout rl_date;
     private TextView tv_date;
+    private TextView tv_date_label;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
 
         rl_date = getViewById(R.id.rl_date);
         tv_date = getViewById(R.id.tv_date);
+        tv_date_label = getViewById(R.id.tv_date_label);
 
         vp_content = getViewById(R.id.vp_content);
     }
@@ -109,6 +111,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
         Bundle arguments = getArguments();
         isBack = arguments.getBoolean("isBack");
         btn_confirm.setText(isBack?"确认退货":"确认换货");
+        tv_date_label.setText(isBack?"退货日期":"换货日期");
         // 如果数据不为空
         if(BaseApplication.indexEntity!= null){
             // 动态添加tab和fragment,ll_tab的最大宽度为240dp

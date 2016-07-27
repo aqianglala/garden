@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context="com.softgarden.garden.view.start.activity.SplashActivity">
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/iv_qidongye"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@mipmap/splash"
+        android:scaleType="fitXY"
         android:text="splash"/>
 </RelativeLayout>

@@ -79,6 +79,11 @@
         <item name="android:background">@mipmap/jiantou</item>
     </style>
 
+    <style name="ellipsize">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="menu_item_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -106,6 +111,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">24px</item>
         <item name="android:textColor">@color/gray_darker</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="tab_text">
