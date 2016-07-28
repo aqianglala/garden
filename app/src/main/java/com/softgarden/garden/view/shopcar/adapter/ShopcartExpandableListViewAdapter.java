@@ -22,6 +22,7 @@ import com.softgarden.garden.interfaces.DialogInputListener;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
+import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.ToastUtil;
 import com.softgarden.garden.view.shopcar.entity.GroupInfo;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -54,12 +55,15 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public int getGroupCount() {
+        LogUtils.e("getGroupCount："+groups.size());
         return groups.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
         String groupId = groups.get(groupPosition).getGroupId();
+        int size = children.get(groupId).size();
+        LogUtils.e("getChildrenCount："+size);
         return children.get(groupId).size();
     }
 

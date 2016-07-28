@@ -3,15 +3,18 @@ package com.softgarden.garden.view.historyOrders.fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
@@ -21,7 +24,7 @@ import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.view.historyOrders.adapter.OrderExAdapter;
-import com.softgarden.garden.view.historyOrders.widget.EventDecorator;
+import com.softgarden.garden.view.historyOrders.widget.DisableDecorator;
 import com.softgarden.garden.view.historyOrders.widget.MySelectorDecorator;
 import com.softgarden.garden.view.historyOrders.widget.OrderDecorator;
 import com.softgarden.garden.view.start.activity.MainActivity;
@@ -46,7 +49,7 @@ import java.util.Map;
  * 进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
  * Created by Hasee on 2016/6/6.
  */
-public class OrderFragment extends BaseFragment implements OnDateSelectedListener{
+public class OrderFragment extends BaseFragment implements OnDateSelectedListener,SwipeRefreshLayout.OnRefreshListener {
 
     private ImageView iv_me;
     private MainActivity mActivity;
@@ -57,6 +60,9 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     private HashMap<String, List<HistoryOrderEntity.DataBean>> map;
     private MyObjectCallBack myObjectCallBack;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RelativeLayout layout_empty;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_orders);
@@ -65,6 +71,14 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
         iv_me = getViewById(R.id.iv_me);
         mActivity = (MainActivity)getActivity();
+
+        layout_empty = getViewById(R.id.layout_empty);
+
+        swipeRefreshLayout = getViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
 
         expandableListView = getViewById(R.id.exListView);
         addFooter();
@@ -83,6 +97,13 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         String[] weekArr = {"周日","周一","周二","周三","周四","周五","周六"};
         widget.setWeekDayLabels(weekArr);
 
+        widget.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                String date1 = formatDate(date);
+                getHistoryOrder(date1);
+            }
+        });
         // 设置点击事件
         calenderLayout.findViewById(R.id.view_choose).setOnClickListener(this);
         widget.setOnDateChangedListener(this);
@@ -93,6 +114,24 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         widget.addDecorator(new MySelectorDecorator(mActivity));
 
         expandableListView.addFooterView(calenderLayout);
+    }
+
+    @NonNull
+    private String formatDate(CalendarDay date) {
+        String year;
+        String month;
+        if (date == null){
+            CalendarDay today = CalendarDay.today();
+            year = String.valueOf(today.getYear());
+            month = String.valueOf(today.getMonth()+1);
+        }else{
+            month = String.valueOf(date.getMonth()+1);
+            year = String.valueOf(date.getYear());
+        }
+        if (month.length() == 1){
+            month =  "0"+month;
+        }
+        return year+"-"+month;
     }
 
     @Override
@@ -106,28 +145,43 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                 return true;
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
         myObjectCallBack = new MyObjectCallBack(mActivity);
-        getHistoryOrder();
+        swipeRefreshLayout.post(new Runnable(){
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+        onRefresh();
     }
 
-    private void getHistoryOrder() {
+    private void getHistoryOrder(String date) {
         HistoryOrderEngine engine = new HistoryOrderEngine();
         String customerNo = BaseApplication.userInfo.getData().getCustomerNo();
-        engine.historyOrder(customerNo, myObjectCallBack);
+        engine.historyOrder(customerNo,date, myObjectCallBack);
     }
 
     @Override
     protected void onUserVisible() {
 
     }
+
+    @Override
+    public void onRefresh() {
+        CalendarDay selectedDate = widget.getSelectedDate();
+        String s = formatDate(selectedDate);
+        getHistoryOrder(s);
+    }
+
     class MyObjectCallBack extends ObjectCallBack<HistoryOrderEntity>{
 
         public MyObjectCallBack(BaseActivity activity) {
-            super(activity);
+            super(activity,false);
         }
 
         @Override
@@ -159,13 +213,22 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                 expandableListView.collapseGroup(0);
                 // 清除颜色标记
                 widget.removeDecorators();
-                Drawable redDrawable = getResources().getDrawable(R.drawable.layer_red);
-                widget.addDecorator(new EventDecorator(redDrawable,nowDates));
+                ArrayList<CalendarDay> calendarDays = new ArrayList<>();
+                calendarDays.addAll(nowDates);
+                calendarDays.addAll(oldDates);
+                Drawable disableDrawable = getResources().getDrawable(R.drawable
+                        .selector_calendar_order_disable);
+                widget.setDateTextAppearance(android.R.attr.dateTextAppearance);
+                widget.addDecorator(new DisableDecorator(disableDrawable, calendarDays));
+                Drawable redDrawable = getResources().getDrawable(R.drawable.selector_calendar_order_current);
+                widget.addDecorator(new OrderDecorator(redDrawable,nowDates));
                 Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
                 widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
             }else{// 刷新数据
                 CalendarDay calendarDay = widget.getSelectedDate();
-                if (calendarDay == null) return;
+                if (calendarDay == null) {
+                    calendarDay = CalendarDay.today();
+                }
                 Date date = calendarDay.getDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String seletedDate = format.format(date);
@@ -175,13 +238,23 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                 if (list!=null && list.size()>0) {
                     mData.addAll(list);
                 }
-                mData.addAll(list);
                 myExAdapter.groupingData();
                 myExAdapter.setOpen(false);
                 expandableListView.collapseGroup(0);
                 myExAdapter.notifyDataSetChanged();
                 expandableListView.setSelection(0);
             }
+            // false，刷新完成，因此停止UI的刷新表现样式。
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        public void onError(String s, String s1, int i) {
+            super.onError(s, s1, i);
+
+            expandableListView.setEmptyView(layout_empty);
+            // false，刷新完成，因此停止UI的刷新表现样式。
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -262,6 +335,8 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Subscriber(tag = "updateOrder")
     private void updateOrder(MessageBean user) {
         Log.e("", "### update user with my_tag, name = " + user.message);
-        getHistoryOrder();
+        CalendarDay selectedDate = widget.getSelectedDate();
+        String s = formatDate(selectedDate);
+        getHistoryOrder(s);
     }
 }

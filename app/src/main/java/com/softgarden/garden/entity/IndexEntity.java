@@ -93,6 +93,15 @@ public class IndexEntity extends BaseDao{
         private List<String> banner = new ArrayList<>();
         private String zhifu;
         private String kfdh;
+        private String thh;
+
+        public String getThh() {
+            return thh;
+        }
+
+        public void setThh(String thh) {
+            this.thh = thh;
+        }
 
         public String getKfdh() {
             return kfdh;

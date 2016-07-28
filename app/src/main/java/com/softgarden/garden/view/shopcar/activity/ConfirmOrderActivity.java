@@ -161,7 +161,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     intent.putExtra(GlobalParams.ORDERNO,data.getData().getOrderNo());
                     intent.putExtra(GlobalParams.ORDERDATE,orderCommitEntity.getOrderDate());
                     intent.putExtra(GlobalParams.ORDERTYPE,"1");
-                    intent.putExtra(GlobalParams.ORDERSTATE,"1");
+                    intent.putExtra(GlobalParams.ORDERSTATE,"0");// 未付款
                     context.startActivity(intent);
                     finish();
                 }

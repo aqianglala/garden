@@ -2,7 +2,6 @@ package com.softgarden.garden.view.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
+import com.softgarden.garden.utils.StatusBarUtils;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
-        
+        StatusBarUtils.setColor(this, getResources().getColor(android.R.color.white));
         et_account = getViewById(R.id.et_account);
         et_password = getViewById(R.id.et_password);
         btn_login = getViewById(R.id.btn_login);
@@ -50,10 +50,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    protected void processLogic(Bundle savedInstanceState) {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-    }
+    protected void processLogic(Bundle savedInstanceState) {}
 
     @Override
     public void onClick(View v) {

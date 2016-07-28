@@ -21,14 +21,14 @@ public class ForgetNextActivity extends BaseActivity {
 
     private EditText et_new_pswd;
     private EditText et_confirm_pswd;
-    private String phone;
+    private String customerNo;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_forget_next);
         et_new_pswd = getViewById(R.id.et_new_pswd);
         et_confirm_pswd = getViewById(R.id.et_confirm_pswd);
-        phone = getIntent().getStringExtra("phone");
+        customerNo = getIntent().getStringExtra("customerNo");
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ForgetNextActivity extends BaseActivity {
      */
     private void modifyPswd(String newPswd){
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
-        engine.modifyPswd(phone, newPswd, new BaseCallBack(this) {
+        engine.modifyPswd(customerNo, newPswd, new BaseCallBack(this) {
             @Override
             public void onSuccess(JSONObject result) {
                 // 修改密码成功

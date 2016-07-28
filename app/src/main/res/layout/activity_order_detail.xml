@@ -185,6 +185,7 @@
             android:layout_width="220px"
             android:layout_height="74px"
             android:background="@drawable/shape_pay"
+            android:visibility="gone"
             android:text="支付"
             android:textSize="@dimen/text_middle"
             android:textColor="@color/white_text"

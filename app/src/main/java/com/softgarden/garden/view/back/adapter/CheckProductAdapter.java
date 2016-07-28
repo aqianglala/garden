@@ -55,6 +55,13 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
         final TextView tv_total = bgaViewHolderHelper.getView(R.id.tv_total);
         final CheckBox checkbox = bgaViewHolderHelper.getView(R.id.checkbox);
 
+        int total = Integer.parseInt(tv_total.getText().toString().trim());
+        if (total>0){
+            checkbox.setChecked(true);
+        }else if (total == 0){
+            checkbox.setChecked(false);
+        }
+        checkInterface.checkChild(position,checkbox.isChecked());
         tv_total.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,7 +7,8 @@ public interface UrlsAndKeys {
     String md5Str = "77&*Kouyubi%4p3";
     String API_SIGN_KEY = "Ysljsd&sfli%87wirioew3^534rjkljl";
     String login = "index.php/App/Api/login";
-    String getCode = "index.php/App/Api/getregVerify";
+    String getregVerify = "index.php/App/Api/getregVerify";// 修改密码
+    String reGetregVerify = "index.php/App/Api/reGetregVerify";// 找回密码
     String verifyCode = "index.php/App/Api/checkfindverify";
     String modifyPswd = "index.php/App/Api/modifyPassword";
     String index = "index.php/App/Api/index";

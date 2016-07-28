@@ -3,6 +3,7 @@ package com.softgarden.garden.engine;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.BaseEngine;
 import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.entity.GetFindCodeEntity;
 import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
@@ -42,14 +43,29 @@ public class UserEngine extends BaseEngine{
      * @param phone
      * @param callBack
      */
-    public void getCode(String phone, BaseCallBack callBack){
+    public void getModifyCode(String phone, BaseCallBack callBack){
         JSONObject object=new JSONObject();
         try {
             object.put("phone",phone);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        HttpHelper.post(UrlsAndKeys.getCode,object,callBack);
+        HttpHelper.post(UrlsAndKeys.getregVerify,object,callBack);
+    }
+
+    /**
+     * 找回密码，获取验证码
+     * @param customerNo
+     * @param callBack
+     */
+    public void getFindCode(String customerNo, ObjectCallBack<GetFindCodeEntity> callBack){
+        JSONObject object=new JSONObject();
+        try {
+            object.put("CustomerNo",customerNo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HttpHelper.post(UrlsAndKeys.reGetregVerify,object,callBack);
     }
 
     /**
@@ -71,14 +87,14 @@ public class UserEngine extends BaseEngine{
 
     /**
      * 修改密码
-     * @param phone
+     * @param customerNo
      * @param newpswd
      * @param callBack
      */
-    public void modifyPswd(String phone, String newpswd, BaseCallBack callBack){
+    public void modifyPswd(String customerNo, String newpswd, BaseCallBack callBack){
         JSONObject object=new JSONObject();
         try {
-            object.put("phone",phone);
+            object.put("CustomerNo",customerNo);
             object.put("newpwd",StringUtils.getMd5String(newpswd+ UrlsAndKeys.md5Str));
         } catch (JSONException e) {
             e.printStackTrace();

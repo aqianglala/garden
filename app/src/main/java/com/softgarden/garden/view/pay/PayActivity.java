@@ -224,16 +224,22 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()){
             case R.id.cb_alipay:
-                if (isChecked)
-                changeBackground(R.id.ll_alipay);
+                if (isChecked) {
+                    leibie = 1;
+                    changeBackground(R.id.ll_alipay);
+                }
                 break;
             case R.id.cb_weixin:
-                if (isChecked)
-                changeBackground(R.id.ll_weixin);
+                if (isChecked) {
+                    leibie = 2;
+                    changeBackground(R.id.ll_weixin);
+                }
                 break;
             case R.id.cb_daofu:
-                if (isChecked)
-                changeBackground(R.id.ll_daofu);
+                if (isChecked) {
+                    leibie = 3;
+                    changeBackground(R.id.ll_daofu);
+                }
                 break;
         }
     }

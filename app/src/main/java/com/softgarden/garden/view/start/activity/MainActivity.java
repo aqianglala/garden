@@ -60,8 +60,6 @@ public class MainActivity extends BaseActivity {
         }
         // register the receiver object
         EventBus.getDefault().register(this);
-        returnType = Integer.parseInt(BaseApplication.userInfo.getData()
-                .getReturnType());
         // 是否已经改过密码
         hasModify = (boolean) SPUtils.get(context, UrlsAndKeys.HASMODIFYPSWD,false);
 
@@ -93,6 +91,7 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case R.id.rb_back:
+                        returnType = BaseApplication.getReturnType();
                         rb_back.setChecked(returnType == 1 || returnType ==3?true:false);
                         if(rb_back.isChecked()){
                             lastCheckId = checkedId;
@@ -113,6 +112,7 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case R.id.rb_change:
+                        returnType = BaseApplication.getReturnType();
                         rb_change.setChecked(returnType == 2 || returnType ==3?true:false);
                         if(rb_change.isChecked()){
                             lastCheckId = checkedId;
@@ -173,17 +173,6 @@ public class MainActivity extends BaseActivity {
             dialog = ModifyDialog.show(this);
         }
     }
-
-//    private void showDialog() {
-//        ModifyPswdDialog dialog = new ModifyPswdDialog(this, R.style.CustomDialog);
-//        dialog.setCancelable(false);
-//        dialog.show();
-//        // 设置宽，高可在xml布局中写上,但宽度默认是match_parent，所以需要在代码中设置
-//        WindowManager.LayoutParams attributes = dialog.getWindow().getAttributes();
-//        attributes.width = (int) (ScreenUtils.getScreenWidth(this)*0.8);
-//        attributes.height = (int) (ScreenUtils.getScreenWidth(this)*0.9);
-//        dialog.getWindow().setAttributes(attributes);
-//    }
 
     /**
      * 将所有的Fragment都置为隐藏状态。

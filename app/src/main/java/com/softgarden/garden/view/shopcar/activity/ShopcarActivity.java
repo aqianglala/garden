@@ -416,13 +416,12 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                 }
             }
             childs.removeAll(toBeDeleteProducts);
-
         }
 
         groups.removeAll(toBeDeleteGroups);
         // 更新首页数据
-        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
         adapter.notifyDataSetChanged();
+        EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
         // 判断购物车是否为空，如果为空则关闭当前页面
         ShoppingCart instance = ShoppingCart.getInstance();
         int totalNum = instance.getTotalNum();

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<com.zhy.autolayout.AutoRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/view_margin"
@@ -11,27 +12,28 @@
         android:background="@color/bg_gray"/>
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:layout_below="@id/view_margin"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        android:layout_below="@id/view_margin"
         app:mcv_showOtherDates="all"
         />
 
     <RelativeLayout
         android:id="@+id/view_choose"
-        android:layout_below="@id/view_margin"
         android:layout_width="110dp"
         android:layout_height="55dp"
-        android:clickable="true"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@id/view_margin"
+        android:layout_centerHorizontal="true"
+        android:clickable="true">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/xia"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@mipmap/xia"/>
     </RelativeLayout>
 </com.zhy.autolayout.AutoRelativeLayout>

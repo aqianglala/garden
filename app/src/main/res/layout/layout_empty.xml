@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_empty"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/empty"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_empty"
+        android:textSize="16sp"
+        android:text="您没有购买此类产品的权限！"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

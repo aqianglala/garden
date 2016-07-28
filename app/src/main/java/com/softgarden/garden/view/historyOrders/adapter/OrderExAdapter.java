@@ -118,6 +118,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 TextView tv_number = (TextView) convertView.findViewById(R.id.tv_number);
                 TextView tv_amount = (TextView) convertView.findViewById(R.id.tv_amount);
                 TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
+                TextView tv_price_label = (TextView) convertView.findViewById(R.id.tv_price_label);
                 final TextView tv_state = (TextView) convertView.findViewById(R.id.tv_state);
                 ImageView iv_order_type = (ImageView) convertView.findViewById(R.id.iv_order_type);
                 LinearLayout ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
@@ -129,10 +130,13 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 String type = item.getType();
                 if ("1".equals(type)){ // 正常订单
                     iv_order_type.setImageResource(R.mipmap.dingdan);
+                    tv_price_label.setText("订单金额");
                 }else if ("2".equals(type)){// 退货
                     iv_order_type.setImageResource(R.mipmap.tui);
+                    tv_price_label.setText("退货金额");
                 }else if ("3".equals(type)){// 换货
                     iv_order_type.setImageResource(R.mipmap.huan);
+                    tv_price_label.setText("换货金额");
                 }
 //                先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
 //                否则，判断用户是否是现金用户还是记账用户

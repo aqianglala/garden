@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseFragment;
@@ -32,6 +33,7 @@ public class FragmentProduct extends BaseFragment{
     private TitleAdapter titleAdapter;
     private ContentAdapter contentAdapter;
     private TextView tv_title;
+    private RelativeLayout layout_empty;
     private IndexEntity.DataBean.ShopBean mData;
     private List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> goods = new ArrayList<>();
 
@@ -42,6 +44,7 @@ public class FragmentProduct extends BaseFragment{
         EventBus.getDefault().register(this);
 
         tv_title = getViewById(R.id.tv_title);
+        layout_empty = getViewById(R.id.layout_empty);
         lv_titles = getViewById(R.id.lv_titles);
         lv_content = getViewById(R.id.lv_content);
     }
@@ -68,6 +71,10 @@ public class FragmentProduct extends BaseFragment{
     protected void processLogic(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         mData = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
+        if (mData.getChild().size() == 0){
+            layout_empty.setVisibility(View.VISIBLE);
+        }
+
         setData();
         // 设置右边列表标题
         if (mData.getChild()!=null && mData.getChild().size()>0)

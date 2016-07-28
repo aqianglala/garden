@@ -85,10 +85,14 @@ public class ChangePromptDialog extends DialogFragment implements View.OnClickLi
                 break;
             case R.id.btn_yes:
                 String pswd = et_pswd.getText().toString().trim();
-                if(TextUtils.isEmpty(pswd)){
-                    Toast.makeText(context,"请输入密码！",Toast.LENGTH_LONG).show();
+                if (mData.getZstail().size()>0){
+                    if(TextUtils.isEmpty(pswd)){
+                        Toast.makeText(context,"请输入密码！",Toast.LENGTH_LONG).show();
+                    }else{
+                        sendLogin(BaseApplication.userInfo.getData().getCustomerNo(),pswd);
+                    }
                 }else{
-                    sendLogin(BaseApplication.userInfo.getData().getCustomerNo(),pswd);
+                    Toast.makeText(context,"换货数量不能为0！",Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.iv_cancle:

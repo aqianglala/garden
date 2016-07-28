@@ -28,6 +28,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.StringUtils;
+import com.softgarden.garden.utils.Utils;
 import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.adapter.OrderDetailExAdapter;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -149,26 +150,27 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     private void initBottomUI() {
         Date dateFromStr = StringUtils.getDateFromStr(orderDate);
-        if ("2".equals(type)||"3".equals(type))return;
-        if ("1".equals(state)|| dateFromStr.getTime()< System.currentTimeMillis()){// 已经付款
+        if ("1".equals(state)|| dateFromStr.getTime()< System.currentTimeMillis()){// 已经付款，或者时间超过
             tv_right.setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.GONE);
+            return;
+        }
+        if ("2".equals(type)||"3".equals(type)){// 如果是退换货订单，时间没过，可以修改
+            tv_right.setVisibility(View.VISIBLE);
             rl_bottom.setVisibility(View.GONE);
             return;
         }
         if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
                 BaseApplication.userInfo.getData().getJsfs())){
-            if ("0".equals(state)){// 未付款
+            if ("0".equals(state)){// 开启了支付且未付款
+                tv_right.setVisibility(View.VISIBLE);
                 btn_pay.setVisibility(View.VISIBLE);
                 rl_confirm.setVisibility(View.GONE);
                 rl_bottom.setVisibility(View.VISIBLE);
-            }else{// 到付或其他
-                rl_bottom.setVisibility(View.GONE);
-                btn_pay.setVisibility(View.GONE);
-                rl_confirm.setVisibility(View.VISIBLE);
             }
-        }else{
-            btn_pay.setVisibility(View.GONE);
-            rl_confirm.setVisibility(View.VISIBLE);
+        }else{// 关闭支付，或者记账用户
+            tv_right.setVisibility(View.VISIBLE);
+            rl_bottom.setVisibility(View.GONE);
         }
     }
 
@@ -232,7 +234,9 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 break;
             case R.id.btn_cancel:
                 rl_date.setEnabled(false);
-                if ("0".equals(state)){
+                // 如果是现金用户，且未付款，且开启了支付
+                if ("现金".equals(BaseApplication.userInfo.getData().getJsfs()) &&"0".equals(state) && "1"
+                    .equals(BaseApplication.indexEntity.getData().getZhifu()) ){
                     rl_confirm.setVisibility(View.GONE);
                     btn_pay.setVisibility(View.VISIBLE);
                 }else{
@@ -283,6 +287,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                     tv_right.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     orderNo = data.getData().getOrderNo();
+                    rl_bottom.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -312,9 +317,23 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     @Override
     public void doIncrease(TextView textView, int position, String currentCount) {
-        int total = mData.get(position).getTotal();
-        mData.get(position).setTotal(++total);
-        mData.get(position).setQty(total+"");
+        HistoryDetailsEntity.DataBean.ShopBean goodsBean = mData.get(position);
+        int total = goodsBean.getTotal();
+        goodsBean.setTotal(++total);
+        goodsBean.setQty(total+"");
+
+        float price;
+        if (goodsBean.getBzj()!=null){
+            price = "0".equals(goodsBean.getIsSpecial())?Float.parseFloat
+                    (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+        }else{
+            price = Float.parseFloat( goodsBean.getPrice());
+        }
+        // 计算总价
+        float amount = price * total;
+        float f1 = Utils.formatFloat(amount);
+        goodsBean.setAmount(f1+"");
+
         adapter.groupingData();
         adapter.notifyDataSetChanged();
         tv_totalAmount.setText(getTotalNum()+"");
@@ -323,10 +342,22 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
     @Override
     public void doDecrease(TextView textView, int position, String currentCount) {
-        int total = mData.get(position).getTotal();
+        HistoryDetailsEntity.DataBean.ShopBean goodsBean = mData.get(position);
+        int total = goodsBean.getTotal();
         if(total>1){
-            mData.get(position).setTotal(--total);
-            mData.get(position).setQty(total+"");
+            float price;
+            if (goodsBean.getBzj()!=null){
+                price = "0".equals(goodsBean.getIsSpecial())?Float.parseFloat
+                        (goodsBean.getBzj()): Float.parseFloat( goodsBean.getPrice());
+            }else{
+                price = Float.parseFloat( goodsBean.getPrice());
+            }
+            // 计算总价
+            float amount = price * total;
+            float f1 = Utils.formatFloat(amount);
+            goodsBean.setAmount(f1+"");
+            goodsBean.setTotal(--total);
+            goodsBean.setQty(total+"");
             adapter.groupingData();
             adapter.notifyDataSetChanged();
             tv_totalAmount.setText(getTotalNum()+"");

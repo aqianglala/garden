@@ -16,12 +16,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.softgarden.garden.base.BaseActivity;
 import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseCallBack;
 import com.softgarden.garden.base.EngineFactory;
+import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.engine.UserEngine;
+import com.softgarden.garden.entity.GetFindCodeEntity;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.ScreenUtils;
 import com.softgarden.garden.utils.ToastUtil;
@@ -35,6 +38,8 @@ public class ForgetPswdActivity extends BaseActivity {
     private EditText et_verification_code;
     private Button btn_get_code;
     private String phone;
+    private String customerNo;
+    private String title;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class ForgetPswdActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        String title = getIntent().getStringExtra("title");
+        title = getIntent().getStringExtra("title");
         if(title.equals("忘记密码")){
             et_phone_number.setEnabled(true);
         }else{
@@ -81,11 +86,17 @@ public class ForgetPswdActivity extends BaseActivity {
                 showContactDialog();
                 break;
             case R.id.btn_get_code:
-                phone = et_phone_number.getText().toString().trim();
-                if(TextUtils.isEmpty(phone)){
-                    showToast("手机号码不能为空！");
+                String trim = et_phone_number.getText().toString().trim();
+                if(TextUtils.isEmpty(trim)){
+                    showToast("输入不能为空！");
                 }else{
-                    getCode();
+                    if(title.equals("忘记密码")){
+                        customerNo = trim;
+                        getFindCode();
+                    }else{
+                        phone = trim;
+                        getModifyCode();
+                    }
                 }
                 break;
         }
@@ -102,7 +113,10 @@ public class ForgetPswdActivity extends BaseActivity {
             public void onSuccess(JSONObject result) {
                 // 跳转到下一页
                 Intent intent = new Intent(context,ForgetNextActivity.class);
-                intent.putExtra("phone",phone);
+                if (TextUtils.isEmpty(customerNo)){
+                    customerNo = BaseApplication.userInfo.getData().getCustomerNo();
+                }
+                intent.putExtra("customerNo",customerNo);
                 startActivity(intent);
                 finish();
             }
@@ -110,20 +124,40 @@ public class ForgetPswdActivity extends BaseActivity {
     }
 
     /**
-     * 获取验证码
+     * 修改密码获取验证码
      */
-    private void getCode() {
+    private void getModifyCode() {
         // 倒计时开始
         mc.start();
         btn_get_code.setEnabled(false);
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
-        engine.getCode(phone, new BaseCallBack(this) {
+        engine.getModifyCode(phone, new BaseCallBack(this) {
             @Override
             public void onSuccess(JSONObject result) {
                 mc.onFinish();
                 ToastUtil.show("获取验证码成功！");
                 String data = String.valueOf(result.optInt("data"));
                 et_verification_code.setText(data);
+            }
+        });
+    }
+
+    /**
+     * 找回密码获取验证码
+     */
+    private void getFindCode() {
+        // 倒计时开始
+        mc.start();
+        btn_get_code.setEnabled(false);
+        UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
+        engine.getFindCode(customerNo, new ObjectCallBack<GetFindCodeEntity>(this) {
+            @Override
+            public void onSuccess(GetFindCodeEntity data) {
+                mc.onFinish();
+                Toast.makeText(context,"验证码已发至号码为："+data.getData().getPhone()+"的手机",Toast
+                        .LENGTH_LONG).show();
+                phone = data.getData().getPhone();
+                et_verification_code.setText(data.getData().getRandNum()+"");
             }
         });
     }

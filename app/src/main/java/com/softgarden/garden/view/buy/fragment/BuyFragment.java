@@ -2,6 +2,8 @@ package com.softgarden.garden.view.buy.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,6 @@ import com.softgarden.garden.base.BaseApplication;
 import com.softgarden.garden.base.BaseFragment;
 import com.softgarden.garden.base.EngineFactory;
 import com.softgarden.garden.base.ObjectCallBack;
-import com.softgarden.garden.dialog.LoadDialog;
 import com.softgarden.garden.engine.BuyEngine;
 import com.softgarden.garden.entity.IndexEntity;
 import com.softgarden.garden.entity.TempData;
@@ -34,29 +35,23 @@ import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 import com.softgarden.garden.view.start.activity.MainActivity;
-import com.softgarden.garden.widget.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import cn.bingoogolapple.refreshlayout.BGANormalRefreshViewHolder;
-import cn.bingoogolapple.refreshlayout.BGARefreshLayout;
-import cn.bingoogolapple.refreshlayout.BGARefreshViewHolder;
-
 /**
  * Created by Hasee on 2016/6/6.
  */
-public class BuyFragment extends BaseFragment implements BGARefreshLayout
-        .BGARefreshLayoutDelegate,Observer{
+public class BuyFragment extends BaseFragment implements Observer{
 
     private ImageView iv_me;
     private ImageView iv_shopcar;
     private MainActivity mActivity;
 
     private ConvenientBanner convenientBanner;//顶部广告栏控件
-    private CustomViewPager viewPager;
+    private ViewPager viewPager;
     private int tabWidth;
     private RelativeLayout rl_indicator;
 
@@ -67,6 +62,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     private ArrayList<BaseFragment> fragments = new ArrayList<>();
     private MyPagerAdapter myPagerAdapter;
     private TextView tv_count;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -79,10 +76,12 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         iv_shopcar = getViewById(R.id.iv_shopCar);
         convenientBanner = getViewById(R.id.convenientBanner);
         viewPager = getViewById(R.id.viewPager);
-        // 设置viewpager不能滑动
-        viewPager.setPagingEnabled(false);
-        initRefreshLayout();
-//        mRefreshLayout.beginRefreshing();
+
+        swipeRefreshLayout = getViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
     }
 
     /**
@@ -102,10 +101,22 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     protected void setListener() {
         iv_me.setOnClickListener(this);
         iv_shopcar.setOnClickListener(this);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
     }
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        swipeRefreshLayout.post(new Runnable(){
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
         // 访问网络
         // 当天不重复请求，隔天才请求新的数据
         String time = (String) SPUtils.get(mActivity, GlobalParams.LAST_UPDATE_TIME, "");
@@ -120,7 +131,6 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             }
             BaseApplication.indexEntity = indexEntity;
             setData(indexEntity);
-            final LoadDialog loadDialog = LoadDialog.show(mActivity);
             new Thread(){
                 @Override
                 public void run() {
@@ -132,7 +142,6 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                     UIUtils.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            loadDialog.dismiss();
 //                            showToast(shoppingCart.getTotalNum()+"");
                             int totalNum = ShoppingCart.getInstance().getTotalNum();
                             if(totalNum>99){
@@ -140,6 +149,12 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
                             }else{
                                 tv_count.setText(totalNum+"");
                             }
+                            swipeRefreshLayout.post(new Runnable(){
+                                @Override
+                                public void run() {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+                            });
                         }
                     });
                 }
@@ -161,9 +176,11 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
     private void loadData() {
         BuyEngine engine = (BuyEngine) EngineFactory.getEngine(BuyEngine.class);
         engine.getProducts(BaseApplication.userInfo.getData().getCustomerNo(), new ObjectCallBack<IndexEntity>
-                (mActivity) {
+                (mActivity,false) {
             @Override
             public void onSuccess(IndexEntity indexEntity) {
+                // false，刷新完成，因此停止UI的刷新表现样式。
+                swipeRefreshLayout.setRefreshing(false);
                 if(shouldClearCart()){//隔天了，清掉了购物车
                     SPUtils.put(mActivity,GlobalParams.SHOPCART_DATA,"");
                     SPUtils.put(mActivity,GlobalParams.DATA,"");
@@ -203,7 +220,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
             @Override
             public void onError(String s, String s1, int i) {
                 super.onError(s, s1, i);
-                mRefreshLayout.endRefreshing();
+                // false，刷新完成，因此停止UI的刷新表现样式。
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -218,6 +236,7 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         // 动态生成fragment，并设置其一级id，让对应的fragment请求自己的数据
         fragments.clear();
         tabViews.clear();
+        ViewHelper.setX(rl_indicator,0);
         ll_tab_container.removeAllViews();
         for(int i=0;i<tabCount;i++){
             // 动态生成tab
@@ -233,7 +252,8 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         viewPager.removeAllViewsInLayout();
         viewPager.setAdapter(myPagerAdapter);
         myPagerAdapter.notifyDataSetChanged();
-        mRefreshLayout.endRefreshing();
+        // false，刷新完成，因此停止UI的刷新表现样式。
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -344,33 +364,6 @@ public class BuyFragment extends BaseFragment implements BGARefreshLayout
         }else{
             return true;
         }
-    }
-    private BGARefreshLayout mRefreshLayout;
-    private void initRefreshLayout() {
-        mRefreshLayout = getViewById(R.id.rl_modulename_refresh);
-        mRefreshLayout.setIsShowLoadingMoreView(false);
-        // 为BGARefreshLayout设置代理
-        mRefreshLayout.setDelegate(this);
-        // 设置下拉刷新和上拉加载更多的风格     参数1：应用程序上下文，参数2：是否具有上拉加载更多功能
-        BGARefreshViewHolder refreshViewHolder = new BGANormalRefreshViewHolder(mActivity, true);
-        // 设置下拉刷新和上拉加载更多的风格
-        mRefreshLayout.setRefreshViewHolder(refreshViewHolder);
-    }
-
-    @Override
-    public void onBGARefreshLayoutBeginRefreshing(final BGARefreshLayout refreshLayout) {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                loadData();
-            }
-        }.start();
-    }
-
-    @Override
-    public boolean onBGARefreshLayoutBeginLoadingMore(BGARefreshLayout refreshLayout) {
-        return false;
     }
 
     @Override

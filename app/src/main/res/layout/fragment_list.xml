@@ -1,44 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.autolayout.AutoLinearLayout
+<com.zhy.autolayout.AutoFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/lv_titles"
-        android:layout_width="200px"
-        android:layout_height="match_parent"
-        android:background="@color/bg_white"/>
-
-    <View
-        android:layout_width="@dimen/line_height"
-        android:layout_height="match_parent"
-        android:background="@color/menu_line"/>
+    <include
+        android:id="@+id/layout_empty"
+        layout="@layout/layout_empty"
+        android:visibility="gone"/>
 
     <com.zhy.autolayout.AutoLinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="64px"
-            android:paddingLeft="30px"
-            android:gravity="center_vertical"
-            android:textSize="28px"
-            android:textColor="@color/gray_darkest"
-            android:background="@color/bg_gray"/>
+        android:orientation="horizontal">
 
         <ListView
-            android:id="@+id/lv_content"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:id="@+id/lv_titles"
+            android:layout_width="200px"
+            android:layout_height="match_parent"
+            android:background="@color/bg_white"/>
+
+        <View
+            android:layout_width="@dimen/line_height"
+            android:layout_height="match_parent"
+            android:background="@color/menu_line"/>
+
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="64px"
+                android:background="@color/bg_gray"
+                android:gravity="center_vertical"
+                android:paddingLeft="30px"
+                android:textColor="@color/gray_darkest"
+                android:textSize="28px"/>
+
+            <ListView
+                android:id="@+id/lv_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </com.zhy.autolayout.AutoLinearLayout>
+
     </com.zhy.autolayout.AutoLinearLayout>
 
 
-
-</com.zhy.autolayout.AutoLinearLayout>
+</com.zhy.autolayout.AutoFrameLayout>

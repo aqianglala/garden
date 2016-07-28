@@ -102,4 +102,12 @@ public class BaseApplication extends Application{
         EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
     }
 
+    public static int getReturnType(){
+        if (BaseApplication.indexEntity == null){
+            return 2;
+        }else{
+            return Integer.parseInt(BaseApplication.indexEntity.getData().getThh());
+        }
+    }
+
 }

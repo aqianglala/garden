@@ -8,8 +8,6 @@
     android:background="@color/bg_white"
     tools:context="com.softgarden.garden.view.login.LoginActivity">
 
-    <include layout="@layout/layout_toolbar"/>
-
     <com.zhy.autolayout.AutoLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

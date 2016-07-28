@@ -19,12 +19,13 @@ import org.json.JSONObject;
  */
 public class HistoryOrderEngine extends BaseEngine{
 
-    public void historyOrder(String customerNo, ObjectCallBack<HistoryOrderEntity>
+    public void historyOrder(String customerNo, String date,ObjectCallBack<HistoryOrderEntity>
             callBack){
 
         JSONObject object=new JSONObject();
         try {
             object.put("CustomerNo",customerNo);
+            object.put("Date",date);
         } catch (JSONException e) {
             e.printStackTrace();
         }
