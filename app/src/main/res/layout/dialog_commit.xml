@@ -6,12 +6,12 @@
 
 
     <com.zhy.autolayout.AutoRelativeLayout
-        android:layout_width="660px"
-        android:layout_height="660px">
+        android:layout_width="680px"
+        android:layout_height="720px">
 
         <ImageView
-            android:layout_width="580px"
-            android:layout_height="660px"
+            android:layout_width="560px"
+            android:layout_height="720px"
             android:layout_centerHorizontal="true"
             android:background="@mipmap/dialog_order"/>
 
@@ -22,8 +22,8 @@
             android:layout_centerInParent="true"
             android:orientation="vertical"
             android:paddingTop="70px"
-            android:paddingLeft="30px"
-            android:paddingRight="30px">
+            android:paddingLeft="35px"
+            android:paddingRight="35px">
 
             <TextView
                 android:layout_width="wrap_content"

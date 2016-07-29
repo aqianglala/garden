@@ -3,6 +3,7 @@ package com.softgarden.garden.view.historyOrders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.softgarden.garden.dialog.OverTimeDialog;
 import com.softgarden.garden.engine.HistoryOrderEngine;
 import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.HistoryDetailsEntity;
+import com.softgarden.garden.entity.OrderCommitEntity;
 import com.softgarden.garden.entity.OrderEditEntity;
 import com.softgarden.garden.interfaces.ModifyCountInterface;
 import com.softgarden.garden.jiadun_android.R;
@@ -39,6 +41,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -129,8 +132,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                     item.setTotal(qty+tgs);
                 }
                 mData = shop ;
-                tv_totalAmount.setText(getTotalNum()+"");
-                tv_price.setText(getTotalPrice()+"");
+                tv_totalAmount.setText(getTotalNum()+"件");
+                tv_price.setText("￥"+getTotalPrice());
                 adapter = new OrderDetailExAdapter(mData, context);
                 adapter.setModifyCountInterface(OrderDetailActivity.this);
                 expandableListView.setAdapter(adapter);
@@ -226,6 +229,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 btn_pay.setVisibility(View.GONE);
                 tv_right.setVisibility(View.GONE);
                 rl_date.setEnabled(true);
+                et_remarks.setEnabled(true);
                 adapter.setEditable(true);
                 adapter.notifyDataSetChanged();
                 break;
@@ -234,6 +238,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 break;
             case R.id.btn_cancel:
                 rl_date.setEnabled(false);
+                et_remarks.setEnabled(false);
                 // 如果是现金用户，且未付款，且开启了支付
                 if ("现金".equals(BaseApplication.userInfo.getData().getJsfs()) &&"0".equals(state) && "1"
                     .equals(BaseApplication.indexEntity.getData().getZhifu()) ){
@@ -247,9 +252,12 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.btn_pay:  // 支付
+                OrderCommitEntity orderCommitEntity = getOrderCommitEntity();
+
                 Intent intent = new Intent(context, PayActivity.class);
                 intent.putExtra(GlobalParams.ORDERNO,orderNo);
                 intent.putExtra(GlobalParams.ORDERTYPE,"1");
+                intent.putExtra("order",orderCommitEntity);
                 intent.putExtra(GlobalParams.TOTALPRICE,tv_price.getText().toString());
                 startActivity(intent);
                 finish();
@@ -267,16 +275,34 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         }
     }
 
+    @NonNull
+    private OrderCommitEntity getOrderCommitEntity() {
+        OrderEditEntity orderEditEntity = getOrderEditEntity();
+        // 将OrderEditEntity转成OrderCommitEntity，不过怪我，一开始做的时候后台字段名字不匹配，都不太一样，所以只能新的bean
+        OrderCommitEntity orderCommitEntity = new OrderCommitEntity();
+        List<HistoryDetailsEntity.DataBean.ShopBean> zstail = orderEditEntity.getZstail();
+        ArrayList<OrderCommitEntity.ZstailBean> zstailBeens = new ArrayList<>();
+        for (HistoryDetailsEntity.DataBean.ShopBean item: zstail){
+            OrderCommitEntity.ZstailBean zstailBean = new OrderCommitEntity.ZstailBean
+                    (item.getItemNo(), item.getProQty(), item
+                    .getQty(), item.getReturnrate(), item.getPrice(), item.getIsSpecial(),
+                    item.getAmount(), item.getTgs(), item.getItemName(), item.getSpec(),
+                            item
+                    .getPicture(), item.getBzj(), item.getTotal());
+            zstailBeens.add(zstailBean);
+        }
+        orderCommitEntity.setZstail(zstailBeens);
+        orderCommitEntity.setZffs(orderEditEntity.getZffs());
+        orderCommitEntity.setOrderDate(orderEditEntity.getOrderDate());
+        orderCommitEntity.setOrderNo(orderEditEntity.getOrderNo());
+        orderCommitEntity.setRemarks(orderEditEntity.getRemarks());
+        orderCommitEntity.setCustomerNo(BaseApplication.userInfo.getData().getCustomerNo());
+        return orderCommitEntity;
+    }
+
     private void commitOrder() {
         if(mData.size()>0){
-            String remarks = et_remarks.getText().toString().trim();
-            OrderEditEntity orderEditEntity = new OrderEditEntity();
-            orderEditEntity.setOrderNo(orderNo);
-            orderEditEntity.setOrderDate(tv_date.getText().toString());
-            orderEditEntity.setRemarks(remarks);
-            if(!TextUtils.isEmpty(zffs))
-            orderEditEntity.setZffs(Integer.parseInt(zffs));
-            orderEditEntity.setZstail(mData);
+            OrderEditEntity orderEditEntity = getOrderEditEntity();
 
             HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
             engine.orderEdit(orderEditEntity,new ObjectCallBack<CommitOrderResultEntity>(context) {
@@ -287,7 +313,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                     tv_right.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     orderNo = data.getData().getOrderNo();
-                    rl_bottom.setVisibility(View.GONE);
+                    initBottomUI();
+                    et_remarks.setEnabled(false);
                 }
 
                 @Override
@@ -300,6 +327,19 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 }
             });
         }
+    }
+
+    @NonNull
+    private OrderEditEntity getOrderEditEntity() {
+        String remarks = et_remarks.getText().toString().trim();
+        OrderEditEntity orderEditEntity = new OrderEditEntity();
+        orderEditEntity.setOrderNo(orderNo);
+        orderEditEntity.setOrderDate(tv_date.getText().toString());
+        orderEditEntity.setRemarks(remarks);
+        if(!TextUtils.isEmpty(zffs))
+        orderEditEntity.setZffs(Integer.parseInt(zffs));
+        orderEditEntity.setZstail(mData);
+        return orderEditEntity;
     }
 
     public void setInputAgain(boolean inputAgain) {
@@ -336,8 +376,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
 
         adapter.groupingData();
         adapter.notifyDataSetChanged();
-        tv_totalAmount.setText(getTotalNum()+"");
-        tv_price.setText(getTotalPrice()+"");
+        tv_totalAmount.setText(getTotalNum()+"件");
+        tv_price.setText("￥"+getTotalPrice());
     }
 
     @Override
@@ -360,8 +400,8 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
             goodsBean.setQty(total+"");
             adapter.groupingData();
             adapter.notifyDataSetChanged();
-            tv_totalAmount.setText(getTotalNum()+"");
-            tv_price.setText(getTotalPrice()+"");
+            tv_totalAmount.setText(getTotalNum()+"件");
+            tv_price.setText("￥"+getTotalPrice());
         }
     }
 

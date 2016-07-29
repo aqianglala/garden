@@ -63,7 +63,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
     public int getChildrenCount(int groupPosition) {
         String groupId = groups.get(groupPosition).getGroupId();
         int size = children.get(groupId).size();
-        LogUtils.e("getChildrenCount："+size);
+        LogUtils.e("groupId:"+groupId+" getChildrenCount："+size);
         return children.get(groupId).size();
     }
 
@@ -90,7 +90,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -160,12 +160,12 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             // 设置价格
             String price = product.getPrice();
             if(price.equals("0.0000") || product.getIsSpecial() == 0){// 没有特价，使用标准价
-                cholder.tv_special.setText(product.getBzj());
+                cholder.tv_special.setText("￥"+product.getBzj());
                 cholder.tv_price.setVisibility(View.GONE);
                 cholder.iv_tejia.setVisibility(View.GONE);
             }else{// 特价
-                cholder.tv_special.setText(product.getPrice()+"");
-                cholder.tv_price.setText(product.getBzj());
+                cholder.tv_special.setText("￥"+product.getPrice());
+                cholder.tv_price.setText("￥"+product.getBzj());
                 cholder.tv_price.setVisibility(View.VISIBLE);
                 cholder.tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 cholder.iv_tejia.setVisibility(View.VISIBLE);
@@ -175,7 +175,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
             cholder.tv_number.setText(product.getItemNo());
             cholder.tv_prediction.setText(product.getProQty()+"");
             cholder.tv_weight.setText(product.getSpec());
-            cholder.tv_back.setText(product.getReturnrate()+"");
+            cholder.tv_back.setText(product.getReturnrate()+"%");
             cholder.tv_total.setText(product.getQty()+"");
             cholder.tv_group.setText(product.getTgs()+"");
 
@@ -239,7 +239,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                     int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
                     int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
                     InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
-                            tuangou,shuliang,maxCount,false);
+                            tuangou,shuliang,maxCount,false,"加入购物车");
                     dialog.setDialogInputListener(new DialogInputListener() {
                         @Override
                         public void inputNum(String num) {
@@ -260,7 +260,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                     int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
                     int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
                     InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
-                            tuangou,shuliang,maxCount,true);
+                            tuangou,shuliang,maxCount,true,"加入购物车");
                     dialog.setDialogInputListener(new DialogInputListener() {
                         @Override
                         public void inputNum(String num) {

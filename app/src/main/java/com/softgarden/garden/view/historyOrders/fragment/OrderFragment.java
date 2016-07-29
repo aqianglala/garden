@@ -33,7 +33,6 @@ import com.softgarden.garden.view.start.entity.MessageBean;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +61,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout layout_empty;
+    private boolean isSwitchMonth;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -100,6 +100,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         widget.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                isSwitchMonth = true;
                 String date1 = formatDate(date);
                 getHistoryOrder(date1);
             }
@@ -116,6 +117,12 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         expandableListView.addFooterView(calenderLayout);
     }
 
+    /**
+     * 如果当前没有选中日期，则取当月
+     * 如果选中了日期，则取出日期的年月
+     * @param date
+     * @return
+     */
     @NonNull
     private String formatDate(CalendarDay date) {
         String year;
@@ -171,10 +178,14 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     }
 
+    /**
+     * 下拉刷新，如果当前有选中日期，则刷新当前日期，如果没有，则刷新本月
+     */
     @Override
     public void onRefresh() {
         CalendarDay selectedDate = widget.getSelectedDate();
         String s = formatDate(selectedDate);
+        isSwitchMonth = false;
         getHistoryOrder(s);
     }
 
@@ -188,62 +199,45 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         public void onSuccess(HistoryOrderEntity data) {
             // 获取历史订单日期
             map = data.getData();
-
-            if(myExAdapter ==null){// 第一次进来
-                ArrayList<CalendarDay> nowDates = new ArrayList<>();
-                ArrayList<CalendarDay> oldDates = new ArrayList<>();
-                boolean hasOrderOnCurrentDay = false;
-                for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
-                    // 当前天有订单
-                    if(StringUtils.getCurrDay().equals(entry.getKey())){
-                        hasOrderOnCurrentDay = true;
-                        nowDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
-                        // 取出当天的订单显示
-                        List<HistoryOrderEntity.DataBean> value = entry.getValue();
-                        mData.clear();
-                        mData.addAll(value);
-                    }else{
-                        oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
-                    }
+            ArrayList<CalendarDay> nowDates = new ArrayList<>();
+            ArrayList<CalendarDay> oldDates = new ArrayList<>();
+            for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
+                // 当前天有订单
+                if(StringUtils.getCurrDay().equals(entry.getKey())){
+                    nowDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
+                }else{
+                    oldDates.add(StringUtils.stringToCalendarDay(entry.getKey()));
                 }
-
+            }
+            // 标记
+            addDecorators(nowDates, oldDates);
+            // 刷新当前天的订单
+            if (isSwitchMonth){// 如果是切换月份，则订单不刷新
+                return;
+            }
+            CalendarDay calendarDay = widget.getSelectedDate();
+            if (calendarDay == null) {
+                calendarDay = CalendarDay.today();
+            }
+            Date date = calendarDay.getDate();
+            String seletedDate = StringUtils.formatDate(date);
+            // 收缩列表,将数据更新在第一项
+            mData.clear();
+            List<HistoryOrderEntity.DataBean> list = map.get(seletedDate);
+            if (list !=null && list.size()>0) {
+                mData.addAll(list);
+            }
+            if (myExAdapter == null){
                 myExAdapter = new OrderExAdapter(mData, mActivity);
                 expandableListView.setAdapter(myExAdapter);
-                // 默认展示收缩第一组
-                expandableListView.collapseGroup(0);
-                // 清除颜色标记
-                widget.removeDecorators();
-                ArrayList<CalendarDay> calendarDays = new ArrayList<>();
-                calendarDays.addAll(nowDates);
-                calendarDays.addAll(oldDates);
-                Drawable disableDrawable = getResources().getDrawable(R.drawable
-                        .selector_calendar_order_disable);
-                widget.setDateTextAppearance(android.R.attr.dateTextAppearance);
-                widget.addDecorator(new DisableDecorator(disableDrawable, calendarDays));
-                Drawable redDrawable = getResources().getDrawable(R.drawable.selector_calendar_order_current);
-                widget.addDecorator(new OrderDecorator(redDrawable,nowDates));
-                Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
-                widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
-            }else{// 刷新数据
-                CalendarDay calendarDay = widget.getSelectedDate();
-                if (calendarDay == null) {
-                    calendarDay = CalendarDay.today();
-                }
-                Date date = calendarDay.getDate();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String seletedDate = format.format(date);
-                // 收缩列表,将数据更新在第一项
-                mData.clear();
-                List<HistoryOrderEntity.DataBean> list = map.get(seletedDate);
-                if (list!=null && list.size()>0) {
-                    mData.addAll(list);
-                }
+            }else{
                 myExAdapter.groupingData();
                 myExAdapter.setOpen(false);
-                expandableListView.collapseGroup(0);
                 myExAdapter.notifyDataSetChanged();
                 expandableListView.setSelection(0);
             }
+            // 默认展示收缩第一组
+            expandableListView.collapseGroup(0);
             // false，刷新完成，因此停止UI的刷新表现样式。
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -256,6 +250,23 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             // false，刷新完成，因此停止UI的刷新表现样式。
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    private void addDecorators(ArrayList<CalendarDay> nowDates, ArrayList<CalendarDay> oldDates) {
+        // 清除颜色标记
+        widget.removeDecorators();
+        ArrayList<CalendarDay> calendarDays = new ArrayList<>();
+        calendarDays.addAll(nowDates);
+        calendarDays.addAll(oldDates);
+        Drawable disableDrawable = getResources().getDrawable(R.drawable
+                .selector_calendar_order_disable);
+        // 设置日期的文字样式，如果不设置，则会有点击时日期的文字变白色的效果
+        widget.setDateTextAppearance(android.R.attr.dateTextAppearance);
+        widget.addDecorator(new DisableDecorator(disableDrawable, calendarDays));
+        Drawable redDrawable = getResources().getDrawable(R.drawable.selector_calendar_order_current);
+        widget.addDecorator(new OrderDecorator(redDrawable,nowDates));
+        Drawable greenDrawable = getResources().getDrawable(R.drawable.selector_calendar_order);
+        widget.addDecorator(new OrderDecorator(greenDrawable, oldDates));
     }
 
     @Override
@@ -302,19 +313,12 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
         Date date = calendarDay.getDate();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String seletedDate = format.format(date);
-        boolean hasOrder = false;
-        for(Map.Entry<String,List<HistoryOrderEntity.DataBean>> entry : map.entrySet()){
-            if (seletedDate.equals(entry.getKey())){
-                hasOrder = true;
-                break;
-            }
-        }
-        if(hasOrder){
+        String seletedDate = StringUtils.formatDate(date);
+        List<HistoryOrderEntity.DataBean> dataBeen = map.get(seletedDate);
+        if (dataBeen != null){
             // 收缩列表,将数据更新在第一项
             mData.clear();
-            mData.addAll(map.get(seletedDate));
+            mData.addAll(dataBeen);
             myExAdapter.groupingData();
             myExAdapter.setOpen(false);
             expandableListView.collapseGroup(0);
@@ -337,6 +341,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         Log.e("", "### update user with my_tag, name = " + user.message);
         CalendarDay selectedDate = widget.getSelectedDate();
         String s = formatDate(selectedDate);
+        isSwitchMonth = false;
         getHistoryOrder(s);
     }
 }

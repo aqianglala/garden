@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.softgarden.garden.jiadun_android.R;
+import com.softgarden.garden.utils.SPUtils;
+import com.softgarden.garden.view.login.LoginActivity;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
+import com.softgarden.garden.view.start.activity.MainActivity;
 
 
 /**
@@ -27,7 +30,7 @@ public class ModifyDialog extends DialogFragment {
     public ModifyDialog() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         // 去掉对话框标题
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         View rootView = inflater.inflate(R.layout.dialog_modify1, container);
@@ -37,6 +40,15 @@ public class ModifyDialog extends DialogFragment {
                 Intent intent = new Intent(context, ForgetPswdActivity.class);
                 intent.putExtra("title","修改密码");
                 context.startActivity(intent);
+            }
+        });
+        rootView.findViewById(R.id.btn_exit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SPUtils.clear(context);
+                Intent intent = new Intent(context, LoginActivity.class);
+                context.startActivity(intent);
+                ((MainActivity)context).finish();
             }
         });
         return rootView;

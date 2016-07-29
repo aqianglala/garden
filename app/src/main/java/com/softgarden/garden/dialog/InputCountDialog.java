@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.softgarden.garden.interfaces.DialogInputListener;
@@ -37,8 +38,10 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
         }else{
             et_count.setText(shuliang+"");
         }
+        Button btn_add_car = (Button) rootView.findViewById(R.id.btn_add_car);
+        btn_add_car.setText(btnLabel);
+        btn_add_car.setOnClickListener(this);
         rootView.findViewById(R.id.btn_cancel).setOnClickListener(this);
-        rootView.findViewById(R.id.btn_add_car).setOnClickListener(this);
         rootView.findViewById(R.id.iv_minus).setOnClickListener(this);
         rootView.findViewById(R.id.iv_plus).setOnClickListener(this);
         return rootView;
@@ -56,13 +59,14 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
     private static int shuliang;
     private static int max;
     private static boolean isTuangou;
+    private static String btnLabel;
     public static InputCountDialog show(FragmentActivity activity,int group,int count,int
-            maxCount,boolean isTuan) {
+            maxCount,boolean isTuan,String Label) {
         tuangou = group;
         shuliang = count;
         max = maxCount;
         isTuangou = isTuan;
-
+        btnLabel = Label;
         context = activity;
         InputCountDialog dialog = new InputCountDialog();
         dialog.setCancelable(true);

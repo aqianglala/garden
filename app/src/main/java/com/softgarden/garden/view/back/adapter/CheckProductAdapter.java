@@ -24,9 +24,11 @@ import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
  */
 public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> {
     private Context context;
-    public CheckProductAdapter(Context context, int itemLayoutId) {
+    private String btnLabel;
+    public CheckProductAdapter(Context context, int itemLayoutId, String btnLabel) {
         super(context, itemLayoutId);
         this.context = context;
+        this.btnLabel = btnLabel;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
                 .setText(R.id.tv_number,item.getItemNo())
                 .setText(R.id.tv_prediction,item.getProQty())
                 .setText(R.id.tv_weight,item.getSpec())
-                .setText(R.id.tv_back,item.getReturnrate());
+                .setText(R.id.tv_back,item.getReturnrate()+"%");
         bgaViewHolderHelper.setText(R.id.tv_total,item.getQty()+"");
         // 判断单价
         float price;
@@ -45,7 +47,7 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
         }else{
             price = Float.parseFloat( item.getPrice());
         }
-        bgaViewHolderHelper.setText(R.id.tv_price,price+"");
+        bgaViewHolderHelper.setText(R.id.tv_price,"￥"+price);
 
         bgaViewHolderHelper.setChecked(R.id.checkbox,item.isChoosed());
 
@@ -67,7 +69,7 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
             public void onClick(View v) {
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
                 InputDialog dialog = InputDialog.show((BaseActivity) context,0,
-                        shuliang,0,false);
+                        shuliang,0,false,btnLabel);
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {

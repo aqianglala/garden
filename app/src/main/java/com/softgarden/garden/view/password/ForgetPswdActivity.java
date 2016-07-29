@@ -40,6 +40,8 @@ public class ForgetPswdActivity extends BaseActivity {
     private String phone;
     private String customerNo;
     private String title;
+    private TextView tv_phone_number;
+    private String mobile;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class ForgetPswdActivity extends BaseActivity {
         et_phone_number = getViewById(R.id.et_phone_number);
         et_verification_code = getViewById(R.id.et_verification_code);
         btn_get_code = getViewById(R.id.btn_get_code);
+        tv_phone_number = getViewById(R.id.tv_phone_number);
     }
 
     @Override
@@ -59,6 +62,14 @@ public class ForgetPswdActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        if (BaseApplication.indexEntity != null){
+            mobile = BaseApplication.indexEntity.getData().getKfdh();
+            tv_phone_number.setText(mobile);
+        }else{
+            getViewById(R.id.ll_prompt).setVisibility(View.GONE);
+            getViewById(R.id.ll_call).setVisibility(View.GONE);
+        }
+
         title = getIntent().getStringExtra("title");
         if(title.equals("忘记密码")){
             et_phone_number.setEnabled(true);
@@ -166,7 +177,6 @@ public class ForgetPswdActivity extends BaseActivity {
      * 显示拨打电话的弹窗
      */
     private void showContactDialog() {
-        final String mobile = BaseApplication.indexEntity.getData().getKfdh();
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_call, null);
         TextView tv_phone = (TextView) view.findViewById(R.id.tv_phone);
         tv_phone.setText(mobile);

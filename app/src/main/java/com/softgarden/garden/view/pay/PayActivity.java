@@ -47,7 +47,7 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
     private CheckBox cb_alipay;
     private CheckBox cb_weixin;
     private CheckBox cb_daofu;
-    private OrderCommitEntity data;
+    private OrderCommitEntity mData;
 
     private static final int SDK_PAY_FLAG = 1;
     private TextView tv_price;
@@ -88,13 +88,15 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        data = (OrderCommitEntity) getIntent().getSerializableExtra("order");
+        mData = (OrderCommitEntity) getIntent().getSerializableExtra("order");
         orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
         float total;
         if (TextUtils.isEmpty(orderNo)){// 从购物车中点进来
             total = ShoppingCart.getInstance().getTotal();
         }else{// 从订单详情页点进来
-            total = Float.parseFloat(getIntent().getStringExtra(GlobalParams.TOTALPRICE));
+            String stringExtra = getIntent().getStringExtra(GlobalParams.TOTALPRICE);
+            String substring = stringExtra.substring(1);
+            total = Float.parseFloat(substring);
         }
         float f = Utils.formatFloat(total);
         tv_price.setText("¥"+f);
@@ -124,9 +126,9 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
             case R.id.btn_commit:
                 if (leibie == 1){
                     if (TextUtils.isEmpty(orderNo)){// 从购物车进去
-                        data.setLeibie(1);
+                        mData.setLeibie(1);
                         ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
-                        engine.onOrder(data, new ObjectCallBack<PayEntity>(this) {
+                        engine.onOrder(mData, new ObjectCallBack<PayEntity>(this) {
                             @Override
                             public void onSuccess(final PayEntity data) {
                                 // 取出订单号
@@ -146,38 +148,61 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                         });
                     }
                 }else if (leibie == 3){
-                    data.setLeibie(3);
-                    ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
-                    engine.dfOrder(data, new ObjectCallBack<CommitOrderResultEntity>(context) {
-                        @Override
-                        public void onSuccess(CommitOrderResultEntity entity) {
-                            // 清空购物车
-                            BaseApplication.clearShopcart();
-                            // 更新历史列表
-                            showToast("提交订单成功！");
-                            EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
-                            // 跳转到详情页,到时还需要传递数据过去
-                            Intent intent = new Intent(context, OrderDetailActivity.class);
-                            LogUtils.e("put:"+entity.getData().getOrderNo());
-                            intent.putExtra(GlobalParams.ORDERNO,entity.getData().getOrderNo());
-                            intent.putExtra(GlobalParams.ORDERDATE,data.getOrderDate());
-                            intent.putExtra(GlobalParams.ORDERTYPE,"1");
-                            intent.putExtra(GlobalParams.ORDERSTATE,"2");
-                            context.startActivity(intent);
-                            finish();
-                        }
-
-                        @Override
-                        public void onError(JSONObject result, String message1, int code) {
-                            showToast(message1);
-                            // 清空购物车
-                            BaseApplication.clearShopcart();
-                            if("时间超过了".equals(message1)){
-                                // 需要验证时间,由后台判断
-                                OverTimeDialog.show(context);
+                    mData.setLeibie(3);
+                    if (!TextUtils.isEmpty(orderNo)){
+                        HistoryOrderEngine engine = (HistoryOrderEngine) EngineFactory.getEngine(HistoryOrderEngine.class);
+                        engine.pay(orderNo, leibie, new ObjectCallBack<PayEntity>(context) {
+                            @Override
+                            public void onSuccess(PayEntity data) {
+                                // 清空购物车
+                                BaseApplication.clearShopcart();
+                                // 更新历史列表
+                                showToast("提交订单成功！");
+                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                                // 跳转到详情页,到时还需要传递数据过去
+                                Intent intent = new Intent(context, OrderDetailActivity.class);
+                                intent.putExtra(GlobalParams.ORDERNO,mData.getOrderNo());
+                                intent.putExtra(GlobalParams.ORDERDATE,mData.getOrderDate());
+                                intent.putExtra(GlobalParams.ORDERTYPE,"1");// 正常订单
+                                intent.putExtra(GlobalParams.ORDERSTATE,"2");// 到付
+                                context.startActivity(intent);
+                                finish();
                             }
-                        }
-                    });
+                        });
+                    }else{
+                        ShopCartEngine engine = (ShopCartEngine) EngineFactory.getEngine(ShopCartEngine.class);
+                        engine.dfOrder(mData, new ObjectCallBack<CommitOrderResultEntity>(context) {
+                            @Override
+                            public void onSuccess(CommitOrderResultEntity entity) {
+                                // 清空购物车
+                                BaseApplication.clearShopcart();
+                                // 更新历史列表
+                                showToast("提交订单成功！");
+                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                                // 跳转到详情页,到时还需要传递数据过去
+                                Intent intent = new Intent(context, OrderDetailActivity.class);
+                                LogUtils.e("put:"+entity.getData().getOrderNo());
+                                intent.putExtra(GlobalParams.ORDERNO,entity.getData().getOrderNo());
+                                intent.putExtra(GlobalParams.ORDERDATE, mData.getOrderDate());
+                                intent.putExtra(GlobalParams.ORDERTYPE,"1");// 正常订单
+                                intent.putExtra(GlobalParams.ORDERSTATE,"2");// 到付
+                                context.startActivity(intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(JSONObject result, String message1, int code) {
+                                showToast(message1);
+                                // 清空购物车
+                                BaseApplication.clearShopcart();
+                                if("时间超过了".equals(message1)){
+                                    // 需要验证时间,由后台判断
+                                    OverTimeDialog.show(context);
+                                }
+                            }
+                        });
+                    }
+
                 }
                 break;
         }
@@ -265,10 +290,12 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                         // 跳转到详情页,到时还需要传递数据过去
                         Intent intent = new Intent(context, OrderDetailActivity.class);
                         intent.putExtra(GlobalParams.ORDERNO,orderNo);
-                        intent.putExtra(GlobalParams.ORDERDATE,data.getOrderDate());
+                        intent.putExtra(GlobalParams.ORDERDATE, mData.getOrderDate());
                         intent.putExtra(GlobalParams.ORDERTYPE,"1");
                         intent.putExtra(GlobalParams.ORDERSTATE,"1");
                         context.startActivity(intent);
+                        // 更新历史列表
+                        EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                         EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrderDetail");
                         finish();
                     } else {

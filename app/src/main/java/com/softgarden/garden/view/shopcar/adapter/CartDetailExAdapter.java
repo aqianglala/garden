@@ -123,11 +123,11 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
 
             String numb = item.getQty() + item.getTgs() + "";
             tv_name.setText(item.getItemName());
-            tv_numb.setText(numb);
+            tv_numb.setText("x"+numb);
             tv_number.setText(item.getItemNo());
             tv_prediction.setText(item.getProQty()+"");
             tv_weight.setText(item.getSpec());
-            tv_back.setText(item.getReturnrate()+"");
+            tv_back.setText(item.getReturnrate()+"%");
             float price;
             if (item.getBzj()!=null){
                 price = item.getIsSpecial() == 0?Float.parseFloat
@@ -135,7 +135,7 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
             }else{
                 price = Float.parseFloat( item.getPrice());
             }
-            tv_price.setText(price+"");
+            tv_price.setText("￥"+price);
             tv_total.setText(numb);
             iv_product.setImageUrl(HttpHelper.HOST+item.getPicture(), ImageLoaderHelper.getInstance());
             rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);
@@ -216,11 +216,11 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
         OrderCommitEntity.ZstailBean item = children.get(childPosition);
         String numb = item.getQty() + item.getTgs() + "";
         holderView.tv_name.setText(item.getItemName());
-        holderView.tv_numb.setText(numb);
+        holderView.tv_numb.setText("x"+numb);
         holderView.tv_number.setText(item.getItemNo());
         holderView.tv_prediction.setText(item.getProQty()+"");
         holderView.tv_weight.setText(item.getSpec());
-        holderView.tv_back.setText(item.getReturnrate()+"");
+        holderView.tv_back.setText(item.getReturnrate()+"%");
         float price;
         if (item.getBzj()!=null){
             price = item.getIsSpecial() == 0?Float.parseFloat
@@ -228,7 +228,7 @@ public class CartDetailExAdapter extends BaseExpandableListAdapter{
         }else{
             price = Float.parseFloat( item.getPrice());
         }
-        holderView.tv_price.setText(price+"");
+        holderView.tv_price.setText("￥"+price);
         holderView.tv_total.setText(numb);
         holderView.iv_product.setImageUrl(HttpHelper.HOST+item.getPicture(), ImageLoaderHelper.getInstance());
         holderView.rl_modify_numb.setVisibility(isEditable?View.VISIBLE:View.GONE);

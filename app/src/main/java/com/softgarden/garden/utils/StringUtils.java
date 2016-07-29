@@ -331,7 +331,6 @@ public class StringUtils {
      * @return
      */
     public static String formatDate(Date date) {
-        Long timestamp = System.currentTimeMillis();
         String dateStr = new SimpleDateFormat("yyyy-MM-dd").format(date);
         return dateStr;
     }

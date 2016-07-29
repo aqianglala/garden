@@ -124,19 +124,19 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                 LinearLayout ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
                 final HistoryOrderEntity.DataBean item = (HistoryOrderEntity.DataBean) getGroup(groupPosition);
                 tv_number.setText(item.getOrderNo());
-                tv_amount.setText((item.getTgs()+item.getQty())+"");
-                tv_price.setText(item.getAmount()+"");
+                tv_amount.setText((item.getTgs()+item.getQty())+"件");
+                tv_price.setText("￥"+item.getAmount());
 
                 String type = item.getType();
                 if ("1".equals(type)){ // 正常订单
                     iv_order_type.setImageResource(R.mipmap.dingdan);
-                    tv_price_label.setText("订单金额");
+                    tv_price_label.setText("订单金额：");
                 }else if ("2".equals(type)){// 退货
                     iv_order_type.setImageResource(R.mipmap.tui);
-                    tv_price_label.setText("退货金额");
+                    tv_price_label.setText("退货金额：");
                 }else if ("3".equals(type)){// 换货
                     iv_order_type.setImageResource(R.mipmap.huan);
-                    tv_price_label.setText("换货金额");
+                    tv_price_label.setText("换货金额：");
                 }
 //                先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
 //                否则，判断用户是否是现金用户还是记账用户
@@ -216,6 +216,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
             holder.tv_price = (TextView) convertView.findViewById(R.id.tv_price);
             holder.tv_detail = (TextView) convertView.findViewById(R.id.tv_detail);
             holder.tv_state = (TextView) convertView.findViewById(R.id.tv_state);
+            holder.tv_price_label = (TextView) convertView.findViewById(R.id.tv_price_label);
             holder.iv_order_type = (ImageView) convertView.findViewById(R.id.iv_order_type);
             holder.ll_state = (LinearLayout) convertView.findViewById(R.id.ll_state);
             convertView.setTag(holder);
@@ -224,16 +225,19 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         }
         final HistoryOrderEntity.DataBean item = children.get(childPosition);
         holder.tv_number.setText(item.getOrderNo());
-        holder.tv_amount.setText((item.getTgs()+item.getQty())+"");
-        holder.tv_price.setText(item.getAmount()+"");
+        holder.tv_amount.setText((item.getTgs()+item.getQty())+"件");
+        holder.tv_price.setText("￥"+item.getAmount());
 
         String type = item.getType();
         if ("1".equals(type)){ // 正常订单
             holder.iv_order_type.setImageResource(R.mipmap.dingdan);
+            holder.tv_price_label.setText("订单金额：");
         }else if ("2".equals(type)){// 退货
             holder.iv_order_type.setImageResource(R.mipmap.tui);
+            holder.tv_price_label.setText("退货金额：");
         }else if ("3".equals(type)){// 换货
             holder.iv_order_type.setImageResource(R.mipmap.huan);
+            holder.tv_price_label.setText("换货金额：");
         }
 //                先判断是否开启支付，如果未开启，则历史订单不显示付款状态，
 //                否则，判断用户是否是现金用户还是记账用户
@@ -281,8 +285,10 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
         TextView tv_price;
         TextView tv_detail;
         TextView tv_state;
+        TextView tv_price_label;
         ImageView iv_order_type;
         LinearLayout ll_state;
+
     }
 
     public void setOpen(boolean open) {

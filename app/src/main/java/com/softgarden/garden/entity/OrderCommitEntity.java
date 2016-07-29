@@ -19,10 +19,19 @@ public class OrderCommitEntity implements Serializable{
 
     private String CustomerNo;
     private String OrderDate;
+    private String OrderNo;
     private String remarks;
 
     private int zffs;
     private int leibie;
+
+    public String getOrderNo() {
+        return OrderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        OrderNo = orderNo;
+    }
 
     public int getZffs() {
         return zffs;
@@ -114,6 +123,15 @@ public class OrderCommitEntity implements Serializable{
         private double returnrate;
         private String spec;
         private int tgs;
+        private int total;
+
+        public int getTotal() {
+            return total;
+        }
+
+        public void setTotal(int total) {
+            this.total = total;
+        }
 
         public ZstailBean(float amount, int isSpecial, String itemGroupName, String itemName,
                           String itemNo, String itemgroupcdoe, String price, int qty, String unit,
@@ -138,6 +156,24 @@ public class OrderCommitEntity implements Serializable{
             this.returnrate = returnrate;
             this.spec = spec;
             this.tgs = tgs;
+        }
+
+        public ZstailBean(String ItemNo, String proQty,  String Qty, String returnrate,
+                          String Price, String IsSpecial, String Amount, String tgs, String
+                                  ItemName, String spec,String picture, String bzj, int total) {
+            this.ItemNo = ItemNo;
+            this.proQty = Integer.parseInt(proQty);
+            this.Qty = Integer.parseInt(Qty);
+            this.returnrate = Double.parseDouble(returnrate);
+            this.Price = Price;
+            this.IsSpecial = Integer.parseInt(IsSpecial);
+            this.Amount = Float.parseFloat(Amount);
+            this.tgs = Integer.parseInt(tgs);
+            this.ItemName = ItemName;
+            this.spec = spec;
+            this.picture = picture;
+            this.bzj = bzj;
+            this.total = total;
         }
 
         public double getAmount() {

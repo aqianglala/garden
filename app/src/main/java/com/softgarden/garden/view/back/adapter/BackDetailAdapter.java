@@ -25,7 +25,7 @@ public class BackDetailAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBea
                 .setText(R.id.tv_number,item.getItemNo())
                 .setText(R.id.tv_prediction,item.getProQty())
                 .setText(R.id.tv_weight,item.getSpec())
-                .setText(R.id.tv_back,item.getReturnrate());
+                .setText(R.id.tv_back,item.getReturnrate()+"%");
         bgaViewHolderHelper.setText(R.id.tv_numb,"x"+item.getQty());
         // 判断单价
         float price;
@@ -35,7 +35,7 @@ public class BackDetailAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBea
         }else{
             price = Float.parseFloat( item.getPrice());
         }
-        bgaViewHolderHelper.setText(R.id.tv_price,price+"");
+        bgaViewHolderHelper.setText(R.id.tv_price,"￥"+price);
 
         NetworkImageView iv_product = bgaViewHolderHelper.getView(R.id.iv_product);
         iv_product.setImageUrl(HttpHelper.HOST+item.getPicture(), ImageLoaderHelper.getInstance());

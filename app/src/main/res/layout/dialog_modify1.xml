@@ -7,11 +7,11 @@
 
     <com.zhy.autolayout.AutoRelativeLayout
         android:layout_width="660px"
-        android:layout_height="660px">
+        android:layout_height="730px">
 
         <ImageView
             android:layout_width="580px"
-            android:layout_height="660px"
+            android:layout_height="730px"
             android:layout_centerHorizontal="true"
             android:background="@mipmap/dialog_modify"/>
 
@@ -45,17 +45,37 @@
 
         </com.zhy.autolayout.AutoLinearLayout>
 
-        <Button
-            android:id="@+id/btn_modify"
-            android:layout_width="350px"
-            android:layout_height="70px"
+        <com.zhy.autolayout.AutoLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/shape_modify"
-            android:layout_marginBottom="30px"
-            android:text="立即修改"
-            android:textColor="@color/white_text"
-            android:textSize="36px"/>
+            android:layout_marginBottom="20px">
+
+            <Button
+                android:id="@+id/btn_exit"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/shape_modify"
+                android:layout_marginRight="50px"
+                android:text="退出登录"
+                android:textColor="@color/white_text"
+                android:textSize="36px"/>
+
+            <Button
+                android:id="@+id/btn_modify"
+                android:layout_width="wrap_content"
+                android:layout_height="70px"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/shape_modify"
+                android:text="立即修改"
+                android:textColor="@color/white_text"
+                android:textSize="36px"/>
+        </com.zhy.autolayout.AutoLinearLayout>
+
 
     </com.zhy.autolayout.AutoRelativeLayout>
 

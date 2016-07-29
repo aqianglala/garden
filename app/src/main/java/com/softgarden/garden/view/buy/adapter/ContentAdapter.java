@@ -51,7 +51,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 .setText(R.id.tv_name,bean.getItemName())
                 .setText(R.id.tv_number, bean.getItemNo())
                 .setText(R.id.tv_weight,bean.getSpec())
-                .setText(R.id.tv_back,bean.getReturnrate()+"")
+                .setText(R.id.tv_back,bean.getReturnrate()+"%")
                 .setText(R.id.tv_prediction,bean.getProQty()+"")
                 .setText(R.id.tv_weight,bean.getSpec());
 
@@ -61,12 +61,12 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
 
         float price = Float.parseFloat(bean.getPrice());
         if(price == 0 || bean.getIsSpecial() == 0){// 没有特价，使用标准价
-            tv_special.setText(bean.getBzj());
+            tv_special.setText("￥"+bean.getBzj());
             tv_price.setVisibility(View.GONE);
             iv_tejia.setVisibility(View.GONE);
         }else{// 特价
-            tv_special.setText(bean.getPrice()+"");
-            tv_price.setText(bean.getBzj());
+            tv_special.setText("￥"+bean.getPrice());
+            tv_price.setText("￥"+bean.getBzj());
             tv_price.setVisibility(View.VISIBLE);
             tv_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             iv_tejia.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
                 InputDialog dialog = InputDialog.show((BaseActivity) context,tuangou,
-                        shuliang,maxCount,false);
+                        shuliang,maxCount,false,"加入购物车");
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {
@@ -122,7 +122,7 @@ public class ContentAdapter extends BGAAdapterViewAdapter<IndexEntity.DataBean.S
                 int tuangou = Integer.parseInt(tv_group.getText().toString().trim());
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
                 InputDialog dialog = InputDialog.show((BaseActivity) context,tuangou,
-                        shuliang,maxCount,true);
+                        shuliang,maxCount,true,"加入购物车");
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {

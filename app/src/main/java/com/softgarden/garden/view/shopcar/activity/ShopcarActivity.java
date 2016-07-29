@@ -197,7 +197,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         int totalNum = ShoppingCart.getInstance().getTotalNum();
         float totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
-        tv_totalprice.setText(Utils.formatFloat(totalPrice)+"");
+        tv_totalprice.setText("￥"+Utils.formatFloat(totalPrice));
     }
 
     @Override
@@ -434,7 +434,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         int totalNum = ShoppingCart.getInstance().getTotalNum();
         float totalPrice = ShoppingCart.getInstance().getTotal();
         tv_amount.setText(totalNum+"");
-        tv_totalprice.setText(Utils.formatFloat(totalPrice)+"");
+        tv_totalprice.setText("￥"+Utils.formatFloat(totalPrice));
     }
 
     @Override

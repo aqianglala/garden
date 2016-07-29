@@ -21,6 +21,7 @@
         android:layout_marginTop="@dimen/margin"
         android:background="@color/bg_gray"
         android:gravity="start"
+        android:enabled="false"
         android:hint="请在这里添加备注（100字以内）"
         android:minLines="5"
         android:padding="10px"

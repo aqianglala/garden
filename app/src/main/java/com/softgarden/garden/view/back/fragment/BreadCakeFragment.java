@@ -76,7 +76,8 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
                 bannerFragments);
         vp_banner.setAdapter(bannerPagerAdapter);
 
-        adapter = new CheckProductAdapter(mActivity, R.layout.item_list_check_content);
+        adapter = new CheckProductAdapter(mActivity, R.layout.item_list_check_content,
+                isBack?"确认退货":"确认换货");
         adapter.setCheckInterface(this);
         adapter.setModifyCountInterface(this);
         adapter.setInputNumListener(this);
