@@ -3,10 +3,10 @@ package com.softgarden.garden.engine;
 import com.google.gson.Gson;
 import com.softgarden.garden.base.BaseEngine;
 import com.softgarden.garden.base.ObjectCallBack;
+import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.HistoryDetailsEntity;
 import com.softgarden.garden.entity.HistoryOrderEntity;
 import com.softgarden.garden.entity.OrderEditEntity;
-import com.softgarden.garden.entity.CommitOrderResultEntity;
 import com.softgarden.garden.entity.PayEntity;
 import com.softgarden.garden.helper.HttpHelper;
 import com.softgarden.garden.interfaces.UrlsAndKeys;
@@ -19,6 +19,12 @@ import org.json.JSONObject;
  */
 public class HistoryOrderEngine extends BaseEngine{
 
+    /**
+     * 获取历史订单数据
+     * @param customerNo
+     * @param date  请求的哪个月的数据，格式为yyyy-MM
+     * @param callBack
+     */
     public void historyOrder(String customerNo, String date,ObjectCallBack<HistoryOrderEntity>
             callBack){
 

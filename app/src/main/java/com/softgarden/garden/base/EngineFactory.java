@@ -6,12 +6,6 @@ import com.softgarden.garden.utils.LogUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * EngineFactory
- *
- * @author 周钇冲 业务类简单工厂，将业务对象缓存起来，不每次都去new
- * @date 2015/9/8
- */
 public class EngineFactory {
 
     public static Map<String, BaseEngine> engines = new HashMap<String, BaseEngine>();

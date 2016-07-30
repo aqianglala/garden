@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity {
                         }else{
                             setcheck(lastCheckId);
                             // 显示对话框
-                            showToast("您没有此类的权限！");
+                            showToast("您没有退货权限！");
                         }
                         break;
                     case R.id.rb_change:
@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity {
                             // 上一个要check
                             setcheck(lastCheckId);
                             // 显示对话框
-                            showToast("您没有此类的权限！");
+                            showToast("您没有换货权限！");
                         }
                         break;
                     case R.id.rb_orders:
@@ -270,6 +270,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Subscriber(tag = "refreshThh")
+    private void refreshThh(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        refreshThh();
+    }
+
     public void toggle(){
         menu.toggle();
     }
@@ -286,6 +292,25 @@ public class MainActivity extends BaseActivity {
         ViewGroup.LayoutParams menu_params = view_menu.getLayoutParams();
         menu_params.height = ScreenUtils.getStatusBarHeight(this);
         view_menu.setLayoutParams(menu_params);
+    }
+
+    /**
+     * 由于退换货界面的数据是来源于首页数据，当首页数据发生变化时，应该更新退换货界面
+     * 由于退换货界面嵌套了多个fragment，马上更新界面体验更不好，于是我把退货或界面直接
+     * 移除，等点到退换货界面的时候重新加载数据就好，这样体验会更好
+     */
+    public void refreshThh(){
+        FragmentTransaction ft = getSupportFragmentManager()
+                .beginTransaction();
+        if (backFragment!=null){
+            ft.remove(backFragment);
+            backFragment = null;
+        }
+        if (changeFragment!=null){
+            ft.remove(changeFragment);
+            changeFragment = null;
+        }
+        ft.commit();
     }
 
 }

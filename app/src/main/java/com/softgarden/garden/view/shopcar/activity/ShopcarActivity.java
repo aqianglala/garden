@@ -144,7 +144,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
         float f1 = Utils.formatFloat(amount);
 
         OrderCommitEntity.ZstailBean productinfo = new OrderCommitEntity
-                .ZstailBean(f1, goodsBean.getIsSpecial(),
+                .ZstailBean(System.currentTimeMillis(),f1, goodsBean.getIsSpecial(),
                 goodsBean.getItemGroupName(), goodsBean.getItemName(), goodsBean.getItemNo(), goodsBean
                 .getItemgroupcdoe(), goodsBean.getPrice(), shuliang, goodsBean
                 .getUnit(),
@@ -163,7 +163,9 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
             }
         }
         if (!hasInGroups) {
-            GroupInfo groupInfo = new GroupInfo(goodsBean.getItemgroupcdoe(),goodsBean.getItemGroupName());
+            GroupInfo groupInfo = new GroupInfo(System.currentTimeMillis(),goodsBean
+                    .getItemgroupcdoe(),goodsBean
+                    .getItemGroupName());
             groups.add(groupInfo);
         }
     }
@@ -196,7 +198,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
 
         int totalNum = ShoppingCart.getInstance().getTotalNum();
         float totalPrice = ShoppingCart.getInstance().getTotal();
-        tv_amount.setText(totalNum+"");
+        tv_amount.setText(totalNum+"件");
         tv_totalprice.setText("￥"+Utils.formatFloat(totalPrice));
     }
 
@@ -240,11 +242,11 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                     rl_date.setVisibility(View.GONE);
                     ll_commit_order.setVisibility(View.GONE);
                     btn_delete.setVisibility(View.VISIBLE);
-                    tv_right.setText("完成");
+                    tv_right.setText("取消");
                     ll_check_all.setVisibility(View.VISIBLE);
                     adapter.setIsEditMode(true);
                     adapter.notifyDataSetChanged();
-                }else if(tv_right.getText().equals("完成")){
+                }else if(tv_right.getText().equals("取消")){
                     rl_date.setVisibility(View.VISIBLE);
                     ll_commit_order.setVisibility(View.VISIBLE);
                     btn_delete.setVisibility(View.GONE);
@@ -433,7 +435,7 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     public void update(Observable observable, Object data) {
         int totalNum = ShoppingCart.getInstance().getTotalNum();
         float totalPrice = ShoppingCart.getInstance().getTotal();
-        tv_amount.setText(totalNum+"");
+        tv_amount.setText(totalNum+"件");
         tv_totalprice.setText("￥"+Utils.formatFloat(totalPrice));
     }
 

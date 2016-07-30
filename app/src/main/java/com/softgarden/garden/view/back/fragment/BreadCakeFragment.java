@@ -198,7 +198,7 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         int measuredHeight = vp_banner.getMeasuredHeight();
         ViewGroup.LayoutParams layoutParams = vp_banner.getLayoutParams();
         if(tags.size()<=3){
-            layoutParams.height = UIUtils.dip2px(53);
+            layoutParams.height = UIUtils.dip2px(60);
         }else{
             layoutParams.height = UIUtils.dip2px(107);
         }

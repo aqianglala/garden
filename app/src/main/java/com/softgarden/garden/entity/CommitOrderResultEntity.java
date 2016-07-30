@@ -3,6 +3,7 @@ package com.softgarden.garden.entity;
 import com.softgarden.garden.base.BaseDao;
 
 /**
+ * 提交订单后服务器端返回数据的封装类
  * Created by qiang-pc on 2016/7/25.
  */
 public class CommitOrderResultEntity extends BaseDao{

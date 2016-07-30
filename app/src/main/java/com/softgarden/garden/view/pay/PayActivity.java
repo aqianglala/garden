@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -133,7 +134,6 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                             public void onSuccess(final PayEntity data) {
                                 // 取出订单号
                                 orderNo = data.getData().getOrderNo();
-                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                                 pay(data);
                             }
                         });
@@ -142,7 +142,6 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                         engine.pay(orderNo, leibie, new ObjectCallBack<PayEntity>(context) {
                             @Override
                             public void onSuccess(PayEntity data) {
-                                EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                                 pay(data);
                             }
                         });
@@ -174,6 +173,7 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                         engine.dfOrder(mData, new ObjectCallBack<CommitOrderResultEntity>(context) {
                             @Override
                             public void onSuccess(CommitOrderResultEntity entity) {
+                                isPayFail = false;// 到付成功，按返回键不退回到详情页
                                 // 清空购物车
                                 BaseApplication.clearShopcart();
                                 // 更新历史列表
@@ -286,6 +286,7 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
+                        isPayFail = false;
                         Toast.makeText(context, "支付成功", Toast.LENGTH_SHORT).show();
                         // 跳转到详情页,到时还需要传递数据过去
                         Intent intent = new Intent(context, OrderDetailActivity.class);
@@ -308,9 +309,11 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(context, "支付失败", Toast.LENGTH_SHORT).show();
                         }
+                        isPayFail = true;
                     }
                     // 清空购物车
                     BaseApplication.clearShopcart();
+                    EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     break;
                 }
                 default:
@@ -318,4 +321,21 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
             }
         };
     };
+
+    private boolean isPayFail;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (isPayFail){// 如果支付失败
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra(GlobalParams.ORDERNO,orderNo);
+                intent.putExtra(GlobalParams.ORDERDATE, mData.getOrderDate());
+                intent.putExtra(GlobalParams.ORDERTYPE,"1");// 正常订单
+                intent.putExtra(GlobalParams.ORDERSTATE,"0");// 未付款
+                context.startActivity(intent);
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

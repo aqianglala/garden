@@ -34,8 +34,9 @@
                 android:background="@android:color/transparent"
                 android:drawableLeft="@mipmap/shouji"
                 android:drawablePadding="20px"
-                android:hint="输入用户名"
+                android:hint="请输入用户名"
                 android:singleLine="true"
+                android:textColor="@color/black_text"
                 android:textColorHint="@color/gray_c"
                 android:textSize="32px"/>
 
@@ -43,6 +44,8 @@
                 android:id="@+id/btn_get_code"
                 android:layout_width="wrap_content"
                 android:layout_height="66px"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:background="@drawable/selector_get_code"
                 android:text="@string/get_code"
                 android:textColor="@color/pink_text"
@@ -56,6 +59,7 @@
             android:layout_marginTop="30px"
             android:drawableLeft="@mipmap/yanzhegma"
             android:drawablePadding="20px"
+            android:inputType="number"
             android:hint="@string/input_verification_code"/>
 
         <Button

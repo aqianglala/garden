@@ -35,6 +35,9 @@ import com.softgarden.garden.view.buy.NetworkImageHolderView;
 import com.softgarden.garden.view.buy.adapter.MyPagerAdapter;
 import com.softgarden.garden.view.shopcar.activity.ShopcarActivity;
 import com.softgarden.garden.view.start.activity.MainActivity;
+import com.softgarden.garden.view.start.entity.MessageBean;
+
+import org.simple.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,8 @@ public class BuyFragment extends BaseFragment implements Observer{
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_buy);
         mActivity = (MainActivity)getActivity();
+        pink = getResources().getColor(R.color.colorAccent);
+        black = getResources().getColor(R.color.black_text);
 
         tv_count = getViewById(R.id.tv_count);
         ll_tab_container = getViewById(R.id.ll_tab_container);
@@ -96,7 +101,9 @@ public class BuyFragment extends BaseFragment implements Observer{
         rl_indicator.setLayoutParams(layoutParams);
     }
 
-
+    private int lastPosition;
+    private int pink ;
+    private int black;
     @Override
     protected void setListener() {
         iv_me.setOnClickListener(this);
@@ -105,6 +112,28 @@ public class BuyFragment extends BaseFragment implements Observer{
             @Override
             public void onRefresh() {
                 loadData();
+                EventBus.getDefault().post(new MessageBean("mr.simple"), "refreshThh");
+            }
+        });
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // 修改文字颜色
+                tabViews.get(lastPosition).setTextColor(black);
+                tabViews.get(position).setTextColor(pink);
+                float translationx = position * tabWidth + positionOffsetPixels/tabCount;
+                ViewHelper.setTranslationX(rl_indicator,translationx);
+                lastPosition = position;
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewPager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -291,8 +320,6 @@ public class BuyFragment extends BaseFragment implements Observer{
                 if(size>0){
                     viewPager.setCurrentItem(i);
                     // 修改文字颜色
-                    int pink = mActivity.getResources().getColor(R.color.colorAccent);
-                    int black = mActivity.getResources().getColor(R.color.black_text);
                     int count = tabViews.size();
                     for(int j=0;j<count;j++){
                         tabViews.get(j).setTextColor(j==i?pink:black);

@@ -15,6 +15,13 @@ import org.json.JSONObject;
  */
 public class FeedBackEngine extends BaseEngine{
 
+    /**
+     * 上传图片和文字，多张图片才用base64编码后用逗号拼接
+     * @param customerNo
+     * @param content
+     * @param pic
+     * @param callBack
+     */
     public void complaint(String customerNo, String content, String pic, BaseCallBack
             callBack){
 
@@ -29,6 +36,12 @@ public class FeedBackEngine extends BaseEngine{
         HttpHelper.post(UrlsAndKeys.complaint,object,callBack);
     }
 
+    /**
+     * 上传建议
+     * @param customerNo
+     * @param content
+     * @param callBack
+     */
     public void proposal(String customerNo, String content, BaseCallBack
             callBack){
 

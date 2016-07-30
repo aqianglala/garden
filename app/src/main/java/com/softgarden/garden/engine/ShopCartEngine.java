@@ -17,6 +17,11 @@ import org.json.JSONObject;
  */
 public class ShopCartEngine extends BaseEngine{
 
+    /**
+     * 提交在线订单，服务端会返回调起支付宝所需的数据
+     * @param data
+     * @param callBack
+     */
     public void onOrder(OrderCommitEntity data, ObjectCallBack<PayEntity>
             callBack){
         String s = new Gson().toJson(data);

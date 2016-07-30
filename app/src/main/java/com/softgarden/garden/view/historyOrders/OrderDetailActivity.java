@@ -230,6 +230,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 tv_right.setVisibility(View.GONE);
                 rl_date.setEnabled(true);
                 et_remarks.setEnabled(true);
+                et_remarks.setHint("请在这里添加备注（100字以内）");
                 adapter.setEditable(true);
                 adapter.notifyDataSetChanged();
                 break;
@@ -239,6 +240,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
             case R.id.btn_cancel:
                 rl_date.setEnabled(false);
                 et_remarks.setEnabled(false);
+                et_remarks.setHint("");
                 // 如果是现金用户，且未付款，且开启了支付
                 if ("现金".equals(BaseApplication.userInfo.getData().getJsfs()) &&"0".equals(state) && "1"
                     .equals(BaseApplication.indexEntity.getData().getZhifu()) ){
@@ -313,6 +315,12 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                     tv_right.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     orderNo = data.getData().getOrderNo();
+
+                    rl_date.setEnabled(false);
+                    adapter.setEditable(false);
+                    adapter.notifyDataSetChanged();
+                    et_remarks.setEnabled(false);
+                    et_remarks.setHint("");
                     initBottomUI();
                     et_remarks.setEnabled(false);
                 }
@@ -336,9 +344,15 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         orderEditEntity.setOrderNo(orderNo);
         orderEditEntity.setOrderDate(tv_date.getText().toString());
         orderEditEntity.setRemarks(remarks);
-        if(!TextUtils.isEmpty(zffs))
+        if(!TextUtils.isEmpty(zffs));
         orderEditEntity.setZffs(Integer.parseInt(zffs));
-        orderEditEntity.setZstail(mData);
+        ArrayList<HistoryDetailsEntity.DataBean.ShopBean> list = new ArrayList<>();
+        for (HistoryDetailsEntity.DataBean.ShopBean item: mData){
+            if (item.getTotal()>0){
+                list.add(item);
+            }
+        }
+        orderEditEntity.setZstail(list);
         return orderEditEntity;
     }
 
@@ -384,7 +398,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     public void doDecrease(TextView textView, int position, String currentCount) {
         HistoryDetailsEntity.DataBean.ShopBean goodsBean = mData.get(position);
         int total = goodsBean.getTotal();
-        if(total>1){
+        if(total>0){
             float price;
             if (goodsBean.getBzj()!=null){
                 price = "0".equals(goodsBean.getIsSpecial())?Float.parseFloat

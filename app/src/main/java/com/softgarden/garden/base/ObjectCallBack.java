@@ -8,9 +8,6 @@ import org.json.JSONObject;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-/**
- * Created by Administrator on 2015/6/15.
- */
 public abstract class ObjectCallBack<T extends BaseDao> extends BaseCallBack {
     public ObjectCallBack(BaseActivity activity) {
         super(activity);

@@ -87,6 +87,9 @@ public class BaseApplication extends Application{
         activities.remove(activity);
     }
 
+    /**
+     * 退出登录
+     */
     public static void finishAllActivity() {
         for (int i = 0; i < activities.size(); i++) {
             if (activities.get(i) != null && !activities.get(i).isFinishing()) {
@@ -96,15 +99,23 @@ public class BaseApplication extends Application{
         activities.clear();
     }
 
+    /**
+     * 清空购物车
+     */
     public static void clearShopcart(){
         tempDataBeans.clear();
         ShoppingCart.getInstance().clearCart();
+        // 刷新首页数据
         EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
     }
 
+    /**
+     * 获取退换货类型
+     * @return
+     */
     public static int getReturnType(){
         if (BaseApplication.indexEntity == null){
-            return 2;
+            return 2;// 不退不换
         }else{
             return Integer.parseInt(BaseApplication.indexEntity.getData().getThh());
         }

@@ -107,7 +107,7 @@
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:background="@drawable/shape_get_code_normal"
-            android:text="加入购物车"
+            android:text="确定"
             android:textColor="@color/pink_text"
             android:textSize="@dimen/text_middle"/>
 

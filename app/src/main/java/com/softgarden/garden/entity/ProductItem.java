@@ -7,6 +7,9 @@ import com.softgarden.garden.dao.annotation.ColmanName;
 import com.softgarden.garden.dao.annotation.TableName;
 import com.softgarden.garden.dao.annotation.TablePrimaryKey;
 
+/**
+ * 这个没用到，因为没用到数据库
+ */
 @TableName("product")
 public class ProductItem extends BaseDao {
 

@@ -68,6 +68,7 @@ public class ConfirmOrderActivity extends BaseActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_footer_order_list,
                 expandableListView, false);
         et_remarks = (EditText) view.findViewById(R.id.et_remarks);
+        et_remarks.setEnabled(true);
         expandableListView.addFooterView(view);
     }
 

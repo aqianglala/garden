@@ -19,11 +19,11 @@
         android:background="@color/bg_white"
         android:layout_below="@id/view_margin"
         app:mcv_showOtherDates="all"
-        />
+        app:mcv_headerTextAppearance="@style/mcv_headerTextAppearance"/>
 
     <RelativeLayout
         android:id="@+id/view_choose"
-        android:layout_width="110dp"
+        android:layout_width="140dp"
         android:layout_height="55dp"
         android:layout_below="@id/view_margin"
         android:layout_centerHorizontal="true"

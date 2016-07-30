@@ -86,12 +86,6 @@ public class CommitOrderDialog extends DialogFragment implements View.OnClickLis
         return dialog;
     }
 
-    /**
-     * 发送登录请求。登录成功时保存账号密码，并跳转到主页
-     *
-     * @param name
-     * @param password
-     */
     private void sendLogin(final String name, String password) {
 
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
@@ -100,6 +94,7 @@ public class CommitOrderDialog extends DialogFragment implements View.OnClickLis
             public void onSuccess(UserEntity data) {
                 ToastUtil.show("验证密码成功！");
                 BaseApplication.userInfo = data;
+                // 已经验证过了就不用重新验证，以下方法将在activity中添加已经验证过的标记，并调用提交订单的方法
                 EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");
                 dismiss();
             }

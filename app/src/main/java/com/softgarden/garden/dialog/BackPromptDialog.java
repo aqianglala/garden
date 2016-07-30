@@ -38,9 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- * Created by Administrator on 2015/6/16.
- */
 public class BackPromptDialog extends DialogFragment implements View.OnClickListener{
     private static Context context;
     private TextView tv_count;
@@ -109,6 +106,12 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable());
     }
 
+    /**
+     * 将数据传入，数据将在详情页展示
+     * @param activity
+     * @param backCommitEntity
+     * @return
+     */
     public static BackPromptDialog show(FragmentActivity activity, BackCommitEntity backCommitEntity) {
         context = activity;
         mData = backCommitEntity;
@@ -120,11 +123,17 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
         return dialog;
     }
 
+    /**
+     * 验证密码是否正确
+     * @param name
+     * @param password
+     */
     private void sendLogin(final String name, String password) {
         UserEngine engine = (UserEngine) EngineFactory.getEngine(UserEngine.class);
         engine.login(name, password, new ObjectCallBack<UserEntity>((BaseActivity) context) {
             @Override
             public void onSuccess(UserEntity data) {
+                BaseApplication.userInfo = data;
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(new Gson().toJson(mData));

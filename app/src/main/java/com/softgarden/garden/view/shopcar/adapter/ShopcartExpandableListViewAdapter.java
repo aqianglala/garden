@@ -80,12 +80,13 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public long getGroupId(int groupPosition) {
-        return 0;
+        return groups.get(groupPosition).getId();
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        String groupId = groups.get(groupPosition).getGroupId();
+        return children.get(groupId).get(childPosition).getId();
     }
 
     @Override
@@ -239,7 +240,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                     int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
                     int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
                     InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
-                            tuangou,shuliang,maxCount,false,"加入购物车");
+                            tuangou,shuliang,maxCount,false,"确定");
                     dialog.setDialogInputListener(new DialogInputListener() {
                         @Override
                         public void inputNum(String num) {
@@ -260,7 +261,7 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
                     int tuangou = Integer.parseInt(cholder.tv_group.getText().toString().trim());
                     int shuliang = Integer.parseInt(cholder.tv_total.getText().toString().trim());
                     InputCountDialog dialog = InputCountDialog.show((BaseActivity) context,
-                            tuangou,shuliang,maxCount,true,"加入购物车");
+                            tuangou,shuliang,maxCount,true,"确定");
                     dialog.setDialogInputListener(new DialogInputListener() {
                         @Override
                         public void inputNum(String num) {

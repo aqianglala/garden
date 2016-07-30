@@ -32,7 +32,6 @@ import org.simple.eventbus.EventBus;
  */
 public class MenuFragment extends BaseFragment {
 
-
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_menu);

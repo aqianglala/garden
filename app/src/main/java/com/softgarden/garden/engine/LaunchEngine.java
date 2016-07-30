@@ -12,6 +12,10 @@ import org.json.JSONObject;
  */
 public class LaunchEngine extends BaseEngine {
 
+    /**
+     * 获取启动页图片
+     * @param callBack
+     */
     public static void qidongye(BaseCallBack callBack){
         HttpHelper.post(UrlsAndKeys.qidongye,new JSONObject(),callBack);
     }

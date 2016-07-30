@@ -38,9 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- * Created by Administrator on 2015/6/16.
- */
 public class ChangePromptDialog extends DialogFragment implements View.OnClickListener{
     private static Context context;
     private TextView tv_count;
@@ -125,6 +122,7 @@ public class ChangePromptDialog extends DialogFragment implements View.OnClickLi
         engine.login(name, password, new ObjectCallBack<UserEntity>((BaseActivity) context) {
             @Override
             public void onSuccess(UserEntity data) {
+                BaseApplication.userInfo = data;
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(new Gson().toJson(mData));

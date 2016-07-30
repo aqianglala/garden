@@ -44,9 +44,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="10px"
             android:text="@string/address_hint"
             android:textColor="@color/gray_darker"
-            android:textSize="@dimen/text_middle"/>
+            android:textSize="@dimen/text_small"/>
 
     </com.zhy.autolayout.AutoLinearLayout>
 

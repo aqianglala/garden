@@ -14,6 +14,11 @@ import org.json.JSONObject;
  */
 public class BuyEngine extends BaseEngine{
 
+    /**
+     * 获取首页数据
+     * @param username
+     * @param callBack
+     */
     public void getProducts(String username, ObjectCallBack<IndexEntity>
             callBack){
 

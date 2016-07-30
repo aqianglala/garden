@@ -60,6 +60,17 @@ public class InputCountDialog extends DialogFragment implements View.OnClickList
     private static int max;
     private static boolean isTuangou;
     private static String btnLabel;
+
+    /**
+     *
+     * @param activity
+     * @param group 团购数目
+     * @param count 加减那里的数目
+     * @param maxCount  数量上限
+     * @param isTuan    是否为团购框点进来的
+     * @param Label 对话框右下角button的文字，后来说不要了。。。
+     * @return
+     */
     public static InputCountDialog show(FragmentActivity activity,int group,int count,int
             maxCount,boolean isTuan,String Label) {
         tuangou = group;

@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class ForgetPswdActivity extends BaseActivity {
     private String customerNo;
     private String title;
     private TextView tv_phone_number;
+    private LinearLayout ll_prompt;
+    private LinearLayout ll_call;
     private String mobile;
 
     @Override
@@ -51,6 +54,9 @@ public class ForgetPswdActivity extends BaseActivity {
         et_verification_code = getViewById(R.id.et_verification_code);
         btn_get_code = getViewById(R.id.btn_get_code);
         tv_phone_number = getViewById(R.id.tv_phone_number);
+
+        ll_prompt = getViewById(R.id.ll_prompt);
+        ll_call = getViewById(R.id.ll_call);
     }
 
     @Override
@@ -73,6 +79,8 @@ public class ForgetPswdActivity extends BaseActivity {
         title = getIntent().getStringExtra("title");
         if(title.equals("忘记密码")){
             et_phone_number.setEnabled(true);
+            ll_prompt.setVisibility(View.GONE);
+            ll_call.setVisibility(View.GONE);
         }else{
             phone = BaseApplication.userInfo.getData().getPhone();
             et_phone_number.setEnabled(false);

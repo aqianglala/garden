@@ -5,11 +5,21 @@ package com.softgarden.garden.view.shopcar.entity;
  */
 public class GroupInfo {
 
+    private long id;
     private String groupId;
     private String groupName;
     private boolean isChoosed;
 
-    public GroupInfo(String groupId, String groupName) {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public GroupInfo(long id, String groupId, String groupName) {
+        this.id = id;
         this.groupId = groupId;
         this.groupName = groupName;
     }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * 提交退货订单的数据封装的bean
  * Created by qiang-pc on 2016/7/14.
  */
 public class BackCommitEntity implements Serializable{

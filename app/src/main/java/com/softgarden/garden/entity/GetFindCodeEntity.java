@@ -3,6 +3,7 @@ package com.softgarden.garden.entity;
 import com.softgarden.garden.base.BaseDao;
 
 /**
+ * 服务端找回密码的验证码数据的封装类
  * Created by qiang-pc on 2016/7/28.
  */
 public class GetFindCodeEntity extends BaseDao {

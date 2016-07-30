@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 提交订单到服务器的数据的封装类
+ * 本来这个List<ZstailBean> zstail，可以复用的，因为在很多地方都要提交订单，
+ * 但是后台一开始的数据字段都不太统一，导致我要创建多个，苦逼的地方，后面懒得改了
  * Created by qiang-pc on 2016/7/14.
  */
 public class OrderCommitEntity implements Serializable{
@@ -124,6 +127,23 @@ public class OrderCommitEntity implements Serializable{
         private String spec;
         private int tgs;
         private int total;
+        private long id;
+
+        public boolean isChoosed() {
+            return isChoosed;
+        }
+
+        public void setChoosed(boolean choosed) {
+            isChoosed = choosed;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public int getTotal() {
             return total;
@@ -133,11 +153,12 @@ public class OrderCommitEntity implements Serializable{
             this.total = total;
         }
 
-        public ZstailBean(float amount, int isSpecial, String itemGroupName, String itemName,
+        public ZstailBean(long id, float amount, int isSpecial, String itemGroupName, String itemName,
                           String itemNo, String itemgroupcdoe, String price, int qty, String unit,
                           String bzj, boolean isChoosed, String itemclassCode, String
                                   itemclassName, String picture, int proQty, double returnrate,
                           String spec, int tgs) {
+            this.id = id;
             Amount = amount;
             IsSpecial = isSpecial;
             ItemGroupName = itemGroupName;

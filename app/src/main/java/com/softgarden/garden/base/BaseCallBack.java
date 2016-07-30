@@ -13,9 +13,6 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-/**
- * Created by Administrator on 2015/6/15.
- */
 public abstract class BaseCallBack implements RequestManager.RequestListener {
     private FragmentActivity activity;
     public int success;
@@ -117,7 +114,4 @@ public abstract class BaseCallBack implements RequestManager.RequestListener {
     public void onBusy(JSONObject result, String message) {
         ToastDialog.showError(getActivity(), message);
     }
-
-
-    ;
 }

@@ -108,7 +108,7 @@ public class ShoppingCart extends Observable {
     }
 
     /**
-     * 应该需要有个全局的集合用来保存团购数和预估数，添加数据就是往这个集合中添加数据
+     * 应该需要有个全局的集合用来保存团购数和预估数，修改数据就是往这个集合中添加数据
      * 然后重新计算总数和总价，再notify
      * @param item
      */

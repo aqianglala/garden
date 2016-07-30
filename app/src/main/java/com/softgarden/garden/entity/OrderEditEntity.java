@@ -3,6 +3,7 @@ package com.softgarden.garden.entity;
 import java.util.List;
 
 /**
+ * 提交修改订单数据到服务器端的数据的封装类
  * Created by qiang-pc on 2016/7/14.
  */
 public class OrderEditEntity {

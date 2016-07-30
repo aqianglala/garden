@@ -5,6 +5,7 @@ import com.softgarden.garden.base.BaseDao;
 import java.util.List;
 
 /**
+ * 上传图片数据到服务端的数据的封装类
  * Created by qiang-pc on 2016/7/19.
  */
 public class UploadImgEntity extends BaseDao{

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -92,11 +93,10 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
                 false);
         widget = (MaterialCalendarView) calenderLayout.findViewById(R.id.calendarView);
         // 设置中文
-        String[] monthArr = {"一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"};
+        String[] monthArr = {"1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"};
         widget.setTitleMonths(monthArr);
-        String[] weekArr = {"周日","周一","周二","周三","周四","周五","周六"};
+        String[] weekArr = {"日","一","二","三","四","五","六"};
         widget.setWeekDayLabels(weekArr);
-
         widget.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
@@ -326,7 +326,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             expandableListView.setSelection(0);
         }else{
             // 当天没有订单
-            showToast("当天没有订单!");
+            Toast.makeText(mActivity,"您选中的日期没有订单！",Toast.LENGTH_SHORT).show();
         }
     }
 

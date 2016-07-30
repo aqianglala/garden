@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,11 @@ import com.softgarden.garden.utils.StringUtils;
 import com.softgarden.garden.utils.UIUtils;
 import com.softgarden.garden.view.back.adapter.ContainerPagerAdapter;
 import com.softgarden.garden.view.start.activity.MainActivity;
+import com.softgarden.garden.view.start.entity.MessageBean;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subscriber;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,10 +63,14 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
     private RelativeLayout rl_date;
     private TextView tv_date;
     private TextView tv_date_label;
+    private ContainerPagerAdapter contentPagerAdapter;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.fragment_back);
+
+        // register the receiver object
+        EventBus.getDefault().register(this);
 
         mActivity = (MainActivity)getActivity();
 
@@ -112,6 +121,10 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
         isBack = arguments.getBoolean("isBack");
         btn_confirm.setText(isBack?"确认退货":"确认换货");
         tv_date_label.setText(isBack?"退货日期":"换货日期");
+        getData();
+    }
+
+    private void getData() {
         // 如果数据不为空
         if(BaseApplication.indexEntity!= null){
             // 动态添加tab和fragment,ll_tab的最大宽度为240dp
@@ -119,6 +132,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
             setTabWidth();
             // 动态生成fragment，并设置其一级id，让对应的fragment请求自己的数据
             fragments.clear();
+            tabViews.clear();
             ll_tab_container.removeAllViews();
             for(int i=0;i<tabCount;i++){
                 // 动态生成tab
@@ -126,9 +140,15 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
                 // 动态生成fragment
                 addFragment(i);
             }
-            ContainerPagerAdapter contentPagerAdapter = new ContainerPagerAdapter(getChildFragmentManager(),
-                    fragments);
+            // 由于fragment的数量是不固定的，因此需要更新pagerAdapter和每个framgent里的数据
+            if (contentPagerAdapter == null){
+                contentPagerAdapter = new ContainerPagerAdapter(getChildFragmentManager(),
+                        fragments);
+            }
+            vp_content.removeAllViews();
+            vp_content.removeAllViewsInLayout();
             vp_content.setAdapter(contentPagerAdapter);
+            contentPagerAdapter.notifyDataSetChanged();
             changeTitleState(0);
         }
     }
@@ -277,6 +297,19 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
         instance.set(year,monthOfYear,dayOfMonth);
         String formatDate = StringUtils.formatDate(instance.getTime());
         tv_date.setText(formatDate);
+    }
+
+    @Override
+    public void onDestroyView() {
+        // Don’t forget to unregister !!
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Subscriber(tag = "updateBackFm")
+    private void updateBackFm(MessageBean user) {
+        Log.e("", "### update user with my_tag, name = " + user.message);
+        getData();
     }
 
 }

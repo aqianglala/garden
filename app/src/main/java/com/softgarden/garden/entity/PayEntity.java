@@ -3,6 +3,7 @@ package com.softgarden.garden.entity;
 import com.softgarden.garden.base.BaseDao;
 
 /**
+ * 支付结果的封装类
  * Created by qiang-pc on 2016/7/21.
  */
 public class PayEntity extends BaseDao{

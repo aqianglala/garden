@@ -12,11 +12,11 @@
     <string name="label_forget_pswd">忘记密码</string>
 
     <string name="input_phone_number">输入手机号</string>
-    <string name="input_verification_code">输入验证码</string>
+    <string name="input_verification_code">请输入验证码</string>
     <string name="next">下一步</string>
     <string name="or_you_can">或者你可以</string>
     <string name="phone_number">400-88-8888</string>
-    <string name="get_code">获取验证码</string>
+    <string name="get_code">获取手机验证码</string>
 
     <string name="input_new_pswd">输入新密码</string>
     <string name="confirm_pswd">确认新密码</string>

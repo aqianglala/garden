@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 首页数据的封装类
  * Created by qiang-pc on 2016/7/6.
  */
 public class IndexEntity extends BaseDao{

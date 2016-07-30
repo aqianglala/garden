@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * 历史订单列表数据的封装类
  * Created by qiang-pc on 2016/7/14.
  */
 public class HistoryOrderEntity extends BaseDao {

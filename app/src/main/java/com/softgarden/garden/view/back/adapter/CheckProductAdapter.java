@@ -69,7 +69,7 @@ public class CheckProductAdapter extends BGAAdapterViewAdapter<IndexEntity.DataB
             public void onClick(View v) {
                 int shuliang = Integer.parseInt(tv_total.getText().toString().trim());
                 InputDialog dialog = InputDialog.show((BaseActivity) context,0,
-                        shuliang,0,false,btnLabel);
+                        shuliang,0,false,"确定");
                 dialog.setDialogInputListener(new DialogInputListener() {
                     @Override
                     public void inputNum(String num) {

@@ -5,6 +5,7 @@ import com.softgarden.garden.base.BaseDao;
 import java.util.List;
 
 /**
+ * 服务器端返回的历史订单详情数据的封装类
  * Created by qiang-pc on 2016/7/15.
  */
 public class HistoryDetailsEntity extends BaseDao {
