@@ -70,6 +70,9 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     private String zffs;
     private RelativeLayout rl_bottom;
 
+    private String price;
+    private boolean isYYY;
+
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_order_detail);
@@ -111,6 +114,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
         type = getIntent().getStringExtra(GlobalParams.ORDERTYPE);
         orderNo = getIntent().getStringExtra(GlobalParams.ORDERNO);
         orderDate = getIntent().getStringExtra(GlobalParams.ORDERDATE);
+        isYYY = getIntent().getBooleanExtra(GlobalParams.ISYYY, false);
         rl_date.setEnabled(false);
         // 设置底部界面
         initBottomUI();
@@ -134,6 +138,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 mData = shop ;
                 tv_totalAmount.setText(getTotalNum()+"件");
                 tv_price.setText("￥"+getTotalPrice());
+                price = tv_price.getText().toString().trim();
                 adapter = new OrderDetailExAdapter(mData, context);
                 adapter.setModifyCountInterface(OrderDetailActivity.this);
                 expandableListView.setAdapter(adapter);
@@ -152,6 +157,10 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
     }
 
     private void initBottomUI() {
+        if (isYYY){
+            tv_right.setVisibility(View.GONE);
+            return;
+        }
         Date dateFromStr = StringUtils.getDateFromStr(orderDate);
         if ("1".equals(state)|| dateFromStr.getTime()< System.currentTimeMillis()){// 已经付款，或者时间超过
             tv_right.setVisibility(View.GONE);
@@ -260,7 +269,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 intent.putExtra(GlobalParams.ORDERNO,orderNo);
                 intent.putExtra(GlobalParams.ORDERTYPE,"1");
                 intent.putExtra("order",orderCommitEntity);
-                intent.putExtra(GlobalParams.TOTALPRICE,tv_price.getText().toString());
+                intent.putExtra(GlobalParams.TOTALPRICE,price);
                 startActivity(intent);
                 finish();
                 break;
@@ -310,6 +319,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
             engine.orderEdit(orderEditEntity,new ObjectCallBack<CommitOrderResultEntity>(context) {
                 @Override
                 public void onSuccess(CommitOrderResultEntity data) {
+                    price = tv_price.getText().toString().trim();
                     // 更新历史列表
                     showToast("提交订单成功！");
                     tv_right.setVisibility(View.VISIBLE);

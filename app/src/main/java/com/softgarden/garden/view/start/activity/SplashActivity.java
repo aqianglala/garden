@@ -18,6 +18,7 @@ import com.softgarden.garden.helper.ImageLoaderHelper;
 import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
+import com.softgarden.garden.view.YingYeYuan.YYYActivity;
 import com.softgarden.garden.view.login.LoginActivity;
 
 import org.json.JSONObject;
@@ -57,7 +58,12 @@ public class SplashActivity extends BaseActivity {
             intent = new Intent(SplashActivity.this, LoginActivity.class);
         }else{
             BaseApplication.userInfo = new Gson().fromJson(userinfo, UserEntity.class);
-            intent = new Intent(SplashActivity.this, MainActivity.class);
+            String yyy = BaseApplication.userInfo.getData().getYyy();
+            if (TextUtils.isEmpty(yyy)){
+                intent = new Intent(SplashActivity.this, MainActivity.class);
+            }else{
+                intent = new Intent(SplashActivity.this, YYYActivity.class);
+            }
         }
         new Handler().postDelayed(new Runnable() {
             @Override

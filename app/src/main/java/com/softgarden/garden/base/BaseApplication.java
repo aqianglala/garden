@@ -104,7 +104,9 @@ public class BaseApplication extends Application{
      */
     public static void clearShopcart(){
         tempDataBeans.clear();
-        ShoppingCart.getInstance().clearCart();
+        ShoppingCart instance = ShoppingCart.getInstance();
+        instance.clearCart();
+        instance.setHasClear(true);
         // 刷新首页数据
         EventBus.getDefault().post(new MessageBean("mr.simple"), "notifyDataSetChange");
     }

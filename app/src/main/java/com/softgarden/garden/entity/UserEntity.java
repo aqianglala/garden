@@ -74,6 +74,15 @@ public class UserEntity extends BaseDao {
         private String status;
         private String ReturnType_name;
         private String token;
+        private String yyy;
+
+        public String getYyy() {
+            return yyy;
+        }
+
+        public void setYyy(String yyy) {
+            this.yyy = yyy;
+        }
 
         public String getCustomerNo() {
             return CustomerNo;

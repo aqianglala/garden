@@ -46,4 +46,5 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:2.4.0'
     compile files('libs/android_volley_manager_1.05.jar')
     compile files('libs/alipaySdk-20160516.jar')
+    compile 'me.yokeyword:indexablestickylistview:0.6.4'
 }

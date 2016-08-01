@@ -33,7 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
 
         initView(savedInstanceState);
-        if(!TAG.equals("MainActivity")&&!TAG.equals("SplashActivity")&& !TAG.equals("LoginActivity")){
+        if(!TAG.equals("MainActivity")&&!TAG.equals("SplashActivity")&& !TAG.equals
+                ("LoginActivity")&& !TAG.equals("YYYOrderActivity")){
             Toolbar toolbar = getViewById(R.id.toolBar);
             setSupportActionBar(toolbar);
             tv_title = getViewById(R.id.tv_title);

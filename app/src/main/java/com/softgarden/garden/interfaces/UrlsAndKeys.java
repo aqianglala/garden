@@ -26,6 +26,7 @@ public interface UrlsAndKeys {
     String dfOrder = "index.php/App/Api/dfOrder";
     String pay = "index.php/App/Api/pay";
     String qidongye = "index.php/App/Api/qidongye";
+    String yyy = "index.php/App/Api/yyy";
 
     String HASMODIFYPSWD = "hasmodifypswd";
 }

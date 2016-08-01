@@ -21,6 +21,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.SPUtils;
 import com.softgarden.garden.utils.StatusBarUtils;
+import com.softgarden.garden.view.YingYeYuan.YYYActivity;
 import com.softgarden.garden.view.password.ForgetPswdActivity;
 import com.softgarden.garden.view.start.activity.MainActivity;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -93,9 +94,14 @@ public class LoginActivity extends BaseActivity {
                 SPUtils.put(LoginActivity.this, GlobalParams.USERINFO,new Gson().toJson(data));
                 SPUtils.put(LoginActivity.this,GlobalParams.HASMODIFYPSWD,data.getErrorMsg().equals("强制改密")
                         ?false:true);
-                goActivity(MainActivity.class);
-                // 首页关闭强制改密的对话框
-                EventBus.getDefault().post(new MessageBean("mr.simple"), "close_dialog");
+                String yyy = data.getData().getYyy();
+                if (TextUtils.isEmpty(yyy)){
+                    goActivity(MainActivity.class);
+                    // 首页关闭强制改密的对话框
+                    EventBus.getDefault().post(new MessageBean("mr.simple"), "close_dialog");
+                }else{
+                    goActivity(YYYActivity.class);
+                }
                 finish();
             }
 

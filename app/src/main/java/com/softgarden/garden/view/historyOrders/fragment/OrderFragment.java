@@ -4,12 +4,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -52,7 +54,7 @@ import java.util.Map;
 public class OrderFragment extends BaseFragment implements OnDateSelectedListener,SwipeRefreshLayout.OnRefreshListener {
 
     private ImageView iv_me;
-    private MainActivity mActivity;
+    private BaseActivity mActivity;
     private List<HistoryOrderEntity.DataBean> mData = new ArrayList<>();
     private MaterialCalendarView widget;
     private ExpandableListView expandableListView;
@@ -63,6 +65,10 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout layout_empty;
     private boolean isSwitchMonth;
+    private String name;
+    private TextView tv_title;
+
+    private boolean isYYY;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -71,9 +77,10 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         EventBus.getDefault().register(this);
 
         iv_me = getViewById(R.id.iv_me);
-        mActivity = (MainActivity)getActivity();
+        mActivity = (BaseActivity) getActivity();
 
         layout_empty = getViewById(R.id.layout_empty);
+        tv_title = getViewById(R.id.tv_title);
 
         swipeRefreshLayout = getViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -157,6 +164,19 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments!=null){
+            name = (String) arguments.get("name");
+        }
+        if (TextUtils.isEmpty(name)){
+            name = BaseApplication.userInfo.getData().getCustomerNo();
+            isYYY = false;
+        }else{
+            iv_me.setVisibility(View.GONE);
+            tv_title.setText(name);
+            tv_title.setCompoundDrawables(null,null,null,null);
+            isYYY = true;
+        }
         myObjectCallBack = new MyObjectCallBack(mActivity);
         swipeRefreshLayout.post(new Runnable(){
             @Override
@@ -169,8 +189,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
 
     private void getHistoryOrder(String date) {
         HistoryOrderEngine engine = new HistoryOrderEngine();
-        String customerNo = BaseApplication.userInfo.getData().getCustomerNo();
-        engine.historyOrder(customerNo,date, myObjectCallBack);
+        engine.historyOrder(name,date, myObjectCallBack);
     }
 
     @Override
@@ -229,6 +248,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
             }
             if (myExAdapter == null){
                 myExAdapter = new OrderExAdapter(mData, mActivity);
+                myExAdapter.setYYY(isYYY);
                 expandableListView.setAdapter(myExAdapter);
             }else{
                 myExAdapter.groupingData();
@@ -274,7 +294,7 @@ public class OrderFragment extends BaseFragment implements OnDateSelectedListene
         super.onClick(v);
         switch (v.getId()){
             case R.id.iv_me:
-                mActivity.toggle();
+                ((MainActivity)mActivity).toggle();
                 break;
             case R.id.view_choose:
                 // 弹出时间选择框

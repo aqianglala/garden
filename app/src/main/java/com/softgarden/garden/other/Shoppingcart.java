@@ -20,6 +20,16 @@ public class ShoppingCart extends Observable {
     private float total = 0;
     private int totalNum=0;
 
+    private boolean hasClear;
+
+    public void setHasClear(boolean hasClear) {
+        this.hasClear = hasClear;
+    }
+
+    public boolean isHasClear() {
+        return hasClear;
+    }
+
     /**
      * 购物车的总价格
      * @return
@@ -89,16 +99,18 @@ public class ShoppingCart extends Observable {
                             }
                         }
                         if(!isInTempData){
-                            int count = Integer.parseInt(goodsBean.getProQty());
-                            totalNum += count;
-                            float price;
-                            if (goodsBean.getBzj()!=null){
-                                price = goodsBean.getIsSpecial() == 0?Float.parseFloat(goodsBean
-                                        .getBzj()): Float.parseFloat(goodsBean.getPrice());
-                            }else{
-                                price = Float.parseFloat(goodsBean.getPrice());
+                            if (!hasClear){// 清空了购物车就不再把预估数加入购物车
+                                int count = Integer.parseInt(goodsBean.getProQty());
+                                totalNum += count;
+                                float price;
+                                if (goodsBean.getBzj()!=null){
+                                    price = goodsBean.getIsSpecial() == 0?Float.parseFloat(goodsBean
+                                            .getBzj()): Float.parseFloat(goodsBean.getPrice());
+                                }else{
+                                    price = Float.parseFloat(goodsBean.getPrice());
+                                }
+                                total += Utils.formatFloat(price * count);
                             }
-                            total += Utils.formatFloat(price * count);
                         }
                     }
                 }

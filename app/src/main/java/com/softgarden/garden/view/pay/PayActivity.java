@@ -7,10 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +38,7 @@ import com.softgarden.garden.view.start.entity.MessageBean;
 import org.json.JSONObject;
 import org.simple.eventbus.EventBus;
 
-public class PayActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener{
+public class PayActivity extends BaseActivity {
 
 
     private LinearLayout ll_alipay;
@@ -80,10 +80,11 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
         ll_alipay.setOnClickListener(this);
         ll_weixin.setOnClickListener(this);
         ll_daofu.setOnClickListener(this);
-        // 点击checkBox也能切换
-        cb_alipay.setOnCheckedChangeListener(this);
-        cb_weixin.setOnCheckedChangeListener(this);
-        cb_daofu.setOnCheckedChangeListener(this);
+
+        cb_alipay.setOnClickListener(this);
+        cb_weixin.setOnClickListener(this);
+        cb_daofu.setOnClickListener(this);
+
         btn_commit.setOnClickListener(this);
     }
 
@@ -124,6 +125,22 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                 changeBackground(R.id.ll_daofu);
                 btn_commit.setText("确认");
                 break;
+            case R.id.cb_alipay:
+                leibie = 1;
+                changeBackground(R.id.ll_alipay);
+                // 修改btn文字
+                btn_commit.setText("确认订单");
+                break;
+            case R.id.cb_weixin:
+                leibie = 2;
+                changeBackground(R.id.ll_weixin);
+                btn_commit.setText("确认订单");
+                break;
+            case R.id.cb_daofu:
+                leibie = 3;
+                changeBackground(R.id.ll_daofu);
+                btn_commit.setText("确认");
+                break;
             case R.id.btn_commit:
                 if (leibie == 1){
                     if (TextUtils.isEmpty(orderNo)){// 从购物车进去
@@ -156,8 +173,8 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
                                 // 清空购物车
                                 BaseApplication.clearShopcart();
                                 // 更新历史列表
-                                showToast("提交订单成功！");
                                 EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
+                                showToast("提交订单成功！");
                                 // 跳转到详情页,到时还需要传递数据过去
                                 Intent intent = new Intent(context, OrderDetailActivity.class);
                                 intent.putExtra(GlobalParams.ORDERNO,mData.getOrderNo());
@@ -245,30 +262,6 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
         cb_daofu.setChecked(resId == R.id.ll_daofu?true:false);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()){
-            case R.id.cb_alipay:
-                if (isChecked) {
-                    leibie = 1;
-                    changeBackground(R.id.ll_alipay);
-                }
-                break;
-            case R.id.cb_weixin:
-                if (isChecked) {
-                    leibie = 2;
-                    changeBackground(R.id.ll_weixin);
-                }
-                break;
-            case R.id.cb_daofu:
-                if (isChecked) {
-                    leibie = 3;
-                    changeBackground(R.id.ll_daofu);
-                }
-                break;
-        }
-    }
-
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unused")
@@ -337,5 +330,24 @@ public class PayActivity extends BaseActivity implements CompoundButton.OnChecke
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            if (isPayFail){// 如果支付失败
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra(GlobalParams.ORDERNO,orderNo);
+                intent.putExtra(GlobalParams.ORDERDATE, mData.getOrderDate());
+                intent.putExtra(GlobalParams.ORDERTYPE,"1");// 正常订单
+                intent.putExtra(GlobalParams.ORDERSTATE,"0");// 未付款
+                context.startActivity(intent);
+                finish();
+            }else{
+                finish();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -80,13 +80,15 @@ public class ShopcartExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public long getGroupId(int groupPosition) {
-        return groups.get(groupPosition).getId();
+//        return groups.get(groupPosition).getId();
+        return groupPosition;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        String groupId = groups.get(groupPosition).getGroupId();
-        return children.get(groupId).get(childPosition).getId();
+//        String groupId = groups.get(groupPosition).getGroupId();
+//        return children.get(groupId).get(childPosition).getId();
+        return childPosition;
     }
 
     @Override

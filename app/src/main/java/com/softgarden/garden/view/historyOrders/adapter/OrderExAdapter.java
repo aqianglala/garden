@@ -37,6 +37,12 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
     private Context context;
     private ExpandableListView exListView;
 
+    private boolean isYYY;
+
+    public void setYYY(boolean YYY) {
+        isYYY = YYY;
+    }
+
     public OrderExAdapter(List<HistoryOrderEntity.DataBean> data, Context context) {
         this.mData = data;
         this.context = context;
@@ -169,6 +175,7 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
                         intent.putExtra(GlobalParams.ORDERTYPE,item.getType());
                         intent.putExtra(GlobalParams.ORDERSTATE,item.getIs_pay());
                         intent.putExtra(GlobalParams.ORDERDATE,item.getOrderDate());
+                        intent.putExtra(GlobalParams.ISYYY,isYYY);
                         context.startActivity(intent);
                     }
                 });

@@ -150,10 +150,11 @@ public class BuyFragment extends BaseFragment implements Observer{
         // 当天不重复请求，隔天才请求新的数据
         String time = (String) SPUtils.get(mActivity, GlobalParams.LAST_UPDATE_TIME, "");
         String data = (String) SPUtils.get(mActivity, GlobalParams.DATA, "");
+        final Boolean hasClear = (Boolean) SPUtils.get(mActivity, GlobalParams.HASCLEAR,false);
         if(StringUtils.getCurrDay().equals(time) && !TextUtils.isEmpty(data)){// 当天,从数据库中获取
             IndexEntity indexEntity = new Gson().fromJson(data, IndexEntity.class);
             // 获取购物车数据
-            String shopcart_data = (String) SPUtils.get(mActivity, GlobalParams.SHOPCART_DATA, "");
+            final String shopcart_data = (String) SPUtils.get(mActivity, GlobalParams.SHOPCART_DATA, "");
             TempData tempData = new Gson().fromJson(shopcart_data, TempData.class);
             if(tempData!=null){
                 BaseApplication.tempDataBeans = tempData.getTempDataBeans();
@@ -165,6 +166,7 @@ public class BuyFragment extends BaseFragment implements Observer{
                 public void run() {
                     super.run();
                     final ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                    shoppingCart.setHasClear(hasClear);
                     // 添加监听
                     shoppingCart.addObserver(BuyFragment.this);
                     shoppingCart.initCartList();
@@ -215,6 +217,7 @@ public class BuyFragment extends BaseFragment implements Observer{
                     SPUtils.put(mActivity,GlobalParams.DATA,"");
                     SPUtils.put(mActivity,GlobalParams.LAST_UPDATE_TIME,"");
                 }
+                SPUtils.put(mActivity,GlobalParams.HASCLEAR,false);
                 // 更新数据
                 SPUtils.put(mActivity,GlobalParams.DATA,new Gson().toJson(indexEntity));
                 // 将此数据做为全局变量，为了减少对数据库的操作
@@ -227,6 +230,7 @@ public class BuyFragment extends BaseFragment implements Observer{
                     public void run() {
                         super.run();
                         final ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                        shoppingCart.setHasClear(false);
                         // 添加监听
                         shoppingCart.addObserver(BuyFragment.this);
                         shoppingCart.initCartList();

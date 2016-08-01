@@ -69,6 +69,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                 expandableListView, false);
         et_remarks = (EditText) view.findViewById(R.id.et_remarks);
         et_remarks.setEnabled(true);
+        et_remarks.setHint("请在这里添加备注（100字以内）");
         expandableListView.addFooterView(view);
     }
 
@@ -110,6 +111,8 @@ public class ConfirmOrderActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()){
             case R.id.btn_commit_order:
+                String remark = et_remarks.getText().toString().trim();
+                orderCommitEntity.setRemarks(remark);
                 HttpHelper.post(UrlsAndKeys.payment, new JSONObject(), new BaseCallBack(this) {
                     @Override
                     public void onSuccess(JSONObject result) {
@@ -145,8 +148,6 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void commitOrder() {
-        String remark = et_remarks.getText().toString().trim();
-        orderCommitEntity.setRemarks(remark);
         try {
             String s = new Gson().toJson(orderCommitEntity);
             LogUtils.e(s);
@@ -154,6 +155,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     (context) {
                 @Override
                 public void onSuccess(CommitOrderResultEntity data) {
+                    BaseApplication.clearShopcart();
                     // 更新历史列表
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     showToast("提交订单成功！");

@@ -213,6 +213,7 @@ public class MainActivity extends BaseActivity {
                     BaseApplication.indexEntity = null;
                     BaseApplication.tempDataBeans.clear();
                     ShoppingCart instance = ShoppingCart.getInstance();
+                    SPUtils.put(this, GlobalParams.HASCLEAR,instance.isHasClear());
                     instance.clearCart();
                     finish();
                 }
