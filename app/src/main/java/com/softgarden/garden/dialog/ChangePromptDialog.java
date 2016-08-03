@@ -135,7 +135,7 @@ public class ChangePromptDialog extends DialogFragment implements View.OnClickLi
                         context) {
                     @Override
                     public void onSuccess(JSONObject result) {
-                        ToastUtil.show("退货成功");
+                        ToastUtil.show("换货成功，请前往“历史订单”查看");
                         dismiss();
                     }
                 });

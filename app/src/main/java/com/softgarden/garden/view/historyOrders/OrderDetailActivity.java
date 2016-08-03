@@ -30,6 +30,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
 import com.softgarden.garden.utils.StringUtils;
+import com.softgarden.garden.utils.ToastUtil;
 import com.softgarden.garden.utils.Utils;
 import com.softgarden.garden.view.pay.PayActivity;
 import com.softgarden.garden.view.shopcar.adapter.OrderDetailExAdapter;
@@ -180,7 +181,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 rl_confirm.setVisibility(View.GONE);
                 rl_bottom.setVisibility(View.VISIBLE);
             }
-        }else{// 关闭支付，或者记账用户
+        }else{// 关闭支付
             tv_right.setVisibility(View.VISIBLE);
             rl_bottom.setVisibility(View.GONE);
         }
@@ -321,7 +322,7 @@ public class OrderDetailActivity extends BaseActivity implements ModifyCountInte
                 public void onSuccess(CommitOrderResultEntity data) {
                     price = tv_price.getText().toString().trim();
                     // 更新历史列表
-                    showToast("提交订单成功！");
+                    ToastUtil.show("提交成功，请前往“历史订单”查看");
                     tv_right.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                     orderNo = data.getData().getOrderNo();

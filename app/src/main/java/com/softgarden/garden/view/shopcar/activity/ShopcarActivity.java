@@ -51,12 +51,14 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
     private Button btn_delete;
     private LinearLayout ll_commit_order;
     private LinearLayout ll_check_all;
+    private ShoppingCart instance;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shopcar);
         // 设置监听
-        ShoppingCart.getInstance().addObserver(this);
+        instance = ShoppingCart.getInstance();
+        instance.addObserver(this);
 
         ll_check_all = getViewById(R.id.ll_check_all);
         tv_right = getViewById(R.id.tv_right);
@@ -106,12 +108,14 @@ public class ShopcarActivity extends BaseActivity implements ShopcartExpandableL
                         }
                     }
                     if(!isInTempData){
-                        int count = Integer.parseInt(goodsBean.getProQty());
-                        if(count!=0) {
-                            addGroup(goodsBean);
-                            OrderCommitEntity.ZstailBean productinfo = generateProductInfo
-                                    (goodsBean,0,Integer.parseInt(goodsBean.getProQty()));
-                            products.add(productinfo);
+                        if (!instance.isHasClear()) {// 清空了购物车就不再把预估数加入购物车
+                            int count = Integer.parseInt(goodsBean.getProQty());
+                            if (count != 0) {
+                                addGroup(goodsBean);
+                                OrderCommitEntity.ZstailBean productinfo = generateProductInfo
+                                        (goodsBean, 0, Integer.parseInt(goodsBean.getProQty()));
+                                products.add(productinfo);
+                            }
                         }
                     }
                 }

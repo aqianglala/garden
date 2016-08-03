@@ -23,7 +23,6 @@ import com.softgarden.garden.base.ObjectCallBack;
 import com.softgarden.garden.engine.UserEngine;
 import com.softgarden.garden.entity.UserEntity;
 import com.softgarden.garden.jiadun_android.R;
-import com.softgarden.garden.utils.ToastUtil;
 import com.softgarden.garden.view.start.entity.MessageBean;
 
 import org.simple.eventbus.EventBus;
@@ -92,7 +91,6 @@ public class CommitOrderDialog extends DialogFragment implements View.OnClickLis
         engine.login(name, password, new ObjectCallBack<UserEntity>((BaseActivity) context) {
             @Override
             public void onSuccess(UserEntity data) {
-                ToastUtil.show("验证密码成功！");
                 BaseApplication.userInfo = data;
                 // 已经验证过了就不用重新验证，以下方法将在activity中添加已经验证过的标记，并调用提交订单的方法
                 EventBus.getDefault().post(new MessageBean(switchPayment), "commitOrder");

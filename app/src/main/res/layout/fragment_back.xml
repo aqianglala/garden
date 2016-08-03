@@ -80,6 +80,7 @@
     </com.zhy.autolayout.AutoRelativeLayout>
 
     <View
+        android:id="@+id/line"
         style="@style/line_horizontal"/>
 
     <android.support.v4.view.ViewPager
@@ -91,6 +92,7 @@
         android:background="@color/bg_gray"/>
 
     <com.zhy.autolayout.AutoLinearLayout
+        android:id="@+id/ll_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_white"

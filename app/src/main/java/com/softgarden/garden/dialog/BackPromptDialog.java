@@ -146,7 +146,7 @@ public class BackPromptDialog extends DialogFragment implements View.OnClickList
                         context) {
                     @Override
                     public void onSuccess(JSONObject result) {
-                        ToastUtil.show("退货成功");
+                        ToastUtil.show("退货成功，请前往“历史订单”查看");
                         dismiss();
                     }
                 });

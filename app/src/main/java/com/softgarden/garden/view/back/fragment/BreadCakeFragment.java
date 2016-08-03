@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.softgarden.garden.base.BaseFragment;
@@ -48,6 +49,8 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
     private boolean isBack;
     private int groups;
     private LinearLayout ll_dots;
+    private LinearLayout ll_content;
+    private RelativeLayout layout_empty;
 
     public HashMap<String, List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean>> getMap() {
         return map;
@@ -60,12 +63,22 @@ public class BreadCakeFragment extends BaseFragment implements CheckInterface,
         vp_banner = getViewById(R.id.vp_banner);
         lv_content = getViewById(R.id.lv_content);
         ll_dots = getViewById(R.id.ll_dots);
+
+        ll_content = getViewById(R.id.ll_content);
+        layout_empty = getViewById(R.id.layout_empty);
     }
 
     private void setData() {
         Bundle arguments = getArguments();
         // 一级分类的全部数据
         data = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
+        if (data.getChild().size() == 0){
+            ll_content.setVisibility(View.GONE);
+            layout_empty.setVisibility(View.VISIBLE);
+        }else{
+            ll_content.setVisibility(View.VISIBLE);
+            layout_empty.setVisibility(View.GONE);
+        }
         isBack = arguments.getBoolean("isBack");
         // 获取到的banner数据
         initBannerData();

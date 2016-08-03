@@ -171,7 +171,7 @@
                 android:layout_width="220px"
                 android:layout_height="74px"
                 android:background="@drawable/shape_modify_order_pressed"
-                android:text="确认订单"
+                android:text="确认修改"
                 android:textSize="@dimen/text_middle"
                 android:textColor="@color/pink_text"
                 android:layout_centerInParent="true"

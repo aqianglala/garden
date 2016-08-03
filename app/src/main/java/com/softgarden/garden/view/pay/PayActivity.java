@@ -31,6 +31,7 @@ import com.softgarden.garden.jiadun_android.R;
 import com.softgarden.garden.other.ShoppingCart;
 import com.softgarden.garden.utils.GlobalParams;
 import com.softgarden.garden.utils.LogUtils;
+import com.softgarden.garden.utils.ToastUtil;
 import com.softgarden.garden.utils.Utils;
 import com.softgarden.garden.view.historyOrders.OrderDetailActivity;
 import com.softgarden.garden.view.start.entity.MessageBean;
@@ -174,7 +175,7 @@ public class PayActivity extends BaseActivity {
                                 BaseApplication.clearShopcart();
                                 // 更新历史列表
                                 EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
-                                showToast("提交订单成功！");
+                                ToastUtil.show("提交成功，请前往“历史订单”查看");
                                 // 跳转到详情页,到时还需要传递数据过去
                                 Intent intent = new Intent(context, OrderDetailActivity.class);
                                 intent.putExtra(GlobalParams.ORDERNO,mData.getOrderNo());
@@ -194,7 +195,7 @@ public class PayActivity extends BaseActivity {
                                 // 清空购物车
                                 BaseApplication.clearShopcart();
                                 // 更新历史列表
-                                showToast("提交订单成功！");
+                                ToastUtil.show("提交成功，请前往“历史订单”查看");
                                 EventBus.getDefault().post(new MessageBean("mr.simple"), "updateOrder");
                                 // 跳转到详情页,到时还需要传递数据过去
                                 Intent intent = new Intent(context, OrderDetailActivity.class);

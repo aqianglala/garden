@@ -50,6 +50,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
 
     private RelativeLayout rl_indicator;
     private LinearLayout ll_tab;
+    private LinearLayout ll_confirm;
     private LinearLayout ll_tab_container;
 
     private int tabCount;
@@ -63,6 +64,7 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
     private RelativeLayout rl_date;
     private TextView tv_date;
     private TextView tv_date_label;
+    private View line;
     private ContainerPagerAdapter contentPagerAdapter;
 
     @Override
@@ -76,10 +78,12 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
 
         btn_confirm = getViewById(R.id.btn_confirm);
         iv_me = getViewById(R.id.iv_me);
+        line = getViewById(R.id.line);
 
         rl_indicator = getViewById(R.id.rl_indicator);
         ll_tab = getViewById(R.id.ll_tab);
         ll_tab_container = getViewById(R.id.ll_tab_container);
+        ll_confirm = getViewById(R.id.ll_confirm);
 
         rl_date = getViewById(R.id.rl_date);
         tv_date = getViewById(R.id.tv_date);
@@ -99,6 +103,18 @@ public class BackFragment extends BaseFragment implements DatePickerDialog.OnDat
                 float i = (float)ScreenUtils.getScreenWidth(mActivity) / tabWidth;
                 float translationx = position * tabWidth + positionOffsetPixels/i;
                 ViewHelper.setTranslationX(rl_indicator,translationx);
+
+                int size = BaseApplication.indexEntity.getData().getShop().get(position).getChild
+                        ().size();
+                if (size > 0){
+                    rl_date.setVisibility(View.VISIBLE);
+                    ll_confirm.setVisibility(View.VISIBLE);
+                    line.setVisibility(View.VISIBLE);
+                }else{
+                    rl_date.setVisibility(View.INVISIBLE);
+                    ll_confirm.setVisibility(View.INVISIBLE);
+                    line.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class FragmentProduct extends BaseFragment{
     private ContentAdapter contentAdapter;
     private TextView tv_title;
     private RelativeLayout layout_empty;
+    private LinearLayout ll_content;
     private IndexEntity.DataBean.ShopBean mData;
     private List<IndexEntity.DataBean.ShopBean.ChildBean.GoodsBean> goods = new ArrayList<>();
 
@@ -47,6 +49,7 @@ public class FragmentProduct extends BaseFragment{
         layout_empty = getViewById(R.id.layout_empty);
         lv_titles = getViewById(R.id.lv_titles);
         lv_content = getViewById(R.id.lv_content);
+        ll_content = getViewById(R.id.ll_content);
     }
 
     @Override
@@ -73,6 +76,7 @@ public class FragmentProduct extends BaseFragment{
         mData = (IndexEntity.DataBean.ShopBean) arguments.getSerializable("data");
         if (mData.getChild().size() == 0){
             layout_empty.setVisibility(View.VISIBLE);
+            ll_content.setVisibility(View.GONE);
         }
 
         setData();
