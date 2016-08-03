@@ -55,7 +55,7 @@ public class YYYActivity extends BaseActivity {
             public void onItemClick(View v, IndexEntity indexEntity) {
                 YYYEntity.DataBean entity = (YYYEntity.DataBean) indexEntity;
                 Intent intent = new Intent(context, YYYOrderActivity.class);
-                intent.putExtra("name",entity.getCustomerName());
+                intent.putExtra("name",entity.getCustomerNo());
                 startActivity(intent);
             }
         });

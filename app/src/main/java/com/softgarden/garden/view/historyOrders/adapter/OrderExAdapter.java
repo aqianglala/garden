@@ -149,8 +149,8 @@ public class OrderExAdapter extends BaseExpandableListAdapter{
 //                如果是记账用户，则不显示付款状态
 //                如果是现金用户，则需根据是否已经付款显示付款状态
 //                进入详情页之后，如果订单是未付款的，则显示一个支付的按钮
-                if ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金".equals(
-                        BaseApplication.userInfo.getData().getJsfs())){
+                if (isYYY || ("1".equals(BaseApplication.indexEntity.getData().getZhifu()) &&"现金"
+                        .equals(BaseApplication.userInfo.getData().getJsfs()))){
                     ll_state.setVisibility(View.VISIBLE);
                     String is_pay = item.getIs_pay();
                     if ("0".equals(is_pay)){// 未付款
